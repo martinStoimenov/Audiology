@@ -26,6 +26,18 @@
 
         public DbSet<Setting> Settings { get; set; }
 
+        public DbSet<Album> Albums { get; set; }
+
+        public DbSet<Favourites> Favourites { get; set; }
+
+        public DbSet<Lyrics> Lyrics { get; set; }
+
+        public DbSet<Playlist> Playlists { get; set; }
+
+        public DbSet<Song> Songs { get; set; }
+
+        public DbSet<UsersAlbum> UsersAlbum { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -47,6 +59,8 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<UsersAlbum>().HasKey(x => new { x.AlbumId, x.UserId });
+
             // Needed for Identity models configuration
             base.OnModelCreating(builder);
 
