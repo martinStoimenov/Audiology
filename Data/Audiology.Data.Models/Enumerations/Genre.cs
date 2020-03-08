@@ -2,7 +2,7 @@
 {
     public enum Genre
     {
-        Opera = 1,
+        Rap = 1,
         Country = 2,
         Jazz = 3,
         RB = 4,
@@ -11,6 +11,6 @@
         Disco = 7,
         TechnoPop = 8,
         House = 9,
-        Rap = 10,
+        Opera = 10,
     }
 }

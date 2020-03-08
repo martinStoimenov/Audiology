@@ -1,0 +1,55 @@
+﻿@{
+    @using Audiology.Data.Models.Enumerations;
+    @model Audiology.Web.ViewModels.Songs.SongUploadViewModel
+    this.ViewData["Title"] = "Song Upload";
+}
+    <h1>Upload to Audiology</h1>
+
+    <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Create">
+
+        <div>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="FileExtension"></label>
+            <select class="form-control" asp-for="FileExtension" asp-items="Html.GetEnumSelectList<FileExtension>()">
+            </select>
+            <span asp-validation-for="FileExtension" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Album"></label>
+            <input asp-for="Album" class="form-control" />
+            <span asp-validation-for="Album" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Genre"></label>
+            <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+            </select>
+            <span asp-validation-for="Genre" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Lyrics.Text"></label>
+            <textarea class="form-control row-cols-3"></textarea>
+            <span asp-validation-for="Lyrics.Text" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Year"></label>
+            <input asp-for="Year" class="form-control" />
+            <span asp-validation-for="Year" class="text-danger"></span>
+        </div>
+
+
+
+        <hr />
+        <button asp-controller="Songs" asp-action="Upload" type="submit" class="btn btn-dark btn-lg btn-block">Upload</button>
+
+        <script></script>
+
+    </form>
