@@ -8,11 +8,11 @@
 
         public ApplicationUser User { get; set; }
 
-        public int SongId { get; set; }
+        public int? SongId { get; set; }
 
         public virtual Song Song { get; set; }
 
-        public int AlbumId { get; set; }
+        public int? AlbumId { get; set; }
 
         public virtual Album Album { get; set; }
     }

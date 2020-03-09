@@ -6,6 +6,7 @@
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
+    using Microsoft.AspNetCore.Http;
 
     public class SongUploadViewModel : IMapFrom<Song>
     {
@@ -29,7 +30,10 @@
         public Genre Genre { get; set; }
 
         [Required]
-        [Range(1,2020)]
+        [Range(1, 2020)]
         public int Year { get; set; }
+
+        [Required]
+        public IFormFile Song { get; set; }
     }
 }

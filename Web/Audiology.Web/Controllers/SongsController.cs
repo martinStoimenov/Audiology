@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Audiology.Web.ViewModels.Songs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Audiology.Web.Controllers
+﻿namespace Audiology.Web.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Audiology.Web.ViewModels.Songs;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+
     public class SongsController : Controller
     {
         // GET: Songs
@@ -38,19 +40,12 @@ namespace Audiology.Web.Controllers
                 return this.View(input);
             }
 
-            return this.Json(input);
-            //return this.Content("Successfull!!");
-
-            /*try
+            using (var fileStream = new FileStream(@"C:\Users\haloho\Desktop\Audiology\Web\Audiology.Web\wwwroot\uploadedGZUZ.mp3", FileMode.Create))
             {
-                // TODO: Add insert logic here
-
-                return this.RedirectToAction(nameof(this.Index));
+                input.Song.CopyToAsync(fileStream);
             }
-            catch
-            {
-                return this.View(input);
-            }*/
+
+            return this.Content("Successfull!!");
         }
 
         // GET: Songs/Edit/5
@@ -67,7 +62,6 @@ namespace Audiology.Web.Controllers
             try
             {
                 // TODO: Add update logic here
-
                 return this.RedirectToAction(nameof(this.Index));
             }
             catch
@@ -90,12 +84,11 @@ namespace Audiology.Web.Controllers
             try
             {
                 // TODO: Add delete logic here
-
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return this.View();
             }
         }
     }

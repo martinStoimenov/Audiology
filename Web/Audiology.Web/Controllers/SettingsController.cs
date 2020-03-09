@@ -6,13 +6,12 @@
     using Audiology.Data.Common.Repositories;
     using Audiology.Data.Models;
     using Audiology.Services.Data;
-    using Audiology.Web.ViewModels.Settings;
 
     using Microsoft.AspNetCore.Mvc;
 
     public class SettingsController : BaseController
     {
-        private readonly ISettingsService settingsService;
+        /*private readonly ISettingsService settingsService;
 
         private readonly IDeletableEntityRepository<Setting> repository;
 
@@ -38,6 +37,6 @@
             await this.repository.SaveChangesAsync();
 
             return this.RedirectToAction(nameof(this.Index));
-        }
+        }*/
     }
 }

@@ -24,8 +24,6 @@
         {
         }
 
-        public DbSet<Setting> Settings { get; set; }
-
         public DbSet<Album> Albums { get; set; }
 
         public DbSet<Favourites> Favourites { get; set; }

@@ -13,6 +13,7 @@
 
         [Required]
         [MaxLength(700)]
+        [Display(Name = "Lyrics")]
         public string Text { get; set; }
     }
 }

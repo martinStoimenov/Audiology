@@ -7,7 +7,7 @@
 
     public class DashboardController : AdministrationController
     {
-        private readonly ISettingsService settingsService;
+        /*private readonly ISettingsService settingsService;
 
         public DashboardController(ISettingsService settingsService)
         {
@@ -18,6 +18,6 @@
         {
             var viewModel = new IndexViewModel { SettingsCount = this.settingsService.GetCount(), };
             return this.View(viewModel);
-        }
+        }*/
     }
 }

@@ -4,6 +4,7 @@ namespace Audiology.Data.Models
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Audiology.Data.Common.Models;
     using Audiology.Data.Models.Enumerations;
@@ -50,6 +51,9 @@ namespace Audiology.Data.Models
         public int? FavouritesId { get; set; }
 
         public virtual Favourites Favourites { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? Birthday { get; set; }
 
         public virtual ICollection<UsersAlbum> UsersAlbums { get; set; }
 
