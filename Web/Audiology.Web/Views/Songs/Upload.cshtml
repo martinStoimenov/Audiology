@@ -4,6 +4,7 @@
     this.ViewData["Title"] = "Song Upload";
 }
     <h1>Upload to Audiology</h1>
+    <p>Provide MP3, FLAC, WAV, ALAC, or AIFF for highest audio quality.</p>
 
     <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Create">
 
@@ -16,12 +17,6 @@
             <label asp-for="Description"></label>
             <input asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="FileExtension"></label>
-            <select class="form-control" asp-for="FileExtension" asp-items="Html.GetEnumSelectList<FileExtension>()">
-            </select>
-            <span asp-validation-for="FileExtension" class="text-danger"></span>
         </div>
         <div>
             <label asp-for="Album"></label>

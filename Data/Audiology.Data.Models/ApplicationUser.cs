@@ -40,6 +40,7 @@ namespace Audiology.Data.Models
         [MaxLength(25)]
         public string LastName { get; set; }
 
+        [MaxLength(150)]
         public string ProfilePicUrl { get; set; }
 
         public Gender Gender { get; set; }

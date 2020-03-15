@@ -3,7 +3,11 @@
     using CommandLine;
 
     [Verb("sandbox", HelpText = "Run sandbox code.")]
-    public class SandboxOptions
+    public static class SandboxOptions
     {
+        public static void Main()
+        {
+
+        }
     }
 }

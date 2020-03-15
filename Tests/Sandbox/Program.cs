@@ -23,7 +23,7 @@
 
     public static class Program
     {
-        public static int Main(string[] args)
+       /* public static int Main(string[] args)
         {
             Console.WriteLine($"{typeof(Program).Namespace} ({string.Join(" ", args)}) starts working...");
             var serviceCollection = new ServiceCollection();
@@ -82,6 +82,6 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
-        }
+        }*/
     }
 }

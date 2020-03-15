@@ -4,31 +4,42 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
-    @if (this.SignInManager.IsSignedIn(this.User))
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(this.User.Identity.Name)!</a>
-        </li>
-        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+    <ul class="navbar-nav">
+        @if (this.SignInManager.IsSignedIn(this.User))
         {
             <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
+                <a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(this.User.Identity.Name)!</a>
+            </li>
+            <div class="dropdown pmd-dropdown pmd-user-info ml-auto">
+                <a href="javascript:void(0);" class="btn-user dropdown-toggle media align-items-center" data-toggle="dropdown" aria-expanded="false">
+                    <img class="mr-2" src="https://resources.tidal.com/images/3461fd8a/672a/4f56/b149/9e436fb86166/480x480.jpg" width="40" height="40" alt="avatar">
+                    
+                    <i class="material-icons md-light ml-2 pmd-sm"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <a class="dropdown-item" href="javascript:void(0);">Edit Profile</a>
+                    <a class="dropdown-item" href="javascript:void(0);">Songs</a>
+                </ul>
+            </div>
+            if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-white" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
+                </li>
+            }
+            <li class="nav-item">
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+                    <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+                </form>
             </li>
         }
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
-                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-            </form>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </li>
-    }
-</ul>
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            </li>
+        }
+    </ul>

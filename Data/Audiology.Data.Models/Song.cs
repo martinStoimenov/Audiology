@@ -1,5 +1,6 @@
 ﻿namespace Audiology.Data.Models
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using Audiology.Data.Common.Models;
@@ -7,12 +8,14 @@
 
     public class Song : BaseDeletableModel<int>
     {
+        public Song()
+        {
+            this.Artists = new HashSet<ApplicationUser>();
+        }
+
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
-
-        [Required]
-        public FileExtension FileExtension { get; set; }
 
         [MaxLength(100)]
         public string Description { get; set; }
@@ -30,5 +33,7 @@
 
         [Required]
         public int Year { get; set; }
+
+        public virtual ICollection<ApplicationUser> Artists { get; set; }
     }
 }

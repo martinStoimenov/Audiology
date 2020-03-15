@@ -26,11 +26,19 @@ namespace Audiology.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CoverUrl")
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
+
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -42,6 +50,10 @@ namespace Audiology.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<string>("Producer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -97,6 +109,9 @@ namespace Audiology.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AlbumId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Birthday")
@@ -168,10 +183,14 @@ namespace Audiology.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProfilePicUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(150)")
+                        .HasMaxLength(150);
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SongId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -181,6 +200,8 @@ namespace Audiology.Data.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
 
                     b.HasIndex("FavouritesId")
                         .IsUnique()
@@ -197,6 +218,8 @@ namespace Audiology.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("PlaylistId");
+
+                    b.HasIndex("SongId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -324,9 +347,6 @@ namespace Audiology.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
-
-                    b.Property<int>("FileExtension")
-                        .HasColumnType("int");
 
                     b.Property<int>("Genre")
                         .HasColumnType("int");
@@ -490,6 +510,10 @@ namespace Audiology.Data.Migrations
 
             modelBuilder.Entity("Audiology.Data.Models.ApplicationUser", b =>
                 {
+                    b.HasOne("Audiology.Data.Models.Album", null)
+                        .WithMany("Artists")
+                        .HasForeignKey("AlbumId");
+
                     b.HasOne("Audiology.Data.Models.Favourites", "Favourites")
                         .WithOne("User")
                         .HasForeignKey("Audiology.Data.Models.ApplicationUser", "FavouritesId");
@@ -497,6 +521,10 @@ namespace Audiology.Data.Migrations
                     b.HasOne("Audiology.Data.Models.Playlist", "Playlist")
                         .WithMany()
                         .HasForeignKey("PlaylistId");
+
+                    b.HasOne("Audiology.Data.Models.Song", null)
+                        .WithMany("Artists")
+                        .HasForeignKey("SongId");
                 });
 
             modelBuilder.Entity("Audiology.Data.Models.Favourites", b =>

@@ -5,13 +5,20 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Audiology.Services.Data.Songs;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     public class SongsController : Controller
     {
+        private readonly ISongsServcie service;
+
+        public SongsController(ISongsServcie service)
+        {
+            this.service = service;
+        }
+
         // GET: Songs
         public ActionResult Index()
         {
@@ -33,17 +40,15 @@
         // POST: Songs/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Upload(SongUploadViewModel input)
+        public async Task<IActionResult> Upload(SongUploadViewModel input)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(input);
             }
+            
 
-            using (var fileStream = new FileStream(@"C:\Users\haloho\Desktop\Audiology\Web\Audiology.Web\wwwroot\uploadedGZUZ.mp3", FileMode.Create))
-            {
-                input.Song.CopyToAsync(fileStream);
-            }
+            await this.service.UploadAsync(input.Song, this.User.Identity.Name);
 
             return this.Content("Successfull!!");
         }

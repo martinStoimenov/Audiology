@@ -14,10 +14,6 @@
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
-        [Display(Name = "File Extension")]
-        public FileExtension FileExtension { get; set; }
-
         [MaxLength(100)]
         public string Description { get; set; }
 
