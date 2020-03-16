@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace Audiology.Data.Migrations
+﻿namespace Audiology.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class AddDescAndCoverToAlbum : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
