@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Audiology.Data.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace Audiology.Web.Areas.Identity.Pages.Account.Manage
+﻿namespace Audiology.Web.Areas.Identity.Pages.Account.Manage
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Audiology.Data.Models;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -36,6 +37,21 @@ namespace Audiology.Web.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [MaxLength(25)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [MaxLength(25)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [MaxLength(30)]
+            [Display(Name = "Profile picture url")]
+            public string ProfilePicUrl { get; set; }
+
+            [DataType(DataType.Date)]
+            public DateTime? Birthday { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -47,7 +63,7 @@ namespace Audiology.Web.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
             };
         }
 

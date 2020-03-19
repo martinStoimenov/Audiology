@@ -1,15 +1,19 @@
 ﻿namespace Audiology.Services.Data.Songs
 {
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Audiology.Data;
     using Audiology.Data.Common.Repositories;
     using Audiology.Data.Models;
+    using Audiology.Services.Mapping;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
 
     public class SongsService : ISongsServcie
     {
@@ -25,6 +29,23 @@
             this.env = env;
             this.userManager = userManager;
             this.songRepository = songRepository;
+        }
+
+        public IEnumerable<T> GetAll<T>(int? count = null)
+        {
+            IQueryable<Song> query =
+                this.songRepository.All().OrderBy(x => x.CreatedOn).ThenBy(x => x.ModifiedOn);
+            if (count.HasValue)
+            {
+                query = query.Take(count.Value);
+            }
+
+            return query.To<T>().ToList();
+        }
+
+        public Task<IEnumerable<SongListViewModel>> GetAllSongsForUserAsync(string userId)
+        {
+            return null;
         }
 
         public async Task UploadAsync(IFormFile input, string username)

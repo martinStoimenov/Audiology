@@ -18,11 +18,15 @@
             <input asp-for="Description" class="form-control" />
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
-        <div>
-            <label asp-for="Album"></label>
-            <input asp-for="Album" class="form-control" />
-            <span asp-validation-for="Album" class="text-danger"></span>
-        </div>
+        @if (Model.Albums != null)
+        {
+            <div>
+                <label asp-for="AlbumId"></label>
+                <select asp-for="AlbumId" asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control"></select>
+                <span asp-validation-for="AlbumId" class="text-danger"></span>
+            </div>
+        }
+
         <div>
             <label asp-for="Genre"></label>
             <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">

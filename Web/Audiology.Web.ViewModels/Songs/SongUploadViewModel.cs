@@ -1,14 +1,16 @@
 ﻿namespace Audiology.Web.ViewModels.Songs
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
+    using Audiology.Web.ViewModels.Albums;
     using Microsoft.AspNetCore.Http;
 
-    public class SongUploadViewModel : IMapFrom<Song>
+    public class SongUploadViewModel : IMapTo<Song>
     {
         [Required]
         [MaxLength(50)]
@@ -17,7 +19,9 @@
         [MaxLength(100)]
         public string Description { get; set; }
 
-        public Album Album { get; set; }
+        public int? AlbumId { get; set; }
+
+        public IEnumerable<AlbumDropDownViewModel> Albums { get; set; }
 
         public Lyrics Lyrics { get; set; }
 

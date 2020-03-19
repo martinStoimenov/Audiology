@@ -12,7 +12,7 @@
         public virtual Song Song { get; set; }
 
         [Required]
-        [MaxLength(700)]
+        [MaxLength(10000)]
         [Display(Name = "Lyrics")]
         public string Text { get; set; }
     }

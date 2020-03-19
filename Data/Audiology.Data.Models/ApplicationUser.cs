@@ -33,14 +33,14 @@ namespace Audiology.Data.Models
 
         // Extended props
         [Required]
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string FirstName { get; set; }
 
         [Required]
-        [MaxLength(25)]
+        [MaxLength(50)]
         public string LastName { get; set; }
 
-        [MaxLength(150)]
+        [MaxLength(600)]
         public string ProfilePicUrl { get; set; }
 
         public Gender Gender { get; set; }
@@ -48,8 +48,6 @@ namespace Audiology.Data.Models
         public int? PlaylistId { get; set; }
 
         public virtual Playlist Playlist { get; set; }
-
-        public int? FavouritesId { get; set; }
 
         public virtual Favourites Favourites { get; set; }
 

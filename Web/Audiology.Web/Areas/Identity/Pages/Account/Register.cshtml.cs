@@ -67,21 +67,21 @@
             public string ConfirmPassword { get; set; }
 
             [Required]
-            [MaxLength(10)]
+            [MaxLength(256)]
             public string Username { get; set; }
 
             [Required]
-            [MaxLength(25)]
+            [MaxLength(50)]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
 
             [Required]
-            [MaxLength(25)]
+            [MaxLength(50)]
             [Display(Name = "Last Name")]
             public string LastName { get; set; }
 
             [Required]
-            [MaxLength(30)]
+            [MaxLength(600)]
             [Display(Name = "Profile picture url")]
             public string ProfilePicUrl { get; set; }
 
@@ -118,7 +118,7 @@
 
                     var code = await this._userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
+                    var callbackUrl = this.Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = user.Id, code = code },
@@ -129,7 +129,7 @@
 
                     if (this.Input.SelectedRole.ToString() == "Artist" | this.Input.SelectedRole.ToString() == "User")
                     {
-                        // Add user to selected role  
+                        // Add user to selected role
                         await this._userManager.AddToRoleAsync(user, this.Input.SelectedRole.ToString());
                     }
 
@@ -150,7 +150,7 @@
             }
 
             // If we got this far, something failed, redisplay form
-            return Page();
+            return this.Page();
         }
     }
 }

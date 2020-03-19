@@ -8,6 +8,7 @@
     using Audiology.Data.Models;
     using Audiology.Data.Repositories;
     using Audiology.Data.Seeding;
+    using Audiology.Services.Data.Albums;
     using Audiology.Services.Data.Songs;
     using Audiology.Services.Mapping;
     using Audiology.Services.Messaging;
@@ -59,6 +60,7 @@
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISongsServcie, SongsService>();
+            services.AddTransient<IAlbumsService, AlbumsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

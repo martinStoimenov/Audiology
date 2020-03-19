@@ -15,16 +15,17 @@
         }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(200)]
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(150)]
         public string Producer { get; set; }
 
-        [MaxLength(150)]
+        [MaxLength(500)]
         public string CoverUrl { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(1000)]
         public string Description { get; set; }
 
         public virtual ICollection<UsersAlbum> UsersAlbum { get; set; }

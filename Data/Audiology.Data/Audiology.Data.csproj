@@ -11,11 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200315211918_AddDescAndCoverToAlbum.cs" />
-    <Compile Remove="Migrations\20200315211918_AddDescAndCoverToAlbum.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
   </ItemGroup>
 

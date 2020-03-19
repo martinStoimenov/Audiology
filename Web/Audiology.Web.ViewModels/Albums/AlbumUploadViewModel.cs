@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Audiology.Data.Models;
+using Audiology.Services.Mapping;
+using System.ComponentModel.DataAnnotations;
 
 namespace Audiology.Web.ViewModels.Albums
 {
-    public class AlbumUploadViewModel
+    public class AlbumUploadViewModel : IMapFrom<Album>
     {
 
         [Required]

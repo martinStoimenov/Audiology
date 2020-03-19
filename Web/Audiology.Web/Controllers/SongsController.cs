@@ -5,18 +5,26 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Audiology.Data.Models;
+    using Audiology.Services.Data.Albums;
     using Audiology.Services.Data.Songs;
+    using Audiology.Web.ViewModels.Albums;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
     public class SongsController : Controller
     {
-        private readonly ISongsServcie service;
+        private readonly ISongsServcie songsService;
+        private readonly IAlbumsService albumsService;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public SongsController(ISongsServcie service)
+        public SongsController(ISongsServcie songsService, IAlbumsService albumsService, UserManager<ApplicationUser> userManager)
         {
-            this.service = service;
+            this.songsService = songsService;
+            this.albumsService = albumsService;
+            this.userManager = userManager;
         }
 
         // GET: Songs
@@ -31,13 +39,18 @@
             return this.View();
         }
 
-        // GET: Songs/Create
+        // GET: Songs/Upload
         public ActionResult Upload()
         {
-            return this.View();
+            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
+            var viewModel = new SongUploadViewModel
+            {
+                Albums = albums,
+            };
+            return this.View(viewModel);
         }
 
-        // POST: Songs/Create
+        // POST: Songs/Upload
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(SongUploadViewModel input)
@@ -46,11 +59,10 @@
             {
                 return this.View(input);
             }
-            
 
-            await this.service.UploadAsync(input.Song, this.User.Identity.Name);
+            await this.songsService.UploadAsync(input.Song, this.User.Identity.Name);
 
-            return this.Content("Successfull!!");
+            return this.RedirectToAction("Index");
         }
 
         // GET: Songs/Edit/5
