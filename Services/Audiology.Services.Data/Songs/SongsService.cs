@@ -1,5 +1,6 @@
 ﻿namespace Audiology.Services.Data.Songs
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -8,6 +9,7 @@
     using Audiology.Data;
     using Audiology.Data.Common.Repositories;
     using Audiology.Data.Models;
+    using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Hosting;
@@ -48,18 +50,12 @@
             return null;
         }
 
-        public async Task UploadAsync(IFormFile input, string username)
+        public async Task UploadAsync(IFormFile input, string username, string songName, string description,  int? albumId, Enum genre, int year)
         {
-            //var dotIndex = input.FileName.IndexOf('.');
-            //var fileExtension = input.FileName.Substring(dotIndex, input.FileName.Length);
+            var dotIndex = input.FileName.LastIndexOf('.');
+            var fileExtension = input.FileName.Substring(dotIndex);
+            var originalFileName = input.FileName.Substring(0, dotIndex);
 
-            //if (input.ToString().ToLower() != fileExtension.ToLower())
-            //{
-                
-            //}
-
-
-            // Add folder with username
             string webRootPath = this.env.WebRootPath + "\\Songs\\";
 
             if (!Directory.Exists(webRootPath + username))
@@ -67,12 +63,41 @@
                 Directory.CreateDirectory(webRootPath + username);
             }
 
-            var filePath = Path.Combine(webRootPath, username, input.FileName);
+            if (songName.Length > 50 || songName == null)
+            {
+                throw new ArgumentOutOfRangeException("Song name cannot be more than 50 characters!");
+            }
+
+            if (description.Length > 100)
+            {
+                throw new ArgumentOutOfRangeException("Description cannot be more than 100 characters!");
+            }
+
+            if (year > 2020)
+            {
+                throw new ArgumentOutOfRangeException("Year cannot be more than the current one!");
+            }
+
+            string name = songName + fileExtension;
+
+            var filePath = Path.Combine(webRootPath, username, name);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await input.CopyToAsync(fileStream);
             }
+
+            var song = new Song
+            {
+                Name = name,
+                Description = description,
+                Year = year,
+                AlbumId = albumId,
+                Genre = (Genre)genre,
+            };
+
+            await this.songRepository.AddAsync(song);
+            await this.songRepository.SaveChangesAsync();
         }
     }
 }

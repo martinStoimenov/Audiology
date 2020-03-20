@@ -8,7 +8,7 @@
         @if (this.SignInManager.IsSignedIn(this.User))
         {
             <li class="nav-item">
-                <a class="nav-link text-warning" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @(this.User.Identity.Name)!</a>
+                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@(this.User.Identity.Name)</a>
             </li>
             <div class="dropdown pmd-dropdown pmd-user-info ml-auto">
                 <a href="javascript:void(0);" class="btn-user dropdown-toggle media align-items-center" data-toggle="dropdown" aria-expanded="false">
@@ -17,8 +17,12 @@
                     <i class="material-icons md-light ml-2 pmd-sm"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <a class="dropdown-item" href="javascript:void(0);">Edit Profile</a>
-                    <a class="dropdown-item" href="javascript:void(0);">Songs</a>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Edit Profile</a>
+                    <a class="dropdown-item" asp-controller="Songs" asp-action="Index">Songs</a>
+                    <a class="dropdown-item" asp-controller="Albums" asp-action="Index">Albums</a>
+                    <a class="dropdown-item" href ="#">Favourites</a>
+                    <a class="dropdown-item" href ="#">Playlists</a>
+                    <a class="dropdown-item" href ="#">Contact</a>
                 </ul>
             </div>
             if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))

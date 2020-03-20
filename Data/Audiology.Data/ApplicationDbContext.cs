@@ -28,8 +28,6 @@
 
         public DbSet<Favourites> Favourites { get; set; }
 
-        public DbSet<Lyrics> Lyrics { get; set; }
-
         public DbSet<Playlist> Playlists { get; set; }
 
         public DbSet<Song> Songs { get; set; }

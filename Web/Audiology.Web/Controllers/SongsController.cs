@@ -32,6 +32,11 @@
         {
             return this.View();
         }
+        
+        public ActionResult All()
+        {
+            return this.View();
+        }
 
         // GET: Songs/Details/5
         public ActionResult Details(int id)
@@ -60,9 +65,9 @@
                 return this.View(input);
             }
 
-            await this.songsService.UploadAsync(input.Song, this.User.Identity.Name);
+            await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.AlbumId, input.Genre, input.Year);
 
-            return this.RedirectToAction("Index");
+            return this.Content("Successs !!!!");
         }
 
         // GET: Songs/Edit/5

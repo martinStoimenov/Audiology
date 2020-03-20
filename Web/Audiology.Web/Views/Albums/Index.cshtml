@@ -1,0 +1,38 @@
+﻿@{
+    @using Audiology.Web.ViewModels.Albums
+    @model List<AlbumsListViewModel>
+    this.ViewData["Title"] = "Albums";
+}
+
+    <div class="row">
+        @foreach (var album in Model)
+        {
+         <div class="col-md-4">
+             <div class="card" style="width: 18rem;">
+                 <img src="@album.CoverUrl" class="card-img-top img-fluid" style="width: 18rem; height: 11rem;" alt="https://aiimsnagpur.edu.in/sites/default/files/inline-images/no-image-icon_24.png">
+                 <div class="card-body">
+                     <a asp-controller="Albums" asp-action="Upload"><h6 class="card-text text-center stretched-link">@album.Name</h6></a>
+                     <h6 class="card-text text-center">@album.Producer</h6>
+                     <p class="card-text text-center">@album.ShortDescription</p>
+                 </div>
+             </div>
+         </div>
+        }
+    </div>
+
+    <!-- <div class="card" style="width: 18rem;">
+        <img src="https://t2.genius.com/unsafe/300x300/https%3A%2F%2Fimages.genius.com%2F9e1388f2130df20d17b85f9b69e8b190.300x300x1.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Album title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">Dapibus ac facilisis in</li>
+            <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+        <div class="card-body">
+            <a href="#" class="card-link">Card link</a>
+            <a href="#" class="card-link">Another link</a>
+        </div>
+    </div>

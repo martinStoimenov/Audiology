@@ -9,6 +9,9 @@
     <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Create">
 
         <div>
+            <input type="file" class="form-control-file border" asp-for="Song">
+        </div>
+        <div>
             <label asp-for="Name"></label>
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
@@ -22,7 +25,9 @@
         {
             <div>
                 <label asp-for="AlbumId"></label>
-                <select asp-for="AlbumId" asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control"></select>
+                <select asp-for="AlbumId"  asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control">
+                    <option value="" selected disabled hidden>Select from existing albums</option>
+                </select>
                 <span asp-validation-for="AlbumId" class="text-danger"></span>
             </div>
         }
@@ -34,19 +39,14 @@
             <span asp-validation-for="Genre" class="text-danger"></span>
         </div>
         <div>
-            <label asp-for="Lyrics.Text"></label>
-            <textarea class="form-control row-cols-3"></textarea>
-            <span asp-validation-for="Lyrics.Text" class="text-danger"></span>
-        </div>
-        <div>
             <label asp-for="Year"></label>
             <input asp-for="Year" class="form-control" />
             <span asp-validation-for="Year" class="text-danger"></span>
-        </div>
-
-        <hr />
+        </div>        
         <div>
-            <input type="file" class="form-control-file border" asp-for="Song">
+            <label asp-for="Producer"></label>
+            <input asp-for="Producer" class="form-control" />
+            <span asp-validation-for="Producer" class="text-danger"></span>
         </div>
 
         <hr />

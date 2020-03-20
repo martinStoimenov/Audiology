@@ -20,13 +20,13 @@
         [MaxLength(100)]
         public string Description { get; set; }
 
+        [MaxLength(100)]
+        public string Producer { get; set; }
+
+        // Add Duration property if unavailable to extract from file
         public int? AlbumId { get; set; }
 
         public virtual Album Album { get; set; }
-
-        public int? LyricsId { get; set; }
-
-        public virtual Lyrics Lyrics { get; set; }
 
         [Required]
         public Genre Genre { get; set; }

@@ -19,11 +19,13 @@
         [MaxLength(100)]
         public string Description { get; set; }
 
+        [Display(Name = "Album")]
         public int? AlbumId { get; set; }
 
         public IEnumerable<AlbumDropDownViewModel> Albums { get; set; }
 
-        public Lyrics Lyrics { get; set; }
+        [MaxLength(100)]
+        public string Producer { get; set; }
 
         [Required]
         [EnumDataType(typeof(Genre))]

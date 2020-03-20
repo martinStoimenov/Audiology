@@ -12,18 +12,21 @@
 
     public class AlbumsController : Controller
     {
-        private readonly IAlbumsService albumsRepository;
+        private readonly IAlbumsService albumsService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public AlbumsController(IAlbumsService albumsRepository, UserManager<ApplicationUser> userManager)
+        public AlbumsController(IAlbumsService albumsService, UserManager<ApplicationUser> userManager)
         {
-            this.albumsRepository = albumsRepository;
+            this.albumsService = albumsService;
             this.userManager = userManager;
         }
 
         public IActionResult Index()
         {
-            return this.View();
+            string userId = this.userManager.GetUserId(this.User);
+            var viewModel = this.albumsService.GetAllForUser<AlbumsListViewModel>(userId);
+
+            return this.View(viewModel);
         }
 
         public IActionResult Upload()
@@ -36,7 +39,7 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            await this.albumsRepository.AddAsync(input.Name, input.CoverUrl, input.Description, input.Producer, userId);
+            await this.albumsService.AddAsync(input.Name, input.CoverUrl, input.Description, input.Producer, userId);
 
             return this.RedirectToAction("Index");
         }

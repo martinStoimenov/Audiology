@@ -1,6 +1,7 @@
-﻿using Audiology.Data.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+using Audiology.Data.Models;
 using Audiology.Services.Mapping;
-using System.ComponentModel.DataAnnotations;
 
 namespace Audiology.Web.ViewModels.Albums
 {
@@ -8,17 +9,18 @@ namespace Audiology.Web.ViewModels.Albums
     {
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(200)]
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(150)]
         public string Producer { get; set; }
 
-        [MaxLength(150)]
+        [MaxLength(500)]
         [Display(Name = "Cover Url")]
         public string CoverUrl { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(1000)]
         public string Description { get; set; }
     }
 }

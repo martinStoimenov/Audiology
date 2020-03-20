@@ -1,5 +1,6 @@
 ﻿namespace Audiology.Services.Data.Songs
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@
 
     public interface ISongsServcie
     {
-        public Task UploadAsync(IFormFile input, string username);
+        public Task UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year);
 
         public Task<IEnumerable<SongListViewModel>> GetAllSongsForUserAsync(string userId);
 

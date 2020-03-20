@@ -261,41 +261,6 @@ namespace Audiology.Data.Migrations
                     b.ToTable("Favourites");
                 });
 
-            modelBuilder.Entity("Audiology.Data.Models.Lyrics", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SongId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasMaxLength(10000);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("Lyrics");
-                });
-
             modelBuilder.Entity("Audiology.Data.Models.Playlist", b =>
                 {
                     b.Property<int>("Id")
@@ -352,9 +317,6 @@ namespace Audiology.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LyricsId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -366,6 +328,10 @@ namespace Audiology.Data.Migrations
                     b.Property<int?>("PlaylistId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Producer")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
@@ -374,10 +340,6 @@ namespace Audiology.Data.Migrations
                     b.HasIndex("AlbumId");
 
                     b.HasIndex("IsDeleted");
-
-                    b.HasIndex("LyricsId")
-                        .IsUnique()
-                        .HasFilter("[LyricsId] IS NOT NULL");
 
                     b.HasIndex("PlaylistId");
 
@@ -538,10 +500,6 @@ namespace Audiology.Data.Migrations
                     b.HasOne("Audiology.Data.Models.Album", "Album")
                         .WithMany("Songs")
                         .HasForeignKey("AlbumId");
-
-                    b.HasOne("Audiology.Data.Models.Lyrics", "Lyrics")
-                        .WithOne("Song")
-                        .HasForeignKey("Audiology.Data.Models.Song", "LyricsId");
 
                     b.HasOne("Audiology.Data.Models.Playlist", null)
                         .WithMany("Songs")
