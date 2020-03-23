@@ -27,15 +27,40 @@
             this.userManager = userManager;
         }
 
-        // GET: Songs
-        public ActionResult Index()
+        public ActionResult ById(int id)
         {
             return this.View();
         }
-        
+
+        // GET: Songs
+        public ActionResult Index()
+        {
+            string userName = this.User.Identity.Name;
+            string userId = this.userManager.GetUserId(this.User);
+            var songs = this.songsService.GetAllSongsForUserAsync(userId);
+
+            foreach (var song in songs)
+            {
+                var songDuration = this.songsService.GetMediaDuration(song.Name, userName);
+                song.SongDuration = songDuration;
+            }
+
+            return this.View(songs);
+        }
+
         public ActionResult All()
         {
-            return this.View();
+            string userName = this.User.Identity.Name;
+            string userId = this.userManager.GetUserId(this.User);
+            var songs = this.songsService.GetAllSongsForUserAsync(userId);
+
+            foreach (var song in songs)
+            {
+                var songDuration = this.songsService.GetMediaDuration(song.Name, userName);
+                song.SongDuration = songDuration;
+            }
+
+            return this.View(songs);
         }
 
         // GET: Songs/Details/5
@@ -65,9 +90,9 @@
                 return this.View(input);
             }
 
-            await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.AlbumId, input.Genre, input.Year);
+            var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.AlbumId, input.Genre, input.Year);
 
-            return this.Content("Successs !!!!");
+            return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }
 
         // GET: Songs/Edit/5

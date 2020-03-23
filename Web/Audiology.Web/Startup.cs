@@ -9,14 +9,17 @@
     using Audiology.Data.Repositories;
     using Audiology.Data.Seeding;
     using Audiology.Services.Data.Albums;
+    using Audiology.Services.Data.Favourites;
     using Audiology.Services.Data.Songs;
     using Audiology.Services.Mapping;
     using Audiology.Services.Messaging;
     using Audiology.Web.ViewModels;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Authorization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -47,9 +50,20 @@
                         options.MinimumSameSitePolicy = SameSiteMode.None;
                     });
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); // CSRF
+            });
             services.AddRazorPages();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddMvc(o =>
+            {
+                var policy = new AuthorizationPolicyBuilder()    // Add default authorization for all controllers
+                    .RequireAuthenticatedUser()
+                    .Build();
+                o.Filters.Add(new AuthorizeFilter(policy));
+            });
 
             services.AddSingleton(this.configuration);
 
@@ -62,6 +76,7 @@
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISongsServcie, SongsService>();
             services.AddTransient<IAlbumsService, AlbumsService>();
+            services.AddTransient<IFavouritesService, FavouritesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

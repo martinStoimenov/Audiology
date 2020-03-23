@@ -16,6 +16,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using NAudio.Wave;
 
     public class SongsService : ISongsServcie
     {
@@ -45,12 +46,14 @@
             return query.To<T>().ToList();
         }
 
-        public Task<IEnumerable<SongListViewModel>> GetAllSongsForUserAsync(string userId)
+        public IEnumerable<SongListViewModel> GetAllSongsForUserAsync(string userId)
         {
-            return null;
+            var songs =  this.songRepository.All().Where(s => s.Album.UsersAlbum.Any(ua => ua.UserId == userId)).To<SongListViewModel>().ToList();
+
+            return songs;
         }
 
-        public async Task UploadAsync(IFormFile input, string username, string songName, string description,  int? albumId, Enum genre, int year)
+        public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description,  int? albumId, Enum genre, int year)
         {
             var dotIndex = input.FileName.LastIndexOf('.');
             var fileExtension = input.FileName.Substring(dotIndex);
@@ -98,6 +101,46 @@
 
             await this.songRepository.AddAsync(song);
             await this.songRepository.SaveChangesAsync();
+            return song.Id;
+        }
+
+        public string GetMediaDuration(string songName, string username)
+        {
+            var dotIndex = songName.LastIndexOf('.');
+            var fileExtension = songName.Substring(dotIndex);
+
+            string name = songName;
+
+            string webRootPath = this.env.WebRootPath + "\\Songs\\";
+
+            var filePath = Path.Combine(webRootPath, username, name);
+
+            Mp3FileReader reader = new Mp3FileReader(filePath);
+            TimeSpan duration = reader.TotalTime;
+            /*            double duration = 0.0;
+                        using (FileStream fs = File.OpenRead(mediaFilename))
+                        {
+                            Mp3Frame frame = Mp3Frame.LoadFromStream(fs);
+                            if (frame != null)
+                            {
+                               // _sampleFrequency = (uint)frame.SampleRate;
+                            }
+                            while (frame != null)
+                            {
+                                if (frame.ChannelMode == ChannelMode.Mono)
+                                {
+                                    duration += (double)frame.SampleCount * 2.0 / (double)frame.SampleRate;
+                                }
+                                else
+                                {
+                                    duration += (double)frame.SampleCount * 4.0 / (double)frame.SampleRate;
+                                }
+                                frame = Mp3Frame.LoadFromStream(fs);
+                            }
+                        }*/
+           return duration.ToString(@"hh\:mm\:ss");
+
+            
         }
     }
 }

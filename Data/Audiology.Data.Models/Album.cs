@@ -13,6 +13,7 @@
             this.UsersAlbum = new HashSet<UsersAlbum>();
             this.Artists = new HashSet<ApplicationUser>();
         }
+        //Add Genre / DateTime type date (Release Date) /
 
         [Required]
         [MaxLength(200)]

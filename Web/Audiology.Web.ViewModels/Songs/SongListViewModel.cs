@@ -1,33 +1,32 @@
 ﻿namespace Audiology.Web.ViewModels.Songs
 {
+    using System.Linq;
+
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
     using AutoMapper;
-    using Microsoft.AspNetCore.Http;
-    using System.Collections.Generic;
 
-    public class SongListViewModel : IHaveCustomMappings
+    public class SongListViewModel : IMapFrom<Song>, IHaveCustomMappings
     {
-        // List of all the songs like a newsfeed
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
-        public double SongDuration { get; set; }
+        public string SongDuration { get; set; }
+
+        public string AlbumCoverUrl { get; set; }
 
         public int? Year { get; set; }
 
         public Genre Genre { get; set; }
 
-        public IEnumerable<SongModel> Songs { get; set; }
+        public int FavouritesCount { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)
         {
             configuration.CreateMap<Song, SongListViewModel>()
-                .ForMember(x => x.Songs, options =>
-                {
-                    // Get the song from disk here
-                    //options.MapFrom(p => p.Name.(v => (int)v.Type));
-                });
+                .ForMember(x => x.FavouritesCount, options => options.MapFrom(s => s.Favourites.Count())); // debug to see if it returns the right value      Try with .Sum()
         }
     }
 }

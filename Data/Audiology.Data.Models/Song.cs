@@ -11,6 +11,7 @@
         public Song()
         {
             this.Artists = new HashSet<ApplicationUser>();
+            this.Favourites = new HashSet<Favourites>();
         }
 
         [Required]
@@ -34,6 +35,8 @@
         [Required]
         public int Year { get; set; }
 
-        public virtual ICollection<ApplicationUser> Artists { get; set; }
+        public virtual ICollection<ApplicationUser> Artists { get; set; } // Remove it and add one to many relation
+
+        public virtual ICollection<Favourites> Favourites { get; set; }
     }
 }
