@@ -59,7 +59,7 @@
 
             services.AddMvc(o =>
             {
-                var policy = new AuthorizationPolicyBuilder()    // Add default authorization for all controllers
+                var policy = new AuthorizationPolicyBuilder() // Add default authorization for all controllers
                     .RequireAuthenticatedUser()
                     .Build();
                 o.Filters.Add(new AuthorizeFilter(policy));

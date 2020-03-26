@@ -12,11 +12,12 @@
 <h1 class="text-center">All Songs</h1>
 
 <style>
+    /*
     .playerContainer {
         margin: 75px auto;
         max-width: 500px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    }
+    }*/
 </style>
 
 <div class="row">
@@ -24,7 +25,7 @@
     {
         <div class="col-md-4">
             <div class="playerContainer" style="width: 18rem;">
-                <img src="@song.AlbumCoverUrl" style="width: 18rem; height: 10rem;" alt="Image not found" />
+                <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" style="width: 18rem; height: 10rem;" alt="Image not found" />
                 <h6 class="text-center">@song.Name.Replace(".mp3", "")</h6>
                 <h5 class="text-center">@this.User.Identity.Name</h5>
                 <audio id="player" controls>
@@ -36,7 +37,7 @@
 </div>
 
 @section Scripts{
-    <script src="https://cdn.plyr.io/3.5.10/plyr.js"></script>
+    <script src="https://cdn.plyr.io/3.5.10/plyr.polyfilled.js"></script>
     <script>
 
         const player = new Plyr('audio', {});

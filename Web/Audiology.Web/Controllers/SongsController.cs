@@ -37,7 +37,7 @@
         {
             string userName = this.User.Identity.Name;
             string userId = this.userManager.GetUserId(this.User);
-            var songs = this.songsService.GetAllSongsForUserAsync(userId);
+            var songs = this.songsService.GetAllSongsForUserAsync<SongListViewModel>(userId);
 
             foreach (var song in songs)
             {
@@ -52,7 +52,7 @@
         {
             string userName = this.User.Identity.Name;
             string userId = this.userManager.GetUserId(this.User);
-            var songs = this.songsService.GetAllSongsForUserAsync(userId);
+            var songs = this.songsService.GetAllSongsForUserAsync<SongListViewModel>(userId);
 
             foreach (var song in songs)
             {
@@ -83,14 +83,16 @@
         // POST: Songs/Upload
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(SongUploadViewModel input)
+        public async Task<IActionResult> Upload(SongUploadViewModel input) // Add validation for error 404.13 data length
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(input);
             }
 
-            var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.AlbumId, input.Genre, input.Year);
+            string userId = this.userManager.GetUserId(this.User);
+
+            var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.AlbumId, input.Genre, input.Year, userId, input.SongArtUrl);
 
             return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }

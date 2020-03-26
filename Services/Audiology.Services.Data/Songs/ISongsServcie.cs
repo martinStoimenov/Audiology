@@ -9,9 +9,9 @@
 
     public interface ISongsServcie
     {
-        public Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year);
+        public Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt);
 
-        public IEnumerable<SongListViewModel> GetAllSongsForUserAsync(string userId);
+        public IEnumerable<T> GetAllSongsForUserAsync<T>(string userId);
 
         public IEnumerable<T> GetAll<T>(int? count = null);
 

@@ -18,6 +18,12 @@
         <span asp-validation-for="CoverUrl" class="text-danger"></span>
     </div>
     <div>
+        <label asp-for="Genre"></label>
+        <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+        </select>
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+    <div>
         <label asp-for="Producer"></label>
         <input asp-for="Producer" class="form-control" />
         <span asp-validation-for="Producer" class="text-danger"></span>
@@ -26,6 +32,11 @@
         <label asp-for="Description"></label>
         <input asp-for="Description" class="form-control" />
         <span asp-validation-for="Description" class="text-danger"></span>
+    </div>    
+    <div>
+        <label asp-for="ReleaseDate"></label>
+        <input asp-for="ReleaseDate" class="form-control" />
+        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
     </div>
 
     <hr />

@@ -19,17 +19,23 @@
 
 <div class="row">
     @foreach (var song in Model)
-    {
+    {<script src="https://cdn.plyr.io/3.5.10/plyr.polyfilled.js"></script>
         <div class="col-md-4">
             <div class="playerContainer" style="width: 18rem;">
-                <img src="@song.AlbumCoverUrl" style="width: 18rem; height: 10rem;" alt="Image not found" />
+                <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" style="width: 18rem; height: 10rem;" alt="Song art not found :)" />
                 <h6 class="text-center">@song.Name.Replace(".mp3", "")</h6>
                 <h5 class="text-center">@this.User.Identity.Name</h5>
-                <div class="text-muted small ml-3">
+
+                <div class="text-muted small ml-3 d-flex justify-content-start">
+
                     <form id="votesForm" method="post"></form>
-                    <a href="#" onclick="favourite(@userId,@song.Id,9)"><i class="fas fa-heart" style="padding-left: 0px;"></i></a>
-                    <div id="favouritesCount">@song.FavouritesCount</div>
+
+                    <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px;"></i></a>
+
+                    <div id="favouritesCount" style="padding-left: 5px;">@song.FavouritesCount</div>
+
                 </div>
+
                 <audio id="player" controls>
                     <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
                 </audio>
@@ -39,10 +45,11 @@
 </div>
 
 @section Scripts{
-    <script src="https://cdn.plyr.io/3.5.10/plyr.js"></script>
+    
     <script>
-        const player = new Plyr('audio', {});
 
+        const player = new Plyr('audio', {});
+        plyr.setup("#audio");
         // Expose player so it can be used from the console
         window.player = player;
     </script>
@@ -52,16 +59,19 @@
 
             var token = $("#votesForm input[name=__RequestVerificationToken]").val();
             var json = { "userId": userId, "songId": songId, "albumId": albumId };
-            console.log(json);
+
             $.ajax({
                 url: "/api/favourites",
                 type: "POST",
+                headers: { 'RequestVerificationToken': token },
                 data: JSON.stringify(json),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                headers: { 'X-CSRF-TOKEN': token },
-                success: function () {
-                    console.log(json);
+                success: function (data) {
+                    $("#favouritesCount").html(data.favouritesCount);
+                },
+                error: function (req, status, error) {
+                    console.log(error);
                 }
             });
         }

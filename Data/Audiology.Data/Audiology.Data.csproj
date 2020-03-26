@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200325135455_AddSongsRelationToUserAndAddedColumnsToAlbumAndPlaylist.cs" />
+    <Compile Remove="Migrations\20200325135455_AddSongsRelationToUserAndAddedColumnsToAlbumAndPlaylist.Designer.cs" />
+    <Compile Remove="Migrations\20200325140125_RemoveSongIdFromUsers.cs" />
+    <Compile Remove="Migrations\20200325140125_RemoveSongIdFromUsers.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
   </ItemGroup>
 

@@ -1,0 +1,35 @@
+﻿@{
+    @using Microsoft.AspNetCore.Identity
+    @using Audiology.Data.Models
+    @inject UserManager<ApplicationUser> userManager
+    @model Audiology.Web.ViewModels.Albums.AlbumViewModel
+    ViewData["Title"] = Model.Name;
+    string userId = this.userManager.GetUserId(this.User);
+}
+
+<div>
+    <img src="@Model.CoverUrl" width="500px" height="300px" alt="Album art not found sorry :)" />
+</div>
+
+<h1 class="text-center">@Model.Name</h1>
+
+<div class="row">
+    @foreach (var song in Model.Songs)
+    {
+        <div class="col-md-4">
+            <div class="playerContainer" style="width: 18rem;">
+                <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" style="width: 18rem; height: 10rem;" alt="Song art not found :)" />
+                <h6 class="text-center">@song.Name.Replace(".mp3", "")</h6>
+                <h5 class="text-center">@this.User.Identity.Name</h5>
+                <div class="text-muted small ml-3">
+                    <form id="votesForm" method="post"></form>
+                    <a href="#" onclick="favourite(@userId,@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px;"></i></a>
+                    <div id="favouritesCount" style="padding-left: 3px;">@song.FavouritesCount</div>
+                </div>
+                <audio id="player" controls>
+                    <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
+                </audio>
+            </div>
+        </div>
+    }
+</div>

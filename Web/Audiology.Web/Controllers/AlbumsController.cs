@@ -39,9 +39,16 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            await this.albumsService.AddAsync(input.Name, input.CoverUrl, input.Description, input.Producer, userId);
+            var albumId = await this.albumsService.AddAsync(input.Name, input.CoverUrl, input.Description, input.Producer, userId, input.ReleaseDate);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(this.ById), new { id = albumId });
+        }
+
+        public IActionResult ById(int id)
+        {
+            var album = this.albumsService.GetCurrentAlbumById(id);
+
+            return this.View(album);
         }
     }
 }

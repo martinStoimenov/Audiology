@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 using Audiology.Data.Models;
+using Audiology.Data.Models.Enumerations;
 using Audiology.Services.Mapping;
 
 namespace Audiology.Web.ViewModels.Albums
@@ -22,5 +24,13 @@ namespace Audiology.Web.ViewModels.Albums
 
         [MaxLength(1000)]
         public string Description { get; set; }
+
+        [Required]
+        [EnumDataType(typeof(Genre))]
+        public Genre Genre { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime? ReleaseDate { get; set; }
     }
 }

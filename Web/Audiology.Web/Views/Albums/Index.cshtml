@@ -4,7 +4,7 @@
     this.ViewData["Title"] = "Albums";
 }
 
-    <h1 classs="text-center">All Albums</h1>
+    <h1 class="text-center">Albums</h1>
     <div class="row">
         @foreach (var album in Model)
         {
@@ -12,7 +12,7 @@
              <div class="card" style="width: 18rem;">
                  <img src="@album.CoverUrl" class="card-img-top img-fluid" style="width: 18rem; height: 11rem;" alt=" Sorry album cover not found :)">
                  <div class="card-body">
-                     <a asp-controller="Albums" asp-action="Upload"><h6 class="card-text text-center stretched-link">@album.Name</h6></a>
+                     <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id"><h6 class="card-text text-center stretched-link">@album.Name</h6></a>
                      <h6 class="card-text text-center">@album.Producer</h6>
                      <p class="card-text text-center">@album.ShortDescription</p>
                  </div>

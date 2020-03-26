@@ -45,12 +45,6 @@ namespace Audiology.Data.Models
 
         public Gender Gender { get; set; }
 
-        public int? PlaylistId { get; set; }
-
-        public virtual Playlist Playlist { get; set; }
-
-        public virtual Favourites Favourites { get; set; }
-
         [Column(TypeName = "date")]
         public DateTime? Birthday { get; set; }
 

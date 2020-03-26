@@ -56,6 +56,7 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<UsersAlbum>().HasKey(x => new { x.AlbumId, x.UserId });
+            builder.Entity<ApplicationUser>().HasIndex(u => u.UserName).IsUnique();
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

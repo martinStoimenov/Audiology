@@ -1,5 +1,6 @@
 ﻿namespace Audiology.Services.Data.Albums
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -8,6 +9,7 @@
     using Audiology.Data.Models;
     using Audiology.Services.Mapping;
     using Audiology.Web.ViewModels.Albums;
+    using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Identity;
 
     public class AlbumsService : IAlbumsService
@@ -28,7 +30,7 @@
             return result;
         }
 
-        public async Task AddAsync(string name, string coverUrl, string description, string producer, string userId)
+        public async Task<int> AddAsync(string name, string coverUrl, string description, string producer, string userId, DateTime? releaseDate)
         {
             var album = new Album
             {
@@ -36,6 +38,7 @@
                 CoverUrl = coverUrl,
                 Description = description,
                 Producer = producer,
+                ReleaseDate = releaseDate,
             };
             // Add check for the album name
             await this.repository.AddAsync(album);
@@ -49,6 +52,8 @@
 
             await this.usersAlbumRepository.AddAsync(usersAlbum);
             await this.usersAlbumRepository.SaveChangesAsync();
+
+            return album.Id;
         }
 
         public IEnumerable<T> GetAll<T>(int? count = null)
@@ -61,6 +66,15 @@
             }
 
             return query.To<T>().ToList();
+        }
+
+        public AlbumViewModel GetCurrentAlbumById(int albumId)
+        {
+            var album = this.repository.All().Where(a => a.Id == albumId).To<AlbumViewModel>().FirstOrDefault();
+            var songs = this.repository.All().Select(a => a.Songs).To<SongListViewModel>().ToList();
+            album.Songs = songs;
+
+            return album;
         }
     }
 }

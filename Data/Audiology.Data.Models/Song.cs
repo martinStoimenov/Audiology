@@ -10,7 +10,6 @@
     {
         public Song()
         {
-            this.Artists = new HashSet<ApplicationUser>();
             this.Favourites = new HashSet<Favourites>();
         }
 
@@ -24,10 +23,14 @@
         [MaxLength(100)]
         public string Producer { get; set; }
 
-        // Add Duration property if unavailable to extract from file
         public int? AlbumId { get; set; }
 
         public virtual Album Album { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
 
         [Required]
         public Genre Genre { get; set; }
@@ -35,7 +38,8 @@
         [Required]
         public int Year { get; set; }
 
-        public virtual ICollection<ApplicationUser> Artists { get; set; } // Remove it and add one to many relation
+        [MaxLength(500)]
+        public string SongArtUrl { get; set; }
 
         public virtual ICollection<Favourites> Favourites { get; set; }
     }

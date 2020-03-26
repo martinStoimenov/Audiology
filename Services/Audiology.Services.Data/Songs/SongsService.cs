@@ -21,17 +21,18 @@
     public class SongsService : ISongsServcie
     {
         private readonly IHostingEnvironment env;
-        private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository<Song> songRepository;
+        private readonly IRepository<ApplicationUser> userRepository;
 
         public SongsService(
             IHostingEnvironment env,
             UserManager<ApplicationUser> userManager,
-            IRepository<Song> songRepository)
+            IRepository<Song> songRepository,
+            IRepository<ApplicationUser> userRepository)
         {
             this.env = env;
-            this.userManager = userManager;
             this.songRepository = songRepository;
+            this.userRepository = userRepository;
         }
 
         public IEnumerable<T> GetAll<T>(int? count = null)
@@ -46,14 +47,14 @@
             return query.To<T>().ToList();
         }
 
-        public IEnumerable<SongListViewModel> GetAllSongsForUserAsync(string userId)
+        public IEnumerable<T> GetAllSongsForUserAsync<T>(string userId)
         {
-            var songs =  this.songRepository.All().Where(s => s.Album.UsersAlbum.Any(ua => ua.UserId == userId)).To<SongListViewModel>().ToList();
+            var songs = this.songRepository.All().Where(s => s.UserId == userId).To<T>().ToList();
 
             return songs;
         }
 
-        public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description,  int? albumId, Enum genre, int year)
+        public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt)
         {
             var dotIndex = input.FileName.LastIndexOf('.');
             var fileExtension = input.FileName.Substring(dotIndex);
@@ -92,6 +93,8 @@
 
             var song = new Song
             {
+                UserId = userId,
+                SongArtUrl = songArt,
                 Name = name,
                 Description = description,
                 Year = year,
@@ -138,9 +141,7 @@
                                 frame = Mp3Frame.LoadFromStream(fs);
                             }
                         }*/
-           return duration.ToString(@"hh\:mm\:ss");
-
-            
+            return duration.ToString(@"hh\:mm\:ss");
         }
     }
 }

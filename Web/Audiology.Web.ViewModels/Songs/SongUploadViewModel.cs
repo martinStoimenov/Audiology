@@ -27,6 +27,10 @@
         [MaxLength(100)]
         public string Producer { get; set; }
 
+        [MaxLength(500)]
+        [Url]
+        public string SongArtUrl { get; set; }
+
         [Required]
         [EnumDataType(typeof(Genre))]
         public Genre Genre { get; set; }
@@ -36,6 +40,6 @@
         public int Year { get; set; }
 
         [Required]
-        public IFormFile Song { get; set; }
+        public IFormFile Song { get; set; }   // Add validation for fileSize and extension
     }
 }
