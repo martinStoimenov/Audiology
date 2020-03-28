@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using Audiology.Data.Models;
     using Audiology.Services.Data.Albums;
@@ -27,9 +28,14 @@
             this.userManager = userManager;
         }
 
-        public ActionResult ById(int id)
+        public IActionResult ById(int id)
         {
-            return this.View();
+            var song = this.songsService.GetSong(id);
+            int dotIndex = song.Name.LastIndexOf(".");
+            string name = song.Name.Remove(dotIndex);
+
+            song.Name = name;
+            return this.View(song);
         }
 
         // GET: Songs

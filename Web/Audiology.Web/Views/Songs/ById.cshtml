@@ -1,7 +1,36 @@
 ﻿@{ 
-
+    @model Audiology.Web.ViewModels.Songs.SongViewModel
 }
 
-    <h1>BY ID View</h1>
+    <img src="@(Model.SongArtUrl == null ? Model.AlbumCoverUrl : Model.SongArtUrl)" alt="Song cover can't be found sorry  :)" />
 
+    <h3>BY ID View</h3>
+    <hr />
+    <h1>@Model.Name</h1>
+
+    <div>Description goes here</div>
+
+
+    <div id="lyrics">Lyrics here</div>
+
+
+   <!-- <div>
+        <vc:newest-songs></vc:newest-songs>
+    </div> -->
+
+<h1>text after the view component</h1>
 // Big song player , next to him more songs from the same album if there's any and below song lyrics
+
+@section Scripts{
+    <script>
+        $(document).ready (function() {
+            var artist = '@Model.UserUserName';
+            var song = '@Model.Name';
+
+            $.get("https://api.lyrics.ovh/v1/" + artist + "/" + song ,
+                function (data) {
+                    document.getElementById("lyrics").innerHTML = data.lyrics.replace(new RegExp("\n","g"), "<br>");
+                })
+        });
+    </script>
+}

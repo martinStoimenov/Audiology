@@ -9,12 +9,16 @@
 
     public interface ISongsServcie
     {
-        public Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt);
+        Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt);
 
-        public IEnumerable<T> GetAllSongsForUserAsync<T>(string userId);
+        IEnumerable<T> GetAllSongsForUserAsync<T>(string userId);
 
-        public IEnumerable<T> GetAll<T>(int? count = null);
+        IEnumerable<T> GetNewestSongs<T>();
 
-        public string GetMediaDuration(string songName, string username);
+        SongViewModel GetSong(int songId);
+
+        IEnumerable<T> GetAll<T>(int? count = null);
+
+        string GetMediaDuration(string songName, string username);
     }
 }

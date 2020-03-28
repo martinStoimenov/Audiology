@@ -35,10 +35,17 @@
             this.userRepository = userRepository;
         }
 
+        public SongViewModel GetSong(int songId)
+        {
+            var song = this.songRepository.All().Where(s => s.Id == songId).To<SongViewModel>().FirstOrDefault();
+
+            return song;
+        }
+
         public IEnumerable<T> GetAll<T>(int? count = null)
         {
             IQueryable<Song> query =
-                this.songRepository.All().OrderBy(x => x.CreatedOn).ThenBy(x => x.ModifiedOn);
+                this.songRepository.All().OrderBy(x => x.CreatedOn);
             if (count.HasValue)
             {
                 query = query.Take(count.Value);
@@ -105,6 +112,12 @@
             await this.songRepository.AddAsync(song);
             await this.songRepository.SaveChangesAsync();
             return song.Id;
+        }
+
+        public IEnumerable<T> GetNewestSongs<T>()
+        {
+            var songs = this.songRepository.All().OrderBy(x => x.CreatedOn).To<T>();
+            return songs;
         }
 
         public string GetMediaDuration(string songName, string username)

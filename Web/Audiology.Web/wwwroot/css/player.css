@@ -1,0 +1,78 @@
+﻿
+
+/* Chromium default media controls */
+/* WARNING: This css file can only style <audio> and <video> elements */
+
+audio {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+}
+
+audio {
+    width: 100%;
+    height: 20%;
+}
+
+    audio::-webkit-media-controls-enclosure {
+        max-width: none
+    }
+
+    audio::-webkit-media-controls-panel {
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    audio::-webkit-media-controls-play-button {
+        -webkit-appearance: none;
+        background: url(data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImZhcyIgZGF0YS1pY29uPSJwbGF5LWNpcmNsZSIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIGZhLXBsYXktY2lyY2xlIGZhLXctMTYiIHJvbGU9ImltZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHBhdGggZmlsbD0iY3VycmVudENvbG9yIiBkPSJNMjU2IDhDMTE5IDggOCAxMTkgOCAyNTZzMTExIDI0OCAyNDggMjQ4IDI0OC0xMTEgMjQ4LTI0OFMzOTMgOCAyNTYgOHptMTE1LjcgMjcybC0xNzYgMTAxYy0xNS44IDguOC0zNS43LTIuNS0zNS43LTIxVjE1MmMwLTE4LjQgMTkuOC0yOS44IDM1LjctMjFsMTc2IDEwN2MxNi40IDkuMiAxNi40IDMyLjkgMCA0MnoiPjwvcGF0aD48L3N2Zz4=) 50% 50% no-repeat;
+    }
+
+    audio::-webkit-media-controls-mute-button {
+        -webkit-appearance: none;
+        padding-top: 5px;
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7EAAAOxAGVKw4bAAABCklEQVQ4jbXSTytEYRQG8N9oFpI0K2mS/FtOFtIYspBmZa1Z+CJkYSfFUrKysLCSDyFKbKVYSFaSNFlI0mBxX9xu13UXPHV663Se87znOYd/RAWbiVxbiF8xinu8JvKruEQti1xFE+9oxfJ19GILT5hOI9fwGMjJBse4xiDWcYtSAQ2U0YEFdMVIbxhAP06xjx5M4Bzb8BxTTEYL83jBMrpDfR1LOMnTAOZCXREHWMQsmrlWEkbhe4Vfb54GDexiTeRPVeTHCC4KYcYy2kUmdiaUh0TOH2EPfRjHGXaSalN+XuMhbjCMFdyhlPblmuxD2hAZOpM19xgepJ/yFSazyJ+oiM42jmKIv8MH7ZxKCmcmUO4AAAAASUVORK5CYII=) 50% 50% no-repeat;
+    }
+
+    audio::-webkit-media-controls-current-time-display,
+    audio::-webkit-media-controls-time-remaining-display {
+        color: black
+    }
+
+    audio::-webkit-media-controls-volume-slider {
+        -webkit-appearance: media-volume-slider;
+        display: flex;
+        /* The 1.9 value was empirically chosen to match old-flexbox behaviour
+     * and be aesthetically pleasing.
+     */
+        default: 50%;
+    }
+
+    audio::-webkit-media-controls-timeline-container {
+        -webkit-appearance: media-controls-background;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        flex: 1 1;
+        -webkit-user-select: none;
+        height: 16px;
+        min-width: 0;
+        color: red;
+    }
+
+    audio::-webkit-media-controls-mute-button {
+        -webkit-appearance: media-mute-button;
+        display: flex;
+        flex: none;
+        border: none;
+        box-sizing: border-box;
+        width: 35px;
+        height: 30px;
+        line-height: 30px;
+        margin-top: 10%;
+        padding-top: 0;
+        background-color: initial;
+        color: inherit;
+    }
