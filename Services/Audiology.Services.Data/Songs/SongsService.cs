@@ -22,17 +22,13 @@
     {
         private readonly IHostingEnvironment env;
         private readonly IRepository<Song> songRepository;
-        private readonly IRepository<ApplicationUser> userRepository;
 
         public SongsService(
             IHostingEnvironment env,
-            UserManager<ApplicationUser> userManager,
-            IRepository<Song> songRepository,
-            IRepository<ApplicationUser> userRepository)
+            IRepository<Song> songRepository)
         {
             this.env = env;
             this.songRepository = songRepository;
-            this.userRepository = userRepository;
         }
 
         public SongViewModel GetSong(int songId)
@@ -116,7 +112,13 @@
 
         public IEnumerable<T> GetNewestSongs<T>()
         {
-            var songs = this.songRepository.All().OrderBy(x => x.CreatedOn).To<T>();
+            var songs = this.songRepository.All().OrderBy(x => x.CreatedOn).To<T>().ToList();
+            return songs;
+        }
+
+        public async Task<IEnumerable<T>> GetSongsByAlbumAsync<T>(int? albumId)
+        {
+            var songs = await this.songRepository.All().Where(s => s.AlbumId == albumId).To<T>().ToListAsync();
             return songs;
         }
 

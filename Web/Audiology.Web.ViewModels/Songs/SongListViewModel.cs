@@ -7,7 +7,7 @@
     using Audiology.Services.Mapping;
     using AutoMapper;
 
-    public class SongListViewModel : IMapFrom<Song> //IHaveCustomMappings
+    public class SongListViewModel : IMapFrom<Song>
     {
         public int Id { get; set; }
 
@@ -24,11 +24,5 @@
         public Genre Genre { get; set; }
 
         public int FavouritesCount { get; set; }
-
-/*        public void CreateMappings(IProfileExpression configuration)
-        {
-            configuration.CreateMap<Song, SongListViewModel>()
-                .ForMember(x => x.FavouritesCount, options => options.MapFrom(s => s.Favourites.Count())); // debug to see if it returns the right value      Try with .Sum()
-        }*/
     }
 }

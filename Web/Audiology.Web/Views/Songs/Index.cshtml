@@ -19,41 +19,27 @@
 
 <div class="row">
     @foreach (var song in Model)
-    {<script src="https://cdn.plyr.io/3.5.10/plyr.polyfilled.js"></script>
-        <div class="col-md-4">
-            <div class="playerContainer" style="width: 18rem;">
-                <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" style="width: 18rem; height: 10rem;" alt="Song art not found :)" />
-                <h6 class="text-center">@song.Name.Replace(".mp3", "")</h6>
-                <h5 class="text-center">@this.User.Identity.Name</h5>
-
-                <div class="text-muted small ml-3 d-flex justify-content-start">
-
-                    <form id="votesForm" method="post"></form>
-
-                    <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px;"></i></a>
-
-                    <div id="favouritesCount" style="padding-left: 5px;">@song.FavouritesCount</div>
-
-                </div>
-
-                <audio id="player" controls>
-                    <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
-                </audio>
-            </div>
+    {
+        <div class="col-md-4" style="height: 12rem;">
+            <div class="text-center" style="width: 19rem; background-color: #f4f4f4">
+                <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" style="width: 18rem; height: 10rem;" alt="Image not found" />
+                <a href="#" class="stretched-link" style="text-decoration: none;
+        color: black;">@song.Name.Replace(".mp3", "")</a>
+        <h5 class="">@this.User.Identity.Name</h5>
+        <form id="votesForm" method="post"></form>
+        <div class="align-content-start">
+            <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+            <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
         </div>
-    }
+        <audio id="player" controls>
+            <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
+        </audio>
+    </div>
+</div>
+}
 </div>
 
 @section Scripts{
-    
-    <script>
-
-        const player = new Plyr('audio', {});
-        plyr.setup("#audio");
-        // Expose player so it can be used from the console
-        window.player = player;
-    </script>
-
     <script>
         function favourite(userId, songId, albumId) {
 

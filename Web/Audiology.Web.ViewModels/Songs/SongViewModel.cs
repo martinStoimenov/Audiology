@@ -1,10 +1,12 @@
 ﻿namespace Audiology.Web.ViewModels.Songs
 {
+    using System;
+
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
 
-    public class SongViewModel : IMapFrom<Song>
+    public class SongViewModel : IMapFrom<Song>  // implement ihave custom mappings for album props
     {
         public string Name { get; set; }
 
@@ -12,9 +14,15 @@
 
         public string Producer { get; set; }
 
-        public string AlbumCoverUrl { get; set; }
-
         public int? AlbumId { get; set; }
+
+        public string AlbumName { get; set; }
+
+        public DateTime? AlbumReleaseDate { get; set; }
+
+        public string AlbumProducer { get; set; }
+
+        public string AlbumCoverUrl { get; set; }
 
         public string UserId { get; set; }
 

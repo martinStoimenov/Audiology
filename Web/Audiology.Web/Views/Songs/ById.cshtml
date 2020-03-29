@@ -1,25 +1,79 @@
-﻿@{ 
+﻿@{
     @model Audiology.Web.ViewModels.Songs.SongViewModel
 }
 
-    <img src="@(Model.SongArtUrl == null ? Model.AlbumCoverUrl : Model.SongArtUrl)" alt="Song cover can't be found sorry  :)" />
+<img src="@(Model.SongArtUrl == null ? Model.AlbumCoverUrl : Model.SongArtUrl)" class="img-fluid" style="width: 100%; height: 25rem" alt="Song cover can't be found sorry  :)" />
+<div class="row">
+    <div class="col-md-6">
+        <h3>BY ID View</h3>
+        <hr />
+        <h1>@Model.Name</h1>
 
-    <h3>BY ID View</h3>
+        <div>Description goes here</div>
+
+
+        <div id="lyrics">Lyrics here</div>
+    </div>
+
     <hr />
-    <h1>@Model.Name</h1>
+    <div class="col-md-6 border-left">
+        <h6 class="text-uppercase">"@Model.Name" Track Info:</h6>
+        <hr />
+        <div class="row justify-content-sm-center">
+            <div class="col-sm text-md-center font-weight-lighter">
+                <span class="d-block">Primary artist</span>
+                <hr />
+                <span class="d-block">Album</span>
+                <hr />
+                <span class="d-block">Producer</span>
+                <hr />
+                <span class="d-block">Release Date</span>
+                <hr />
+            </div>
 
-    <div>Description goes here</div>
+            <div class="col-sm text-md-center">
+                <a href="#" class="text-decoration-none"><span class="d-block">@Model.UserUserName</span></a>
+                <hr />
+                <a href="#" class="text-decoration-none"><span class="d-block">Strassenbande</span></a>
+                <hr />
+                <span class="d-block">Nikosaaaaaaa</span>
+                <hr />
+                <span class="d-block">@Model.Year</span>
+                <hr />
+            </div>
 
+        </div>
 
-    <div id="lyrics">Lyrics here</div>
+        <hr />
+        <iframe width="520" height="315"
+                src="https://www.youtube.com/embed/YAt60oZ_J-4?controls=1">
+        </iframe>
 
+        @if (Model.AlbumId != null)
+        {
+            <div>
+                <img src="@Model.AlbumCoverUrl" class="img-thumbnail rounded float-left" alt="Alternate Text" />
+                <span class="float-sm-right">@Model.AlbumName strassenbande</span>
+                <span>@Model.AlbumProducer</span>
+                <span>@Model.AlbumReleaseDate</span>
+            </div>
 
-   <!-- <div>
+            <div><vc:songs-by-album album-id="@Model.AlbumId"></vc:songs-by-album></div>
+        }
+
+    </div>
+    <!-- <div>
         <vc:newest-songs></vc:newest-songs>
     </div> -->
-
+</div>
 <h1>text after the view component</h1>
 // Big song player , next to him more songs from the same album if there's any and below song lyrics
+
+<div class="fixed-bottom">
+    <audio id="player" controls>
+        <source src="~/Songs//@this.User.Identity.Name/@Model.Name" type="audio/mp3">
+    </audio>
+</div>
 
 @section Scripts{
     <script>
@@ -28,9 +82,24 @@
             var song = '@Model.Name';
 
             $.get("https://api.lyrics.ovh/v1/" + artist + "/" + song ,
+
                 function (data) {
+                    if (data.hasOwnProperty('error') == true) {
+                    document.getElementById("lyrics").innerHTML = "Lyrics cannot be found";
+                    }
+                    else {
                     document.getElementById("lyrics").innerHTML = data.lyrics.replace(new RegExp("\n","g"), "<br>");
+                    }
+
                 })
         });
     </script>
+        // cinhopa bottom player
+<div id="cp_widget_ba7b8c58-bc74-4fae-a7c8-436760146a3c">...</div><script type="text/javascript">
+var cpo = []; cpo["_object"] ="cp_widget_ba7b8c58-bc74-4fae-a7c8-436760146a3c"; cpo["_fid"] = "AoJAKpO5gNYz";
+var _cpmp = _cpmp || []; _cpmp.push(cpo);
+(function() { var cp = document.createElement("script"); cp.type = "text/javascript";
+cp.async = true; cp.src = "//www.cincopa.com/media-platform/runtime/libasync.js";
+var c = document.getElementsByTagName("script")[0];
+c.parentNode.insertBefore(cp, c); })(); </script>
 }

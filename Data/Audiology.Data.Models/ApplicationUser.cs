@@ -21,6 +21,8 @@ namespace Audiology.Data.Models
             this.UsersAlbums = new HashSet<UsersAlbum>();
         }
 
+        // Add properties for social media links
+
         // Audit info
         public DateTime CreatedOn { get; set; }
 

@@ -11,6 +11,8 @@
     {
         Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt);
 
+        Task<IEnumerable<T>> GetSongsByAlbumAsync<T>(int? albumId);
+
         IEnumerable<T> GetAllSongsForUserAsync<T>(string userId);
 
         IEnumerable<T> GetNewestSongs<T>();
