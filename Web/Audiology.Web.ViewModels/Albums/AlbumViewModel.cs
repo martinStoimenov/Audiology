@@ -7,7 +7,7 @@
     using Audiology.Web.ViewModels.Songs;
     using AutoMapper;
 
-    public class AlbumViewModel : IMapFrom<Album>, IHaveCustomMappings
+    public class AlbumViewModel : IMapFrom<Album>
     {
         public string Name { get; set; }
 
@@ -21,11 +21,8 @@
 
         public string ReleaseDate { get; set; }
 
-        public IEnumerable<SongListViewModel> Songs { get; set; }
+        public string UsersAlbumUserId { get; set; }
 
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            configuration.CreateMap<Album, AlbumViewModel>().ForMember(av => av.Songs, opt => opt.Ignore());
-        }
+        public IEnumerable<SongListViewModel> Songs { get; set; }
     }
 }

@@ -5,11 +5,7 @@
         <div>
             @foreach (var song in Model)
             {
-                @for (int num = 1; num <= Model.Count(); num++)
-                {
                     <hr />
-                    <span>@num.  </span><a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="text-decoration-none"><span>@song.Name</span></a>
-                }
-
+                    <span>.  </span><a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="text-decoration-none"><span>@song.Name</span></a>
             }
         </div>

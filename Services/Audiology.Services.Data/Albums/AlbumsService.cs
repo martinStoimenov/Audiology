@@ -16,11 +16,13 @@
     {
         private readonly IRepository<Album> repository;
         private readonly IRepository<UsersAlbum> usersAlbumRepository;
+        private readonly IRepository<Song> songRepository;
 
-        public AlbumsService(IRepository<Album> repository, IRepository<UsersAlbum> usersAlbumRepository)
+        public AlbumsService(IRepository<Album> repository, IRepository<UsersAlbum> usersAlbumRepository, IRepository<Song> songRepository)
         {
             this.repository = repository;
             this.usersAlbumRepository = usersAlbumRepository;
+            this.songRepository = songRepository;
         }
 
         public IEnumerable<T> GetAllForUser<T>(string userId)
@@ -71,8 +73,12 @@
         public AlbumViewModel GetCurrentAlbumById(int albumId)
         {
             var album = this.repository.All().Where(a => a.Id == albumId).To<AlbumViewModel>().FirstOrDefault();
-            var songs = this.repository.All().Select(a => a.Songs).To<SongListViewModel>().ToList();
-            album.Songs = songs;
+
+            if (album.Songs.Count() > 0)
+            {
+                var songs = this.songRepository.All().Where(s => s.AlbumId == albumId).To<SongListViewModel>().ToList();
+                album.Songs = songs;
+            }
 
             return album;
         }

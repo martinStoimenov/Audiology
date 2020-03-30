@@ -41,7 +41,7 @@
         public IEnumerable<T> GetAll<T>(int? count = null)
         {
             IQueryable<Song> query =
-                this.songRepository.All().OrderBy(x => x.CreatedOn);
+                this.songRepository.All().OrderByDescending(x => x.CreatedOn);
             if (count.HasValue)
             {
                 query = query.Take(count.Value);

@@ -15,6 +15,10 @@
 
         public string SongDuration { get; set; }
 
+        public string UserUserName { get; set; }
+
+        public string SongType { get; set; }
+
         public string SongArtUrl { get; set; }
 
         public string AlbumCoverUrl { get; set; }

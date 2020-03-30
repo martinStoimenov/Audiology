@@ -3,22 +3,32 @@
 }
 
 <img src="@(Model.SongArtUrl == null ? Model.AlbumCoverUrl : Model.SongArtUrl)" class="img-fluid" style="width: 100%; height: 25rem" alt="Song cover can't be found sorry  :)" />
+<hr />
 <div class="row">
     <div class="col-md-6">
-        <h3>BY ID View</h3>
-        <hr />
         <h1>@Model.Name</h1>
-
-        <div>Description goes here</div>
-
-
+        <hr />
         <div id="lyrics">Lyrics here</div>
     </div>
 
     <hr />
     <div class="col-md-6 border-left">
+
+        <audio id="player" controls>
+            <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).mp3" type="audio/mp3"> <!-- Fix extension and type -->
+        </audio>
+        <hr />
+
+        <span>Song description :</span>
+        <div>Description goes here</div>
+
+        // favourites
+
+        // Add social media links here
+
         <h6 class="text-uppercase">"@Model.Name" Track Info:</h6>
         <hr />
+
         <div class="row justify-content-sm-center">
             <div class="col-sm text-md-center font-weight-lighter">
                 <span class="d-block">Primary artist</span>
@@ -44,10 +54,10 @@
 
         </div>
 
-        <hr />
         <iframe width="520" height="315"
                 src="https://www.youtube.com/embed/YAt60oZ_J-4?controls=1">
         </iframe>
+        <hr />
 
         @if (Model.AlbumId != null)
         {
@@ -56,6 +66,7 @@
                 <span class="float-sm-right">@Model.AlbumName strassenbande</span>
                 <span>@Model.AlbumProducer</span>
                 <span>@Model.AlbumReleaseDate</span>
+                <span>@Model.AlbumDuration</span>
             </div>
 
             <div><vc:songs-by-album album-id="@Model.AlbumId"></vc:songs-by-album></div>
@@ -69,11 +80,6 @@
 <h1>text after the view component</h1>
 // Big song player , next to him more songs from the same album if there's any and below song lyrics
 
-<div class="fixed-bottom">
-    <audio id="player" controls>
-        <source src="~/Songs//@this.User.Identity.Name/@Model.Name" type="audio/mp3">
-    </audio>
-</div>
 
 @section Scripts{
     <script>
@@ -94,6 +100,7 @@
                 })
         });
     </script>
+    
         // cinhopa bottom player
 <div id="cp_widget_ba7b8c58-bc74-4fae-a7c8-436760146a3c">...</div><script type="text/javascript">
 var cpo = []; cpo["_object"] ="cp_widget_ba7b8c58-bc74-4fae-a7c8-436760146a3c"; cpo["_fid"] = "AoJAKpO5gNYz";

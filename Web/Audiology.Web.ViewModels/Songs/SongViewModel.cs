@@ -20,6 +20,8 @@
 
         public DateTime? AlbumReleaseDate { get; set; }
 
+        public decimal AlbumDuration { get; set; }
+
         public string AlbumProducer { get; set; }
 
         public string AlbumCoverUrl { get; set; }

@@ -1,8 +1,12 @@
 ﻿@{
+    @using Microsoft.AspNetCore.Identity;
+    @using Audiology.Data.Models;
     @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
     Layout = "";
+    @inject UserManager<ApplicationUser> UserManager
+    string userId = this.UserManager.GetUserId(this.User);
 }
-    <h2>Newest songs</h2>
+<h3>Newest songs:</h3>
 
 <div class="row">
     @foreach (var song in Model)
@@ -10,18 +14,48 @@
         <div class="col-md-4" style="height: 12rem;">
             <div class="text-center" style="width: 19rem; background-color: #f4f4f4">
                 <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" style="width: 18rem; height: 10rem;" alt="Image not found" />
-                <a href="#" class="stretched-link" style="text-decoration: none;
+                <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="stretched-link" style="text-decoration: none;
         color: black;">@song.Name.Replace(".mp3", "")</a>
         <h5 class="">@this.User.Identity.Name</h5>
-            <form id="votesForm" method="post"></form>
+        <form id="votesForm" method="post"></form>
+        @if (this.User.Identity.IsAuthenticated)
+        {
             <div class="align-content-start">
-                <a href="#" onclick="favourite('userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
                 <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
             </div>
-            <audio id="player" controls>
-                <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
-            </audio>
-            </div>
-        </div>
+        }
+
+        <audio id="player" controls>
+            <source src="~/Songs//@song.UserUserName/@song.Name" type="audio/mp3" /> <!-- song.SongType>-->
+        </audio>
+    </div>
+</div>
 }
 </div>
+
+@section Scripts{
+    <script>
+        function favourite(userId, songId, albumId) {
+
+            var token = $("#votesForm input[name=__RequestVerificationToken]").val();
+            var json = { "userId": userId, "songId": songId, "albumId": albumId };
+
+            $.ajax({
+                url: "/api/favourites",
+                type: "POST",
+                headers: { 'RequestVerificationToken': token },
+                data: JSON.stringify(json),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    $("#favouritesCount").html(data.favouritesCount);
+                },
+                error: function (req, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,31 @@
+﻿@{ 
+    @model Audiology.Data.Models.ApplicationUser
+}
+
+    <div class="row text-center">
+
+        <div class="col font-weight-lighter">
+            <span class="d-block">Artist first name:</span>
+            <hr />
+            <span class="d-block">Artist last name:</span>
+            <hr />
+            <span class="d-block">Country:</span>
+            <hr />
+            <span class="d-block">Birthday:</span>
+            <hr />
+        </div>
+
+        <div class="col">
+            <span class="d-block">@Model.FirstName</span>
+            <hr />
+            <span class="d-block">@Model.LastName</span>
+            <hr />
+            <span class="d-block">Bulgaria</span>
+            <hr />
+            <span class="d-block">@Model.Birthday</span>
+            <hr />
+        </div>
+
+    </div>
+
+
