@@ -31,30 +31,11 @@
             this.songRepository = songRepository;
         }
 
-        public SongViewModel GetSong(int songId)
+        public async Task<T> GetSong<T>(int songId)
         {
-            var song = this.songRepository.All().Where(s => s.Id == songId).To<SongViewModel>().FirstOrDefault();
+            var song = await this.songRepository.All().Where(s => s.Id == songId).To<T>().FirstOrDefaultAsync();
 
             return song;
-        }
-
-        public IEnumerable<T> GetAll<T>(int? count = null)
-        {
-            IQueryable<Song> query =
-                this.songRepository.All().OrderByDescending(x => x.CreatedOn);
-            if (count.HasValue)
-            {
-                query = query.Take(count.Value);
-            }
-
-            return query.To<T>().ToList();
-        }
-
-        public IEnumerable<T> GetAllSongsForUserAsync<T>(string userId)
-        {
-            var songs = this.songRepository.All().Where(s => s.UserId == userId).To<T>().ToList();
-
-            return songs;
         }
 
         public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt)
@@ -108,6 +89,72 @@
             await this.songRepository.AddAsync(song);
             await this.songRepository.SaveChangesAsync();
             return song.Id;
+        }
+
+        public async Task<int> EditSong(int id, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year)
+        {
+            var song = this.songRepository.All().Where(s => s.Id == id).FirstOrDefault();
+
+            if (song != null)
+            {
+                if (producer.Length <= 100 && producer != null)
+                {
+                    song.Producer = producer;
+                }
+
+                if (name.Length <= 50 && name != null)
+                {
+                    song.Name = name;
+                }
+
+                if (description.Length <= 100 && description != null)
+                {
+                    song.Description = description;
+                }
+
+                if (year > 1 || year < 2020)
+                {
+                    song.Year = year;
+                }
+
+                if (songArtUrl.Length <= 100 && songArtUrl != null)
+                {
+                    song.SongArtUrl = songArtUrl;
+                }
+
+/*                if (albumId != null) album can be null add check if selected one is valid
+                {
+                    song.AlbumId = albumId;
+                }*/
+
+                if (Enum.IsDefined(typeof(Genre), genre))
+                {
+                    song.Genre = (Genre)genre;
+                }
+            }
+
+            this.songRepository.Update(song);
+            await this.songRepository.SaveChangesAsync();
+            return song.Id;
+        }
+
+        public IEnumerable<T> GetAll<T>(int? count = null)
+        {
+            IQueryable<Song> query =
+                this.songRepository.All().OrderByDescending(x => x.CreatedOn);
+            if (count.HasValue)
+            {
+                query = query.Take(count.Value);
+            }
+
+            return query.To<T>().ToList();
+        }
+
+        public IEnumerable<T> GetAllSongsForUserAsync<T>(string userId)
+        {
+            var songs = this.songRepository.All().Where(s => s.UserId == userId).To<T>().ToList();
+
+            return songs;
         }
 
         public IEnumerable<T> GetNewestSongs<T>()

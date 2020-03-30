@@ -28,9 +28,9 @@
             this.userManager = userManager;
         }
 
-        public IActionResult ById(int id)
+        public async Task<IActionResult> ById(int id)
         {
-            var song = this.songsService.GetSong(id);
+            var song = await this.songsService.GetSong<SongViewModel>(id);
             int dotIndex = song.Name.LastIndexOf(".");
             string name = song.Name.Remove(dotIndex);
 
@@ -104,31 +104,29 @@
         }
 
         // GET: Songs/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return this.View();
+            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
+            var song = await this.songsService.GetSong<SongEditViewModel>(id);
+
+            song.Albums = albums;
+
+            return this.View(song);
         }
 
         // POST: Songs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(SongEditViewModel input)
         {
-            try
-            {
-                // TODO: Add update logic here
-                return this.RedirectToAction(nameof(this.Index));
-            }
-            catch
-            {
-                return this.View();
-            }
+                await this.songsService.EditSong(input.Id, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year);
+                return this.RedirectToAction(nameof(this.ById), new { id = input.Id });
         }
 
         // GET: Songs/Delete/5
         public ActionResult Delete(int id)
         {
-            return this.View();
+            return this.View(); // Add confirmation popup before deleting
         }
 
         // POST: Songs/Delete/5

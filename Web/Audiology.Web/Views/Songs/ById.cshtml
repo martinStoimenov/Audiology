@@ -8,15 +8,19 @@
     <div class="col-md-6">
         <h1>@Model.Name</h1>
         <hr />
-        <div id="lyrics">Lyrics here</div>
+        @if (this.User.IsInRole("Artist"))
+        {
+            <div id="lyrics">If lyrics are not shown here rename your song. Lyrics come from <a href="https://lyrics.ovh/" target="_blank">lirycs.ovh</a>.</div>
+        }
+        @if (this.User.IsInRole("User"))
+        {
+            <div id="lyrics">Sent Email to artist to update the lyrics.</div>
+        }
     </div>
 
     <hr />
     <div class="col-md-6 border-left">
 
-        <audio id="player" controls>
-            <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).mp3" type="audio/mp3"> <!-- Fix extension and type -->
-        </audio>
         <hr />
 
         <span>Song description :</span>
@@ -61,21 +65,34 @@
 
         @if (Model.AlbumId != null)
         {
-            <div>
-                <img src="@Model.AlbumCoverUrl" class="img-thumbnail rounded float-left" alt="Alternate Text" />
-                <span class="float-sm-right">@Model.AlbumName strassenbande</span>
-                <span>@Model.AlbumProducer</span>
-                <span>@Model.AlbumReleaseDate</span>
-                <span>@Model.AlbumDuration</span>
+            <div class="d-block">
+                <img src="@Model.AlbumCoverUrl" class="img-thumbnail rounded float-left" style="width: 7rem; height: 7rem;" alt="Alternate Text" />
+                <div class="text-left d-block">
+                    <span class="float-sm-right">@Model.AlbumName</span>
+                </div>
+                    <span>@Model.AlbumProducer</span>
+                    <span>@Model.AlbumReleaseDate</span>
+                    <span>@Model.AlbumDuration</span>
+                
             </div>
 
+            <hr />
             <div><vc:songs-by-album album-id="@Model.AlbumId"></vc:songs-by-album></div>
         }
+
+    <a asp-controller="Songs" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-dark btn-lg btn-block">UPDATE</a>
 
     </div>
     <!-- <div>
         <vc:newest-songs></vc:newest-songs>
     </div> -->
+</div>
+<div class="fixed-bottom" style="margin-left: 17rem; width: 71rem;">
+    <div class="font-weight-lighter text-left" style="margin-left: 1rem;">@Model.Name</div>
+
+    <audio id="player" controls style="width: 100%;">
+        <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).mp3" type="audio/mp3"> <!-- Fix extension and type -->
+    </audio>
 </div>
 <h1>text after the view component</h1>
 // Big song player , next to him more songs from the same album if there's any and below song lyrics
@@ -100,13 +117,4 @@
                 })
         });
     </script>
-    
-        // cinhopa bottom player
-<div id="cp_widget_ba7b8c58-bc74-4fae-a7c8-436760146a3c">...</div><script type="text/javascript">
-var cpo = []; cpo["_object"] ="cp_widget_ba7b8c58-bc74-4fae-a7c8-436760146a3c"; cpo["_fid"] = "AoJAKpO5gNYz";
-var _cpmp = _cpmp || []; _cpmp.push(cpo);
-(function() { var cp = document.createElement("script"); cp.type = "text/javascript";
-cp.async = true; cp.src = "//www.cincopa.com/media-platform/runtime/libasync.js";
-var c = document.getElementsByTagName("script")[0];
-c.parentNode.insertBefore(cp, c); })(); </script>
 }

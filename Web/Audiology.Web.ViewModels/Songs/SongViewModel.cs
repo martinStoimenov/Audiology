@@ -6,8 +6,10 @@
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
 
-    public class SongViewModel : IMapFrom<Song>  // implement ihave custom mappings for album props
+    public class SongViewModel : IMapFrom<Song>
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

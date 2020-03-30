@@ -9,26 +9,35 @@
 
 <h1 class="text-center">All Songs</h1>
 
-<div class="row">
+<div>
     @foreach (var song in Model)
     {
-        <div class="col-md-4" style="height: 12rem;">
-            <div class="text-center" style="width: 19rem; background-color: #f4f4f4">
-                <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" style="width: 18rem; height: 10rem;" alt="Image not found" />
-                <a asp-action="ById" asp-route-id="@song.Id" class="stretched-link" style="text-decoration: none;
-        color: black;">@song.Name.Replace(".mp3", "")</a>
-        <h5 class="">@this.User.Identity.Name</h5>
-        <form id="votesForm" method="post"></form>
-        <div class="align-content-start">
-            <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
-            <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
+        <div class="text-left" style="width: 52rem; background-color: #f4f4f4; margin-top: 2rem;">
+
+            <div class="d-inline-flex p-2 bd-highlight">
+                <div class="align-self-end">
+                    <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded" style="width: 7rem; height: 7rem;" alt="Image not found" />
+                </div>
+                <div class="d-block text-left align-self-start" style="margin-left: 1rem;">
+                    <div class="d-block">
+                        <h5 class="font-weight-lighter h-25 d-inline-block">@song.UserUserName</h5>
+                    </div>
+                    <div class="text-wrap"><a asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a></div>
+
+                </div>
+
+                <div class="justify-content-end">
+                    <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                    <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
+                </div>
+            </div>
+            <span class="d-flex justify-content-start align-self-end">
+                <audio id="player" style="width: 52rem" controls>
+                    <source src="~/Songs//@song.UserUserName/@song.Name" type="audio/mp3">
+                </audio>
+            </span>
         </div>
-        <audio id="player" controls>
-            <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
-        </audio>
-    </div>
-</div>
-}
+    }
 </div>
 
 @section Scripts{
