@@ -11,8 +11,10 @@
     {
         IEnumerable<T> GetAllForUser<T>(string userId);
 
-        AlbumViewModel GetCurrentAlbumById(int albumId);
+        T GetCurrentAlbumById<T>(int albumId);
 
         Task<int> AddAsync(string name, string coverUrl, string description, string producer, string userId, DateTime? releaseDate);
+
+        Task<int> EditAlbumAsync(int id, string name, string description, string producer, string coverUrl, Enum genre, DateTime? releaseDate);
     }
 }

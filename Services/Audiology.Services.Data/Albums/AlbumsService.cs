@@ -7,10 +7,12 @@
 
     using Audiology.Data.Common.Repositories;
     using Audiology.Data.Models;
+    using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
     using Audiology.Web.ViewModels.Albums;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
 
     public class AlbumsService : IAlbumsService
     {
@@ -58,6 +60,50 @@
             return album.Id;
         }
 
+        public async Task<int> EditAlbumAsync(int id, string name, string description, string producer, string coverUrl, Enum genre, DateTime? releaseDate)
+        {
+            var album = await this.repository.All().Where(a => a.Id == id).FirstOrDefaultAsync();
+
+            if (album != null)
+            {
+                if (name.Length <= 200 && name != null)
+                {
+                    album.Name = name;
+                }
+
+                if (description.Length <= 1000 && description != null)
+                {
+                    album.Description = description;
+                }
+
+                if (producer.Length <= 150 && producer != null)
+                {
+                    album.Producer = producer;
+                }
+
+                if (coverUrl.Length <= 500 && coverUrl != null)
+                {
+                    album.CoverUrl = coverUrl;
+                }
+
+                if (Enum.IsDefined(typeof(Genre), genre))
+                {
+                    album.Genre = (Genre)genre;
+                }
+
+                DateTime temp;
+                if (DateTime.TryParse(releaseDate.ToString(), out temp))
+                {
+                    album.ReleaseDate = temp;
+                }
+            }
+
+            this.repository.Update(album);
+            await this.repository.SaveChangesAsync();
+
+            return album.Id;
+        }
+
         public IEnumerable<T> GetAll<T>(int? count = null)
         {
             IQueryable<Album> query =
@@ -70,15 +116,9 @@
             return query.To<T>().ToList();
         }
 
-        public AlbumViewModel GetCurrentAlbumById(int albumId)
+        public T GetCurrentAlbumById<T>(int albumId)
         {
-            var album = this.repository.All().Where(a => a.Id == albumId).To<AlbumViewModel>().FirstOrDefault();
-
-            if (album.Songs.Count() > 0)
-            {
-                var songs = this.songRepository.All().Where(s => s.AlbumId == albumId).To<SongListViewModel>().ToList();
-                album.Songs = songs;
-            }
+            var album = this.repository.All().Where(a => a.Id == albumId).To<T>().FirstOrDefault();
 
             return album;
         }

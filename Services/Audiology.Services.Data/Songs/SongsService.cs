@@ -91,7 +91,7 @@
             return song.Id;
         }
 
-        public async Task<int> EditSong(int id, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year)
+        public async Task<int> EditSongAsync(int id, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year)
         {
             var song = this.songRepository.All().Where(s => s.Id == id).FirstOrDefault();
 

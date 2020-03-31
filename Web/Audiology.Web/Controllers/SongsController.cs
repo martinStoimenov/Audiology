@@ -119,8 +119,8 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(SongEditViewModel input)
         {
-                await this.songsService.EditSong(input.Id, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year);
-                return this.RedirectToAction(nameof(this.ById), new { id = input.Id });
+                var songId = await this.songsService.EditSongAsync(input.Id, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year);
+                return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }
 
         // GET: Songs/Delete/5

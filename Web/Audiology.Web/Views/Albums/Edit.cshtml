@@ -1,0 +1,50 @@
+﻿@{
+    @using Audiology.Data.Models.Enumerations;
+    @model Audiology.Web.ViewModels.Albums.AlbumEditViewModel
+    ViewData["Title"] = "Edit album";
+}
+
+<h2>Edit Album: @Model.Name</h2>
+
+@if (Model.CoverUrl != null)
+{
+    <img src="@Model.CoverUrl" class="img-fluid" style="width: 100%; height: 25rem" alt="Song cover can't be found sorry  :)" />
+}
+
+<form asp-controller="Albums" asp-action="Edit">
+
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="CoverUrl"></label>
+        <input asp-for="CoverUrl" class="form-control" />
+        <span asp-validation-for="CoverUrl" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Genre"></label>
+        <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+        </select>
+        <span asp-validation-for="Genre" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Producer"></label>
+        <input asp-for="Producer" class="form-control" />
+        <span asp-validation-for="Producer" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="ReleaseDate"></label>
+        <input asp-for="ReleaseDate" class="form-control" />
+        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+    </div>
+
+    <hr />
+    <button asp-controller="Albums" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block">UPDATE</button>
+</form>
