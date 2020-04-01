@@ -1,4 +1,5 @@
 ﻿@{
+    @using Audiology.Data.Models.Enumerations;
     @model Audiology.Web.ViewModels.Songs.SongViewModel
 }
 
@@ -70,17 +71,69 @@
                 <div class="text-left d-block">
                     <span class="float-sm-right">@Model.AlbumName</span>
                 </div>
-                    <span>@Model.AlbumProducer</span>
-                    <span>@Model.AlbumReleaseDate</span>
-                    <span>@Model.AlbumDuration</span>
-                
+                <span>@Model.AlbumProducer</span>
+                <span>@Model.AlbumReleaseDate</span>
+                <span>@Model.AlbumDuration</span>
+
             </div>
 
             <hr />
             <div><vc:songs-by-album album-id="@Model.AlbumId"></vc:songs-by-album></div>
         }
 
-    <a asp-controller="Songs" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-dark btn-lg btn-block">UPDATE</a>
+
+    <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
+        <input type="hidden" name="Id" value="@this.Model.Id" />
+        <input type="hidden" name="UserUserName" value="@this.Model.UserUserName" />
+        <div>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="SongArtUrl"></label>
+            <input asp-for="SongArtUrl" class="form-control" />
+            <span asp-validation-for="SongArtUrl" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Description"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        @if (Model.Albums != null)
+        {
+            <div>
+                <label asp-for="AlbumId"></label>
+                <select asp-for="AlbumId" asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control">
+                    <option value="" selected disabled hidden>Select from existing albums</option>
+                    <option value=""></option>
+                </select>
+                <span asp-validation-for="AlbumId" class="text-danger"></span>
+            </div>
+        }
+
+        <div>
+            <label asp-for="Genre"></label>
+            <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+            </select>
+            <span asp-validation-for="Genre" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Year"></label>
+            <input asp-for="Year" class="form-control" />
+            <span asp-validation-for="Year" class="text-danger"></span>
+        </div>
+        <div>
+            <label asp-for="Producer"></label>
+            <input asp-for="Producer" class="form-control" />
+            <span asp-validation-for="Producer" class="text-danger"></span>
+        </div>
+
+        <hr />
+        <button asp-controller="Songs" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block">UPDATE</button>
+    </form>
+        <br/>
+        <a href="#" onclick="toggleForm()" class="btn btn-dark btn-lg btn-block">EDIT SONG</a>
 
     </div>
     <!-- <div>
@@ -100,6 +153,13 @@
 
 @section Scripts{
     <script>
+        function toggleForm() {
+            $('#updateForm').show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#updateForm").offset().top
+            }, 500);
+        }
+
         $(document).ready (function() {
             var artist = '@Model.UserUserName';
             var song = '@Model.Name';

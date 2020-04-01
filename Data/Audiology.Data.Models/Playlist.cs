@@ -4,7 +4,7 @@
 
     using Audiology.Data.Common.Models;
 
-    public class Playlist : BaseDeletableModel<int>
+    public class Playlist : BaseDeletableModel<int> // add public or private prop
     {
         [Required]
         public string Name { get; set; }

@@ -91,9 +91,18 @@
             return song.Id;
         }
 
-        public async Task<int> EditSongAsync(int id, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year)
+        public async Task<int> EditSongAsync(int id, string username, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year)
         {
             var song = this.songRepository.All().Where(s => s.Id == id).FirstOrDefault();
+
+            int dotIndex = song.Name.LastIndexOf(".");
+            if (dotIndex == -1)
+            {
+                throw new IndexOutOfRangeException("file extension is missing");
+            }
+
+            string songName = song.Name.Substring(0, dotIndex);
+            string fileExtension = song.Name.Substring(dotIndex);
 
             if (song != null)
             {
@@ -104,7 +113,7 @@
 
                 if (name.Length <= 50 && name != null)
                 {
-                    song.Name = name;
+                    song.Name = name + fileExtension;
                 }
 
                 if (description.Length <= 100 && description != null)
@@ -122,10 +131,10 @@
                     song.SongArtUrl = songArtUrl;
                 }
 
-/*                if (albumId != null) album can be null add check if selected one is valid
+                if (albumId != null)
                 {
-                    song.AlbumId = albumId;
-                }*/
+                    song.AlbumId = albumId;  // album can be null add check if selected one is valid
+                }
 
                 if (Enum.IsDefined(typeof(Genre), genre))
                 {
@@ -133,8 +142,21 @@
                 }
             }
 
+            string newName = name + fileExtension;
+
+            string webRootPath = this.env.WebRootPath + "\\Songs\\";
+
+            var newPath = Path.Combine(webRootPath, username, newName);
+
+            string oldPath = webRootPath + username + "\\" + songName + fileExtension;
+
+            var file = new FileInfo(oldPath);
+
+            file.MoveTo(newPath);
+
             this.songRepository.Update(song);
             await this.songRepository.SaveChangesAsync();
+
             return song.Id;
         }
 

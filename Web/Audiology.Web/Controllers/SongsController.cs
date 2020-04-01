@@ -30,11 +30,11 @@
 
         public async Task<IActionResult> ById(int id)
         {
-            var song = await this.songsService.GetSong<SongViewModel>(id);
-            int dotIndex = song.Name.LastIndexOf(".");
-            string name = song.Name.Remove(dotIndex);
+            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
 
-            song.Name = name;
+            var song = await this.songsService.GetSong<SongViewModel>(id);
+
+            song.Albums = albums;
             return this.View(song);
         }
 
@@ -117,10 +117,10 @@
         // POST: Songs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(SongEditViewModel input)
+        public async Task<IActionResult> Edit(SongViewModel input)
         {
-                var songId = await this.songsService.EditSongAsync(input.Id, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year);
-                return this.RedirectToAction(nameof(this.ById), new { id = songId });
+            var songId = await this.songsService.EditSongAsync(input.Id, input.UserUserName, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year);
+            return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }
 
         // GET: Songs/Delete/5

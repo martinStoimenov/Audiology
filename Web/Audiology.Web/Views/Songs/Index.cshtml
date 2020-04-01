@@ -14,19 +14,20 @@
     {
         <div class="text-left" style="width: 52rem; background-color: #f4f4f4; margin-top: 2rem;">
 
-            <div class="d-inline-flex p-2 bd-highlight">
+            <div class="d-flex flex-row bd-highlight mb-3" style="margin: 0 !important;">
                 <div class="align-self-end">
                     <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded" style="width: 7rem; height: 7rem;" alt="Image not found" />
                 </div>
-                <div class="d-block text-left align-self-start" style="margin-left: 1rem;">
-                    <div class="d-block">
+                <div class="d-block" style="margin-left: 1rem;">
+                    <div class="d-block p-2 w-100 bd-highlight">
                         <h5 class="font-weight-lighter h-25 d-inline-block">@song.UserUserName</h5>
                     </div>
-                    <div class="text-wrap"><a asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a></div>
+                    <div class="text-wrap p-2 w-100 bd-highlight"><a asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a></div>
 
                 </div>
 
-                <div class="justify-content-end">
+                <div class="ml-auto p-2 bd-highlight">
+                    <form id="votesForm" method="post"></form>
                     <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
                     <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
                 </div>

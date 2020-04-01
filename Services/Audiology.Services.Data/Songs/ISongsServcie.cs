@@ -11,7 +11,7 @@
     {
         Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt);
 
-        Task<int> EditSongAsync(int id, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year);
+        Task<int> EditSongAsync(int id,string username, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year);
 
         Task<IEnumerable<T>> GetSongsByAlbumAsync<T>(int? albumId);
 
