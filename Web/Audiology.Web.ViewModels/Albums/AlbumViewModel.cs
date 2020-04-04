@@ -34,6 +34,8 @@
 
         public string UsersAlbumUserId { get; set; }
 
+        public int FavouritesCount { get; set; }
+
         public IEnumerable<SongListViewModel> Songs { get; set; }
     }
 }

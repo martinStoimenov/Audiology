@@ -42,6 +42,11 @@
         [HttpPost]
         public async Task<IActionResult> Upload(AlbumUploadViewModel input)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var userId = this.userManager.GetUserId(this.User);
 
             var albumId = await this.albumsService.AddAsync(input.Name, input.CoverUrl, input.Description, input.Producer, userId, input.ReleaseDate);
@@ -51,6 +56,11 @@
 
         public async Task<IActionResult> ById(int id)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var album = this.albumsService.GetCurrentAlbumById<AlbumViewModel>(id);
 
             var songs = await this.songsService.GetSongsByAlbumAsync<SongListViewModel>(id);
@@ -63,9 +73,27 @@
         [HttpPost]
         public async Task<IActionResult> Edit(AlbumViewModel input)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
             var albumId = await this.albumsService.EditAlbumAsync(input.Id, input.Name, input.Description, input.Producer, input.CoverUrl, input.Genre, input.ReleaseDate);
 
             return this.RedirectToAction(nameof(this.ById), new { id = albumId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            await this.albumsService.DeleteAlbum(id);
+
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }

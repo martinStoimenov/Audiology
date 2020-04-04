@@ -22,23 +22,66 @@
     {
         private readonly IHostingEnvironment env;
         private readonly IRepository<Song> songRepository;
+        private readonly IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo;
+        private readonly IDeletableEntityRepository<Favourites> favouritesRepo;
+        private readonly IRepository<ApplicationUser> userRepo;
 
         public SongsService(
             IHostingEnvironment env,
-            IRepository<Song> songRepository)
+            IRepository<Song> songRepository,
+            IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo,
+            IDeletableEntityRepository<Favourites> favouritesRepo,
+            IRepository<ApplicationUser> userRepo)
         {
             this.env = env;
             this.songRepository = songRepository;
+            this.playlistsSongsRepo = playlistsSongsRepo;
+            this.favouritesRepo = favouritesRepo;
+            this.userRepo = userRepo;
         }
 
-        public async Task<T> GetSong<T>(int songId)
+        public async Task DeleteSong(int songId)
         {
-            var song = await this.songRepository.All().Where(s => s.Id == songId).To<T>().FirstOrDefaultAsync();
+            var song = await this.songRepository.All().Where(s => s.Id == songId).FirstOrDefaultAsync();
+            var playlistSong = await this.playlistsSongsRepo.All().Where(ps => ps.SongId == song.Id).FirstOrDefaultAsync();
+            var favouritedSong = await this.favouritesRepo.All().Where(f => f.SongId == songId).FirstOrDefaultAsync();
+            var userName = await this.userRepo.All().Where(u => u.Id == song.UserId).Select(x => x.UserName).FirstOrDefaultAsync();
 
-            return song;
+            if (song != null)
+            {
+                if (playlistSong != null)
+                {
+                    this.playlistsSongsRepo.Delete(playlistSong);
+                    await this.playlistsSongsRepo.SaveChangesAsync();
+                }
+
+                if (favouritedSong != null)
+                {
+                    this.favouritesRepo.Delete(favouritedSong);
+                    await this.favouritesRepo.SaveChangesAsync();
+                }
+
+                this.songRepository.Delete(song);
+            }
+
+            string webRootPath = Path.Combine(this.env.WebRootPath, "Songs");
+
+            string songName = song.Name;
+            string username = userName;
+
+            string fullPath = Path.Combine(webRootPath, username, songName);
+
+            this.songRepository.Delete(song);
+
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+
+            await this.songRepository.SaveChangesAsync();
         }
 
-        public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, int? albumId, Enum genre, int year, string userId, string songArt)
+        public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, string producer, int? albumId, Enum genre, int year, string userId, string songArt, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl)
         {
             var dotIndex = input.FileName.LastIndexOf('.');
             var fileExtension = input.FileName.Substring(dotIndex);
@@ -66,6 +109,26 @@
                 throw new ArgumentOutOfRangeException("Year cannot be more than the current one!");
             }
 
+            if (featuring.Length > 100)
+            {
+                throw new ArgumentOutOfRangeException("Featuring cannot be more than 100 characters!");
+            }
+
+            if (writtenBy.Length > 100)
+            {
+                throw new ArgumentOutOfRangeException("WrittenBy cannot be more than 100 characters!");
+            }
+
+            if (youtubeUrl.Length > 500)
+            {
+                throw new ArgumentOutOfRangeException("You Tube url cannot be more than 500 characters!");
+            }
+
+            if (soundcloudUrl == null || soundcloudUrl.Length > 500) // refactor these validations
+            {
+                throw new ArgumentOutOfRangeException("Soundcloud url cannot be more than 500 characters!");
+            }
+
             string name = songName + fileExtension;
 
             var filePath = Path.Combine(webRootPath, username, name);
@@ -82,8 +145,13 @@
                 Name = name,
                 Description = description,
                 Year = year,
+                Producer = producer,
                 AlbumId = albumId,
                 Genre = (Genre)genre,
+                Featuring = featuring,
+                WrittenBy = writtenBy,
+                YoutubeUrl = youtubeUrl,
+                SoundcloudUrl = soundcloudUrl,
             };
 
             await this.songRepository.AddAsync(song);
@@ -91,7 +159,7 @@
             return song.Id;
         }
 
-        public async Task<int> EditSongAsync(int id, string username, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year)
+        public async Task<int> EditSongAsync(int id, string username, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl)
         {
             var song = this.songRepository.All().Where(s => s.Id == id).FirstOrDefault();
 
@@ -126,7 +194,7 @@
                     song.Year = year;
                 }
 
-                if (songArtUrl.Length <= 100 && songArtUrl != null)
+                if (songArtUrl.Length <= 500 && songArtUrl != null)
                 {
                     song.SongArtUrl = songArtUrl;
                 }
@@ -139,6 +207,26 @@
                 if (Enum.IsDefined(typeof(Genre), genre))
                 {
                     song.Genre = (Genre)genre;
+                }
+
+                if (featuring.Length <= 100 && featuring != null)
+                {
+                    song.Featuring = featuring;
+                }
+
+                if (writtenBy.Length <= 100 && writtenBy != null)
+                {
+                    song.WrittenBy = writtenBy;
+                }
+
+                if (youtubeUrl.Length <= 500 && youtubeUrl != null)
+                {
+                    song.YoutubeUrl = youtubeUrl;
+                }
+
+                if (soundcloudUrl.Length <= 500 && soundcloudUrl != null)
+                {
+                    song.SoundcloudUrl = soundcloudUrl;
                 }
             }
 
@@ -158,6 +246,13 @@
             await this.songRepository.SaveChangesAsync();
 
             return song.Id;
+        }
+
+        public async Task<T> GetSong<T>(int songId)
+        {
+            var song = await this.songRepository.All().Where(s => s.Id == songId).To<T>().FirstOrDefaultAsync();
+
+            return song;
         }
 
         public IEnumerable<T> GetAll<T>(int? count = null)

@@ -8,6 +8,7 @@
     using Audiology.Data.Common.Repositories;
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
+    using Audiology.Services.Data.Songs;
     using Audiology.Services.Mapping;
     using Audiology.Web.ViewModels.Albums;
     using Audiology.Web.ViewModels.Songs;
@@ -18,18 +19,23 @@
     {
         private readonly IRepository<Album> repository;
         private readonly IRepository<Song> songRepository;
+        private readonly ISongsServcie songsServcie;
 
-        public AlbumsService(IRepository<Album> repository, IRepository<Song> songRepository)
+        public AlbumsService(
+            IRepository<Album> repository,
+            IRepository<Song> songRepository,
+            ISongsServcie songsServcie)
         {
             this.repository = repository;
             this.songRepository = songRepository;
+            this.songsServcie = songsServcie;
         }
 
         public IEnumerable<T> GetAllForUser<T>(string userId)
         {
-            var result = this.repository.All().Where(a => a.UserId == userId).To<T>().ToList(); // Add validations
+            var result = this.repository.All().Where(a => a.UserId == userId).To<T>().ToList();
 
-            return null;
+            return result;
         }
 
         public async Task<int> AddAsync(string name, string coverUrl, string description, string producer, string userId, DateTime? releaseDate)
@@ -111,6 +117,23 @@
             var album = this.repository.All().Where(a => a.Id == albumId).To<T>().FirstOrDefault();
 
             return album;
+        }
+
+        public async Task DeleteAlbum(int albumId)
+        {
+            var album = await this.repository.All().Where(a => a.Id == albumId).FirstOrDefaultAsync();
+            var songsIds = await this.songRepository.All().Where(s => s.AlbumId == albumId).Select(s => s.Id).ToListAsync();
+
+            if (album != null)
+            {
+                foreach (var songId in songsIds)
+                {
+                    await this.songsServcie.DeleteSong(songId);
+                }
+
+                this.repository.Delete(album);
+                await this.repository.SaveChangesAsync();
+            }
         }
     }
 }

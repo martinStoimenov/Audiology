@@ -37,7 +37,8 @@
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="SongId" value="@this.Model.Id" />
                                 <input name="name" class="form-control" placeholder="Playlist Name">
-                                <div class="form-check">        <!-- is private checkbox dont work / by default is false -->
+                                <div class="form-check">
+                                    <!-- is private checkbox dont work / by default is false -->
                                     <input name="IsPrivate" value="@Model.Playlists.Select(x=>x.IsPrivate)" type="checkbox" class="form-check-input" id="exampleCheck1">
                                     <label class="form-check-label" for="exampleCheck1">Make private</label>
                                 </div>
@@ -168,29 +169,61 @@
                     <span asp-validation-for="AlbumId" class="text-danger"></span>
                 </div>
             }
+            <div class="form-row">
+                <div class="col">
+                    <label asp-for="Genre"></label>
+                    <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+                    </select>
+                    <span asp-validation-for="Genre" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Year"></label>
+                    <input asp-for="Year" class="form-control" />
+                    <span asp-validation-for="Year" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Producer"></label>
+                    <input asp-for="Producer" class="form-control" />
+                    <span asp-validation-for="Producer" class="text-danger"></span>
+                </div>
+            </div>
 
-            <div>
-                <label asp-for="Genre"></label>
-                <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
-                </select>
-                <span asp-validation-for="Genre" class="text-danger"></span>
+            <span class="font-weight-bold">Additional metadata:</span>
+            <br />
+            <div class="form-row">
+                <div class="col">
+                    <label asp-for="Featuring"></label>
+                    <input asp-for="Featuring" class="form-control" placeholder="feat. Eminem 2pac Biggie " />
+                    <span asp-validation-for="Featuring" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="WrittenBy"></label>
+                    <input asp-for="WrittenBy" class="form-control" placeholder="Eminem, Juice WRLD, Luis Resto" />
+                    <span asp-validation-for="WrittenBy" class="text-danger"></span>
+                </div>
             </div>
-            <div>
-                <label asp-for="Year"></label>
-                <input asp-for="Year" class="form-control" />
-                <span asp-validation-for="Year" class="text-danger"></span>
-            </div>
-            <div>
-                <label asp-for="Producer"></label>
-                <input asp-for="Producer" class="form-control" />
-                <span asp-validation-for="Producer" class="text-danger"></span>
+
+            <span class="font-weight-bold">Audio and Video:</span>
+            <br />
+            <div class="form-row">
+                <div class="col">
+                    <label asp-for="YoutubeUrl"></label>
+                    <input asp-for="YoutubeUrl" class="form-control" />
+                    <span asp-validation-for="YoutubeUrl" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="SoundcloudUrl"></label>
+                    <input asp-for="SoundcloudUrl" class="form-control" />
+                    <span asp-validation-for="SoundcloudUrl" class="text-danger"></span>
+                </div>
             </div>
 
             <hr />
             <button asp-controller="Songs" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-music" style="margin-right: 1rem;"></i>UPDATE</button>
+            <button asp-controller="Songs" asp-action="Delete" asp-route-id="@Model.Id" type="submit" class="btn btn-outline-danger btn-block">DELETE</button>
         </form>
 
-        @if (this.User.IsInRole("Artist") || this.User.IsInRole("Administrator"))
+        @if (this.User.IsInRole("Artist") && this.User.Identity.Name == Model.UserUserName || this.User.IsInRole("Administrator"))
         {
             <br />
             <a href="#" onclick="toggleForm()" class="btn btn-dark btn-lg btn-block">EDIT SONG</a>

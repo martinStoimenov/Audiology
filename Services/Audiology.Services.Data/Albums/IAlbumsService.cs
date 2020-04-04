@@ -13,6 +13,8 @@
 
         T GetCurrentAlbumById<T>(int albumId);
 
+        Task DeleteAlbum(int albumId);
+
         Task<int> AddAsync(string name, string coverUrl, string description, string producer, string userId, DateTime? releaseDate);
 
         Task<int> EditAlbumAsync(int id, string name, string description, string producer, string coverUrl, Enum genre, DateTime? releaseDate);

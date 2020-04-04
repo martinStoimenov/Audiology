@@ -3,57 +3,130 @@
     @model Audiology.Web.ViewModels.Songs.SongUploadViewModel
     this.ViewData["Title"] = "Song Upload";
 }
-    <h1>Upload to Audiology</h1>
-    <p>Provide MP3, FLAC, WAV, ALAC, or AIFF for highest audio quality.</p>
+<h1>Upload to Audiology</h1>
+<br />
+<p>Provide MP3, WAV, or OGG for highest audio quality.</p>
 
-    <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Create">
+<form enctype="multipart/form-data" asp-controller="Songs" asp-action="Create">
 
-        <div>
-            <input type="file" class="form-control-file border" asp-for="Song">
-        </div>
-        <div>
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="SongArtUrl"></label>
-            <input asp-for="SongArtUrl" class="form-control" />
-            <span asp-validation-for="SongArtUrl" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="Description"></label>
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
+    <div class="custom-file">
+        <input asp-for="Song" type="file" class="custom-file-input" id="file">
+        <label class="custom-file-label" for="customFile">Choose song</label>
+        <small id="passwordHelpBlock" class="form-text text-muted">
+            Your file must be smaller than 25 MB. <span id="output" class="font-weight-bolder"></span>
+        </small>
+    </div>
+
+    <br />
+    <span class="font-weight-bold">Primary info:</span>
+    <hr />
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" placeholder="Better Dayz" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="SongArtUrl"></label>
+        <input asp-for="SongArtUrl" class="form-control" placeholder="https://pbs.twimg.com/media/EOdVuEyXkAEahsE.jpg" />
+        <span asp-validation-for="SongArtUrl" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control form-control-lg" placeholder="Eminem and late rapper Juice WRLD team up for the first time on “Godzilla,” where they compare themselves to monsters. In particular, they become Godzilla, a fictional sea monster that is known for its mass destruction and endless killing." />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <br />
+    <div class="form-row">
         @if (Model.Albums != null)
         {
-            <div>
+            <div class="col">
                 <label asp-for="AlbumId"></label>
-                <select asp-for="AlbumId"  asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control">
+                <select asp-for="AlbumId" asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control">
                     <option value="" selected disabled hidden>Select from existing albums</option>
                 </select>
                 <span asp-validation-for="AlbumId" class="text-danger"></span>
             </div>
         }
 
-        <div>
+        <div class="col-3">
             <label asp-for="Genre"></label>
             <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
             </select>
             <span asp-validation-for="Genre" class="text-danger"></span>
         </div>
-        <div>
+        <div class="col-1">
             <label asp-for="Year"></label>
-            <input asp-for="Year" class="form-control" />
+            <input asp-for="Year" class="form-control" value="" placeholder="2013" />
             <span asp-validation-for="Year" class="text-danger"></span>
-        </div>        
-        <div>
+        </div>
+        <div class="col">
             <label asp-for="Producer"></label>
-            <input asp-for="Producer" class="form-control" />
+            <input asp-for="Producer" class="form-control" placeholder="Eminem & d.a. got that dope" />
             <span asp-validation-for="Producer" class="text-danger"></span>
         </div>
+    </div>
 
-        <hr />
-        <button asp-controller="Songs" asp-action="Upload" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-angle-double-up" style="margin-right: 1rem;"></i>UPLOAD<i class="fas fa-angle-double-up" style="margin-left: 1rem;"></i></button>
-    </form>
+    <br />
+    <span class="font-weight-bold">Additional metadata:</span>
+    <hr />
+    <div class="form-row">
+        <div class="col">
+            <label asp-for="Featuring"></label>
+            <input asp-for="Featuring" class="form-control" placeholder="feat. Eminem 2pac Biggie " />
+            <span asp-validation-for="Featuring" class="text-danger"></span>
+        </div>
+        <div class="col-4">
+            <label asp-for="WrittenBy"></label>
+            <input asp-for="WrittenBy" class="form-control" placeholder="Eminem, Juice WRLD, Luis Resto" />
+            <span asp-validation-for="WrittenBy" class="text-danger"></span>
+        </div>
+    </div>
+
+    <br />
+    <span class="font-weight-bold">Audio and Video:</span>
+    <hr />
+    <div class="form-row">
+        <div class="col-4">
+            <label asp-for="YoutubeUrl"></label>
+            <input asp-for="YoutubeUrl" class="form-control" />
+            <span asp-validation-for="YoutubeUrl" class="text-danger"></span>
+        </div>
+        <div class="col">
+            <label asp-for="SoundcloudUrl"></label>
+            <input asp-for="SoundcloudUrl" class="form-control" />
+            <span asp-validation-for="SoundcloudUrl" class="text-danger"></span>
+        </div>
+    </div>
+
+    <hr />
+    <button asp-controller="Songs" asp-action="Upload" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-angle-double-up" style="margin-right: 1rem;"></i>UPLOAD<i class="fas fa-angle-double-up" style="margin-left: 1rem;"></i></button>
+</form>
+
+@section Scripts{
+    <script type="text/javascript">
+        $('#file').on('change', function () {
+            const size =
+                (this.files[0].size / 1024 / 1024).toFixed(2);
+
+            if (size > 25 || size < 1) {
+                alert("File must be between the size of 1-25 MB");
+            } else {
+                $("#output").html(
+                    'Song size is: ' + size + " MB");
+            }
+
+            var file = $('input[type="file"]').val();
+            var exts = ['mp3', 'wav', 'ogg'];
+            if (file) {
+                var get_ext = file.split('.').reverse()[0].toLowerCase();
+
+                if ($.inArray(get_ext.toLowerCase(), exts) > -1) {
+                    $("#output").html('Allowed file extension ' + '.' + get_ext + '.');
+                } else {
+                    alert('Invalid file!');
+                }
+            }
+        });
+    </script>
+}

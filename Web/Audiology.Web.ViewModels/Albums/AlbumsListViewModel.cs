@@ -16,6 +16,8 @@
 
         public string CoverUrl { get; set; }
 
+        public int FavouritesCount { get; set; }
+
         public string Description { get; set; }
 
         public string ShortDescription

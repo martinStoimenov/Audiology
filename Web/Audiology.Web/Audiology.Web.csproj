@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Audiology.Common\Audiology.Common.csproj" />
     <ProjectReference Include="..\..\Data\Audiology.Data.Models\Audiology.Data.Models.csproj" />
     <ProjectReference Include="..\..\Data\Audiology.Data\Audiology.Data.csproj" />
     <ProjectReference Include="..\..\Services\Audiology.Services.Data\Audiology.Services.Data.csproj" />

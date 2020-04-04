@@ -115,7 +115,7 @@
 
             string userId = this.userManager.GetUserId(this.User);
 
-            var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.AlbumId, input.Genre, input.Year, userId, input.SongArtUrl);
+            var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.Producer, input.AlbumId, input.Genre, input.Year, userId, input.SongArtUrl, input.Featuring, input.WrittenBy, input.YoutubeUrl, input.SoundcloudUrl);
 
             return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }
@@ -125,30 +125,18 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(SongViewModel input)
         {
-            var songId = await this.songsService.EditSongAsync(input.Id, input.UserUserName, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year);
+            var songId = await this.songsService.EditSongAsync(input.Id, input.UserUserName, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year, input.Featuring, input.WrittenBy, input.YoutubeUrl, input.SoundcloudUrl);
             return this.RedirectToAction(nameof(this.ById), new { id = songId });
-        }
-
-        // GET: Songs/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return this.View(); // Add confirmation popup before deleting
         }
 
         // POST: Songs/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return this.View();
-            }
+            await this.songsService.DeleteSong(id);
+
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }

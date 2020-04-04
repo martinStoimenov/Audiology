@@ -18,6 +18,8 @@
 
         public int SongId { get; set; }
 
+        public int FavouritesCount { get; set; }
+
         public string SongName { get; set; }
 
         public string SongDescription { get; set; }
