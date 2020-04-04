@@ -10,6 +10,7 @@
     using Audiology.Data.Seeding;
     using Audiology.Services.Data.Albums;
     using Audiology.Services.Data.Favourites;
+    using Audiology.Services.Data.Playlists;
     using Audiology.Services.Data.Songs;
     using Audiology.Services.Mapping;
     using Audiology.Services.Messaging;
@@ -77,6 +78,7 @@
             services.AddTransient<ISongsServcie, SongsService>();
             services.AddTransient<IAlbumsService, AlbumsService>();
             services.AddTransient<IFavouritesService, FavouritesService>();
+            services.AddTransient<IPlaylistsService, PlaylistsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

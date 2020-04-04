@@ -11,7 +11,7 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    public class FavouritesController : ControllerBase
+    public class FavouritesController : Controller
     {
         private readonly IFavouritesService favouritesService;
         private readonly UserManager<ApplicationUser> userManager;
@@ -31,6 +31,16 @@
             var favouritesCount = this.favouritesService.GetCount(input.SongId, input.AlbumId);
 
             return new FavouritesOutputModel { FavouritesCount = favouritesCount };
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            var all = await this.favouritesService.GetAllAsync<FavouritesViewModel>(userId);
+
+            return this.View(all);
         }
     }
 }

@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@{ var userProfilePic = this.UserManager.GetUserAsync(this.User).Result.ProfilePicUrl; }
 
     <ul class="navbar-nav">
         @if (this.SignInManager.IsSignedIn(this.User))
@@ -12,17 +13,17 @@
             </li>
             <div class="dropdown pmd-dropdown pmd-user-info ml-auto">
                 <a href="javascript:void(0);" class="btn-user dropdown-toggle media align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="mr-2" src="https://resources.tidal.com/images/3461fd8a/672a/4f56/b149/9e436fb86166/480x480.jpg" width="40" height="40" alt="Avatar">
+                    <img class="mr-2" src="@userProfilePic" width="40" height="40" alt="Avatar">
                     
-                    <i class="material-icons md-light ml-2 pmd-sm"></i>
+                    <i class="far fa-caret-circle-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Edit Profile</a>
-                    <a class="dropdown-item" asp-controller="Songs" asp-action="Index">Songs</a>
-                    <a class="dropdown-item" asp-controller="Albums" asp-action="Index">Albums</a>
-                    <a class="dropdown-item" href ="#">Favourites</a>
-                    <a class="dropdown-item" href ="#">Playlists</a>
-                    <a class="dropdown-item" href ="#">Contact</a>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fas fa-sliders-h"></i> Edit Profile</a>
+                    <a class="dropdown-item" asp-controller="Songs" asp-action="Index"><i class="fas fa-music"></i> Songs</a>
+                    <a class="dropdown-item" asp-controller="Albums" asp-action="Index"><i class="fas fa-compact-disc"></i> Albums</a>
+                    <a class="dropdown-item" asp-controller="Favourites" asp-action="Index"><i class="fab fa-gratipay"></i> Favourites</a>
+                    <a class="dropdown-item" asp-controller="Playlists" asp-action="Index"><i class="fas fa-headphones"></i> Playlists</a>
+                    <a class="dropdown-item" href ="#"><i class="fas fa-brain"></i> Contact</a>
                 </ul>
             </div>
             if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))

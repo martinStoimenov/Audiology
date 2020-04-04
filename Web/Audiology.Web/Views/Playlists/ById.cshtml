@@ -1,0 +1,10 @@
+﻿@{ 
+    @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
+}
+
+    <h1>Playlist NAME here </h1>
+
+@foreach (var song in Model)
+{
+    <span>@song.Name</span>
+}

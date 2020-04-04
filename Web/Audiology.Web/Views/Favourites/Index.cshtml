@@ -1,0 +1,54 @@
+﻿@{
+    @using Microsoft.AspNetCore.Identity;
+    @using Audiology.Data.Models;
+    @model IEnumerable<Audiology.Web.ViewModels.Favourites.FavouritesViewModel>
+    @inject UserManager<ApplicationUser> UserManager
+    string userId = this.UserManager.GetUserId(this.User);
+}
+
+<h1>Welcome to favourites page bruddhas</h1>
+
+
+@foreach (var liked in Model)
+{
+    <hr />
+    <div>/ @liked.SongId  /</div>
+    <div>/ @liked.AlbumId  /</div>
+    <div>/ @liked.SongGenre  /</div>
+    <div>/ @liked.SongName  /</div>
+    <div>/ @liked.SongProducer  /</div>
+    <div>/ @liked.SongUserUserName  /</div>
+    <div>/ @liked.SongYear  /</div>
+    <div>/ @liked.UserId  /</div>
+    <div>/ @liked.SongUserUserName  /</div>
+    <div>/ @liked.SongSoundcloudUrl  /</div>
+    <div>/ @liked.SongYear  /</div>
+
+    <hr />
+    <div class="text-left" style="width: 52rem; background-color: #f4f4f4; margin-top: 2rem;">
+
+        <div class="d-flex flex-row bd-highlight mb-3" style="margin: 0 !important;">
+            <div class="align-self-end">
+                <img src="@(liked.SongSongArtUrl == null ? liked.SongAlbumCoverUrl : liked.SongSongArtUrl)" class="rounded" style="width: 7rem; height: 7rem;" alt="Image not found" />
+            </div>
+            <div class="d-block" style="margin-left: 1rem;">
+                <div class="d-block p-2 w-100 bd-highlight">
+                    <h5 class="font-weight-lighter h-25 d-inline-block">@liked.SongUserUserName</h5>
+                </div>
+                <div class="text-wrap p-2 w-100 bd-highlight"><a asp-controller="Songs" asp-action="ById" asp-route-id="@liked.SongId" style="text-decoration: none; color: black;">@liked.SongName.Replace(".mp3", "")</a></div>
+
+            </div>
+
+            <div class="ml-auto p-2 bd-highlight">
+                <form id="votesForm" method="post"></form>
+                <a href="#" onclick="favourite('@userId',@liked.SongId,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@liked</div>
+            </div>
+        </div>
+        <span class="d-flex justify-content-start align-self-end">
+            <audio id="player" style="width: 52rem" controls>
+                <source src="~/Songs//@liked.SongUserUserName/@liked.SongName" type="audio/mp3">
+            </audio>
+        </span>
+    </div>
+}

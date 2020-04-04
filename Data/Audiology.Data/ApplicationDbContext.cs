@@ -32,7 +32,7 @@
 
         public DbSet<Song> Songs { get; set; }
 
-        public DbSet<UsersAlbum> UsersAlbum { get; set; }
+        public DbSet<PlaylistsSongs> PlaylistsSongs { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -55,8 +55,11 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<UsersAlbum>().HasKey(x => new { x.AlbumId, x.UserId });
+            builder.Entity<PlaylistsSongs>().HasKey(x => new { x.PlaylistId, x.SongId });
+
             builder.Entity<ApplicationUser>().HasIndex(u => u.UserName).IsUnique();
+
+            builder.Entity<Playlist>().Property(p => p.IsPrivate).HasDefaultValue(false);
 
             // Needed for Identity models configuration
             base.OnModelCreating(builder);

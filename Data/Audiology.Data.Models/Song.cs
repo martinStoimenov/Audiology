@@ -11,13 +11,14 @@
         public Song()
         {
             this.Favourites = new HashSet<Favourites>();
+            this.PlaylistsSongs = new HashSet<PlaylistsSongs>();
         }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(100)]
         public string Name { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(1000)]
         public string Description { get; set; }
 
         [MaxLength(100)]
@@ -41,6 +42,21 @@
         [MaxLength(500)]
         public string SongArtUrl { get; set; }
 
+        [MaxLength(100)]
+        public string Featuring { get; set; }
+
+        [MaxLength(100)]
+        public string WrittenBy { get; set; }
+
+        [MaxLength(500)]
+        public string YoutubeUrl { get; set; }
+
+        [MaxLength(500)]
+        public string SoundcloudUrl { get; set; }
+
         public virtual ICollection<Favourites> Favourites { get; set; }
+
+        public virtual ICollection<PlaylistsSongs> PlaylistsSongs { get; set; }
+
     }
 }

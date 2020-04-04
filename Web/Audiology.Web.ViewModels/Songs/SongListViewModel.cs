@@ -28,5 +28,7 @@
         public Genre Genre { get; set; }
 
         public int FavouritesCount { get; set; }
+
+        public string PlaylistName { get; set; }
     }
 }

@@ -3,6 +3,8 @@
     @model Audiology.Web.ViewModels.Songs.SongViewModel
 }
 
+
+
 <img src="@(Model.SongArtUrl == null ? Model.AlbumCoverUrl : Model.SongArtUrl)" class="img-fluid" style="width: 100%; height: 25rem" alt="Song cover can't be found sorry  :)" />
 <hr />
 <div class="row">
@@ -21,9 +23,53 @@
 
     <hr />
     <div class="col-md-6 border-left">
+        <h6>Add to playlist:</h6>
+        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".bd-example-modal-sm" style="width: 4rem; height: 3rem;"><i class="fas fa-plus-circle"></i></button>
+
+        <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content text-center">
+                    <div class="modal-header ">
+                        <h5 class="modal-title text-center text-black-50">Add to playlist:</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-controller="Playlists" asp-action="Create" method="post">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" name="SongId" value="@this.Model.Id" />
+                                <input name="name" class="form-control" placeholder="Playlist Name">
+                                <div class="form-check">        <!-- is private checkbox dont work / by default is false -->
+                                    <input name="IsPrivate" value="@Model.Playlists.Select(x=>x.IsPrivate)" type="checkbox" class="form-check-input" id="exampleCheck1">
+                                    <label class="form-check-label" for="exampleCheck1">Make private</label>
+                                </div>
+                                <span asp-validation-for="Name" class="text-danger"></span> <!-- Add validation for playlist name -->
+                            </div>
+                            <button asp-controller="Playlists" asp-action="Create" type="submit" class="btn btn-outline-dark" style="width: 10rem; height: 2rem;"><i class="fas fa-plus-circle"></i></button>
+
+                        </form>
+
+                        <br />
+                        @if (Model.Playlists != null)
+                        {
+                            @foreach (var playlist in Model.Playlists)
+                            {
+                                <form asp-controller="Playlists" asp-action="Add" method="post">
+                                    <div class="form-group d-block">
+                                        <input type="hidden" class="form-control" name="SongId" value="@this.Model.Id" />
+                                        <input type="hidden" class="form-control" name="PlaylistId" value="@playlist.Id" />
+                                        <span style="margin-right: 1rem;">@playlist.Name</span>
+                                        <button asp-controller="Playlists" asp-action="Add" type="submit" class="btn btn-outline-dark" style="margin-top: 10px;">
+                                            <i class="fas fa-plus-circle"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <hr />
-
         <span>Song description :</span>
         <div>Description goes here</div>
 
@@ -40,6 +86,8 @@
                 <hr />
                 <span class="d-block">Album</span>
                 <hr />
+                <span class="d-block">Genre</span>
+                <hr />
                 <span class="d-block">Producer</span>
                 <hr />
                 <span class="d-block">Release Date</span>
@@ -49,9 +97,11 @@
             <div class="col-sm text-md-center">
                 <a href="#" class="text-decoration-none"><span class="d-block">@Model.UserUserName</span></a>
                 <hr />
-                <a href="#" class="text-decoration-none"><span class="d-block">Strassenbande</span></a>
+                <a href="#" class="text-decoration-none"><span class="d-block">@(Model.AlbumName == null ? "It's single" : Model.AlbumName)</span></a>
                 <hr />
-                <span class="d-block">Nikosaaaaaaa</span>
+                <a href="#" class="text-decoration-none"><span class="d-block">@Model.Genre</span></a>
+                <hr />
+                <span class="d-block">@Model.Producer</span>
                 <hr />
                 <span class="d-block">@Model.Year</span>
                 <hr />
@@ -59,11 +109,18 @@
 
         </div>
 
-        <iframe width="520" height="315"
-                src="https://www.youtube.com/embed/YAt60oZ_J-4?controls=1">
-        </iframe>
+        <div id="youTubePlayer">
+            <iframe width="520" height="315"
+                    src="https://www.youtube.com/embed/YAt60oZ_J-4?controls=1">
+            </iframe>
+        </div>
         <hr />
 
+        <div id="soundCloudPlayer">
+            <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/436863855&color=%234d544d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+        </div>
+
+        <hr />
         @if (Model.AlbumId != null)
         {
             <div class="d-block">
@@ -82,58 +139,62 @@
         }
 
 
-    <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
-        <input type="hidden" name="Id" value="@this.Model.Id" />
-        <input type="hidden" name="UserUserName" value="@this.Model.UserUserName" />
-        <div>
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="SongArtUrl"></label>
-            <input asp-for="SongArtUrl" class="form-control" />
-            <span asp-validation-for="SongArtUrl" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="Description"></label>
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        @if (Model.Albums != null)
-        {
+        <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
+            <input type="hidden" name="Id" value="@this.Model.Id" />
+            <input type="hidden" name="UserUserName" value="@this.Model.UserUserName" />
             <div>
-                <label asp-for="AlbumId"></label>
-                <select asp-for="AlbumId" asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control">
-                    <option value="" selected disabled hidden>Select from existing albums</option>
-                    <option value=""></option>
-                </select>
-                <span asp-validation-for="AlbumId" class="text-danger"></span>
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+            <div>
+                <label asp-for="SongArtUrl"></label>
+                <input asp-for="SongArtUrl" class="form-control" />
+                <span asp-validation-for="SongArtUrl" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            @if (Model.Albums != null)
+            {
+                <div>
+                    <label asp-for="AlbumId"></label>
+                    <select asp-for="AlbumId" asp-items="@Model.Albums.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control">
+                        <option value="" selected disabled hidden>Select from existing albums</option>
+                        <option value=""></option>
+                    </select>
+                    <span asp-validation-for="AlbumId" class="text-danger"></span>
+                </div>
+            }
+
+            <div>
+                <label asp-for="Genre"></label>
+                <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+                </select>
+                <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Year"></label>
+                <input asp-for="Year" class="form-control" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Producer"></label>
+                <input asp-for="Producer" class="form-control" />
+                <span asp-validation-for="Producer" class="text-danger"></span>
+            </div>
+
+            <hr />
+            <button asp-controller="Songs" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-music" style="margin-right: 1rem;"></i>UPDATE</button>
+        </form>
+
+        @if (this.User.IsInRole("Artist") || this.User.IsInRole("Administrator"))
+        {
+            <br />
+            <a href="#" onclick="toggleForm()" class="btn btn-dark btn-lg btn-block">EDIT SONG</a>
         }
-
-        <div>
-            <label asp-for="Genre"></label>
-            <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
-            </select>
-            <span asp-validation-for="Genre" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="Year"></label>
-            <input asp-for="Year" class="form-control" />
-            <span asp-validation-for="Year" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="Producer"></label>
-            <input asp-for="Producer" class="form-control" />
-            <span asp-validation-for="Producer" class="text-danger"></span>
-        </div>
-
-        <hr />
-        <button asp-controller="Songs" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block">UPDATE</button>
-    </form>
-        <br/>
-        <a href="#" onclick="toggleForm()" class="btn btn-dark btn-lg btn-block">EDIT SONG</a>
 
     </div>
     <!-- <div>
@@ -144,7 +205,7 @@
     <div class="font-weight-lighter text-left" style="margin-left: 1rem;">@Model.Name</div>
 
     <audio id="player" controls style="width: 100%;">
-        <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).mp3" type="audio/mp3"> <!-- Fix extension and type -->
+        <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).@Model.FileExtension" type="audio/@Model.FileExtension"> <!-- Fix extension and type -->
     </audio>
 </div>
 <h1>text after the view component</h1>
@@ -154,9 +215,9 @@
 @section Scripts{
     <script>
         function toggleForm() {
-            $('#updateForm').show();
+            $('#updateForm').slideToggle().show();
             $([document.documentElement, document.body]).animate({
-                scrollTop: $("#updateForm").offset().top
+                scrollTop: $('#updateForm').offset().top
             }, 500);
         }
 

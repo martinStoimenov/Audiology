@@ -13,8 +13,6 @@
         public Album()
         {
             this.Songs = new HashSet<Song>();
-            this.UsersAlbum = new HashSet<UsersAlbum>();
-            this.Playlists = new HashSet<Playlist>();
         }
 
         [Required]
@@ -34,14 +32,14 @@
         [Required]
         public Genre Genre { get; set; }
 
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
+
         [Required]
         [Column(TypeName = "date")]
         public DateTime? ReleaseDate { get; set; }
 
-        public virtual ICollection<UsersAlbum> UsersAlbum { get; set; }
-
         public virtual ICollection<Song> Songs { get; set; }
-
-        public virtual ICollection<Playlist> Playlists { get; set; }
     }
 }

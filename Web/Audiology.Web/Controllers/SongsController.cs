@@ -8,8 +8,10 @@
     using System.Threading.Tasks;
     using Audiology.Data.Models;
     using Audiology.Services.Data.Albums;
+    using Audiology.Services.Data.Playlists;
     using Audiology.Services.Data.Songs;
     using Audiology.Web.ViewModels.Albums;
+    using Audiology.Web.ViewModels.Playlists;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -20,21 +22,36 @@
         private readonly ISongsServcie songsService;
         private readonly IAlbumsService albumsService;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IPlaylistsService playlistsService;
 
-        public SongsController(ISongsServcie songsService, IAlbumsService albumsService, UserManager<ApplicationUser> userManager)
+        public SongsController(
+            ISongsServcie songsService,
+            IAlbumsService albumsService,
+            UserManager<ApplicationUser> userManager,
+            IPlaylistsService playlistsService)
         {
             this.songsService = songsService;
             this.albumsService = albumsService;
             this.userManager = userManager;
+            this.playlistsService = playlistsService;
         }
 
         public async Task<IActionResult> ById(int id)
         {
+            string userId = this.userManager.GetUserId(this.User);
+
             var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
 
             var song = await this.songsService.GetSong<SongViewModel>(id);
 
+            int dotIndex = song.Name.LastIndexOf('.');
+            string fileExtension = song.Name.Substring(dotIndex + 1);
+            string songName = song.Name.Substring(0, dotIndex);
+
+            song.Playlists = await this.playlistsService.GetAllPlaylistsAsync<PlaylistChooseViewModel>(userId);
             song.Albums = albums;
+            song.FileExtension = fileExtension;
+            song.Name = songName;
             return this.View(song);
         }
 
@@ -101,17 +118,6 @@
             var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.AlbumId, input.Genre, input.Year, userId, input.SongArtUrl);
 
             return this.RedirectToAction(nameof(this.ById), new { id = songId });
-        }
-
-        // GET: Songs/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
-            var song = await this.songsService.GetSong<SongEditViewModel>(id);
-
-            song.Albums = albums;
-
-            return this.View(song);
         }
 
         // POST: Songs/Edit/5

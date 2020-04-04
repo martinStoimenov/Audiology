@@ -1,4 +1,5 @@
 ﻿@{
+    @using Audiology.Data.Models.Enumerations;
     @using Microsoft.AspNetCore.Identity
     @using Audiology.Data.Models
     @inject UserManager<ApplicationUser> userManager
@@ -23,27 +24,83 @@
                 <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" style="width: 18rem; height: 10rem;" alt="Image not found" />
                 <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="stretched-link" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a>
 
-        <h5 class="">@this.User.Identity.Name</h5>
-        <form id="votesForm" method="post"></form>
+                <h5 class="">@this.User.Identity.Name</h5>
+                <form id="votesForm" method="post"></form>
 
-        <div class="align-content-start">
-            <a href="#" onclick="favourite('userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
-            <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
-        </div>
+                <div class="align-content-start">
+                    <a href="#" onclick="favourite('userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                    <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
+                </div>
 
-        <audio id="player" controls>
-            <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
-        </audio>
+                <audio id="player" controls>
+                    <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
+                </audio>
             </div>
         </div>
     }
     <div class="col border-left">
         <vc:user-details user-id="@userId"></vc:user-details>
+        <br />
+        <form asp-controller="Albums" asp-action="Edit" id="updateForm" style="display: none">
+            <input type="hidden" name="Id" value="@this.Model.Id" />
+            <div>
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="CoverUrl"></label>
+                <input asp-for="CoverUrl" class="form-control" />
+                <span asp-validation-for="CoverUrl" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Genre"></label>
+                <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+                </select>
+                <span asp-validation-for="Genre" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Producer"></label>
+                <input asp-for="Producer" class="form-control" />
+                <span asp-validation-for="Producer" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Description"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="ReleaseDate"></label>
+                <input asp-for="ReleaseDate" class="form-control" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+
+            <hr />
+            <button asp-controller="Albums" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-compact-disc" style="margin-right: 1rem;"></i>UPDATE</button>
+        </form>
+
+        @if (this.User.IsInRole("Artist") || this.User.IsInRole("Administrator"))
+        {
+            <br />
+            <a href="#" onclick="toggleForm()" class="btn btn-dark btn-lg btn-block">EDIT ALBUM</a>
+        }
+
     </div>
 </div>
 
-<a asp-controller="Albums" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-dark btn-lg btn-block">UPDATE</a>
 
 
 
 
+
+
+@section Scripts{
+    <script>
+        function toggleForm() {
+            $('#updateForm').slideToggle().show();
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#updateForm").offset().top
+            }, 500);
+        }
+    </script>
+}

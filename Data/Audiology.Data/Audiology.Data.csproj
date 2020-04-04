@@ -15,6 +15,22 @@
     <Compile Remove="Migrations\20200325135455_AddSongsRelationToUserAndAddedColumnsToAlbumAndPlaylist.Designer.cs" />
     <Compile Remove="Migrations\20200325140125_RemoveSongIdFromUsers.cs" />
     <Compile Remove="Migrations\20200325140125_RemoveSongIdFromUsers.Designer.cs" />
+    <Compile Remove="Migrations\20200402004011_AddUsersPlaylists.cs" />
+    <Compile Remove="Migrations\20200402004011_AddUsersPlaylists.Designer.cs" />
+    <Compile Remove="Migrations\20200402004510_AddUsersPlaylists.cs" />
+    <Compile Remove="Migrations\20200402004510_AddUsersPlaylists.Designer.cs" />
+    <Compile Remove="Migrations\20200402005252_AddUsersPlaylists.cs" />
+    <Compile Remove="Migrations\20200402005252_AddUsersPlaylists.Designer.cs" />
+    <Compile Remove="Migrations\20200402010650_AddUsersPlaylists.cs" />
+    <Compile Remove="Migrations\20200402010650_AddUsersPlaylists.Designer.cs" />
+    <Compile Remove="Migrations\20200402011816_AddUsersPlaylists.cs" />
+    <Compile Remove="Migrations\20200402011816_AddUsersPlaylists.Designer.cs" />
+    <Compile Remove="Migrations\20200402140656_AddUsersPlaylist.cs" />
+    <Compile Remove="Migrations\20200402140656_AddUsersPlaylist.Designer.cs" />
+    <Compile Remove="Migrations\20200402154804_AddPlaylistsSongs.cs" />
+    <Compile Remove="Migrations\20200402154804_AddPlaylistsSongs.Designer.cs" />
+    <Compile Remove="Migrations\20200402155539_AddPlaylistsSongs.cs" />
+    <Compile Remove="Migrations\20200402155539_AddPlaylistsSongs.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

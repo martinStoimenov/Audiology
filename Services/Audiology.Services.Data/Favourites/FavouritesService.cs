@@ -1,10 +1,12 @@
 ﻿namespace Audiology.Services.Data.Favourites
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Audiology.Data.Common.Repositories;
     using Audiology.Data.Models;
+    using Audiology.Services.Mapping;
     using Microsoft.EntityFrameworkCore;
 
     public class FavouritesService : IFavouritesService
@@ -43,6 +45,13 @@
             }
 
             await this.repository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync<T>(string userId)
+        {
+            var allFavourited = await this.repository.All().Where(f => f.UserId == userId).To<T>().ToListAsync();
+
+            return allFavourited;
         }
     }
 }

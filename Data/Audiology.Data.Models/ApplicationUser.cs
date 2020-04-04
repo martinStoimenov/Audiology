@@ -18,7 +18,8 @@ namespace Audiology.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
-            this.UsersAlbums = new HashSet<UsersAlbum>();
+            this.Favourites = new HashSet<Favourites>();
+            this.Albums = new HashSet<Album>();
         }
 
         // Add properties for social media links
@@ -50,7 +51,9 @@ namespace Audiology.Data.Models
         [Column(TypeName = "date")]
         public DateTime? Birthday { get; set; }
 
-        public virtual ICollection<UsersAlbum> UsersAlbums { get; set; }
+        public virtual ICollection<Album> Albums { get; set; }
+
+        public virtual ICollection<Favourites> Favourites { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 

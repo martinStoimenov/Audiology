@@ -60,19 +60,12 @@
             return this.View(album);
         }
 
-        public async Task<IActionResult> Edit(int id)
-        {
-            var album = this.albumsService.GetCurrentAlbumById<AlbumEditViewModel>(id);
-
-            return this.View(album);
-        }
-
         [HttpPost]
-        public async Task<IActionResult> Edit(AlbumEditViewModel input)
+        public async Task<IActionResult> Edit(AlbumViewModel input)
         {
             var albumId = await this.albumsService.EditAlbumAsync(input.Id, input.Name, input.Description, input.Producer, input.CoverUrl, input.Genre, input.ReleaseDate);
 
-            return this.RedirectToAction(nameof(this.ById), new { id = albumId});
+            return this.RedirectToAction(nameof(this.ById), new { id = albumId });
         }
     }
 }

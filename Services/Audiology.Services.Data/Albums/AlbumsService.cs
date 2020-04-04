@@ -17,27 +17,26 @@
     public class AlbumsService : IAlbumsService
     {
         private readonly IRepository<Album> repository;
-        private readonly IRepository<UsersAlbum> usersAlbumRepository;
         private readonly IRepository<Song> songRepository;
 
-        public AlbumsService(IRepository<Album> repository, IRepository<UsersAlbum> usersAlbumRepository, IRepository<Song> songRepository)
+        public AlbumsService(IRepository<Album> repository, IRepository<Song> songRepository)
         {
             this.repository = repository;
-            this.usersAlbumRepository = usersAlbumRepository;
             this.songRepository = songRepository;
         }
 
         public IEnumerable<T> GetAllForUser<T>(string userId)
         {
-            var result = this.repository.All().Where(a => a.UsersAlbum.Any(ua => ua.UserId == userId)).To<T>().ToList();
+            var result = this.repository.All().Where(a => a.UserId == userId).To<T>().ToList(); // Add validations
 
-            return result;
+            return null;
         }
 
         public async Task<int> AddAsync(string name, string coverUrl, string description, string producer, string userId, DateTime? releaseDate)
         {
             var album = new Album
             {
+                UserId = userId,
                 Name = name,
                 CoverUrl = coverUrl,
                 Description = description,
@@ -47,15 +46,6 @@
             // Add check for the album name
             await this.repository.AddAsync(album);
             await this.repository.SaveChangesAsync();
-
-            var usersAlbum = new UsersAlbum
-            {
-                AlbumId = album.Id,
-                UserId = userId,
-            };
-
-            await this.usersAlbumRepository.AddAsync(usersAlbum);
-            await this.usersAlbumRepository.SaveChangesAsync();
 
             return album.Id;
         }
