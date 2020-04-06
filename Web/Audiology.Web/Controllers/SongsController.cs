@@ -55,7 +55,6 @@
             return this.View(song);
         }
 
-        // GET: Songs
         public ActionResult Index()
         {
             string userName = this.User.Identity.Name;
@@ -86,13 +85,6 @@
             return this.View(songs);
         }
 
-        // GET: Songs/Details/5
-        public ActionResult Details(int id)
-        {
-            return this.View();
-        }
-
-        // GET: Songs/Upload
         public ActionResult Upload()
         {
             var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
@@ -103,7 +95,6 @@
             return this.View(viewModel);
         }
 
-        // POST: Songs/Upload
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(SongUploadViewModel input) // Add validation for error 404.13 data length
@@ -115,21 +106,19 @@
 
             string userId = this.userManager.GetUserId(this.User);
 
-            var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.Producer, input.AlbumId, input.Genre, input.Year, userId, input.SongArtUrl, input.Featuring, input.WrittenBy, input.YoutubeUrl, input.SoundcloudUrl);
+            var songId = await this.songsService.UploadAsync(input.Song, this.User.Identity.Name, input.Name, input.Description, input.Producer, input.AlbumId, input.Genre, input.Year, userId, input.SongArtUrl, input.Featuring, input.WrittenBy, input.YoutubeUrl, input.SoundcloudUrl, input.InstagramPostUrl);
 
             return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }
 
-        // POST: Songs/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(SongViewModel input)
         {
-            var songId = await this.songsService.EditSongAsync(input.Id, input.UserUserName, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year, input.Featuring, input.WrittenBy, input.YoutubeUrl, input.SoundcloudUrl);
+            var songId = await this.songsService.EditSongAsync(input.Id, input.UserUserName, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year, input.Featuring, input.WrittenBy, input.YoutubeUrl, input.SoundcloudUrl, input.InstagramPostUrl);
             return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }
 
-        // POST: Songs/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)

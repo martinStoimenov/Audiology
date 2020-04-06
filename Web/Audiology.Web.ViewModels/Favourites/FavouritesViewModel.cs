@@ -18,7 +18,7 @@
 
         public int SongId { get; set; }
 
-        public int FavouritesCount { get; set; }
+        public int SongFavouritesCount { get; set; }
 
         public string SongName { get; set; }
 
@@ -43,5 +43,7 @@
         public string SongWrittenBy { get; set; }
 
         public string SongYoutubeUrl { get; set; }
+
+        public string SongInstagramPostUrl { get; set; }
     }
 }

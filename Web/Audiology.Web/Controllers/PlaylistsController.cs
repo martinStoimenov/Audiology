@@ -41,6 +41,14 @@
             return this.RedirectToAction("Index", "Songs");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Remove(string userId, int playlistId, int songId)
+        {
+            await this.service.RemoveAsync(userId, playlistId, songId);
+
+            return this.RedirectToAction(nameof(this.ById), new { Id = playlistId });
+        }
+
         public async Task<IActionResult> Index()
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -53,6 +61,7 @@
         public async Task<IActionResult> ById(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
+            this.ViewData["playlistId"] = id;
 
             var songsInPlaylist = await this.service.GetAllSongsInPlaylistAsync<SongListViewModel>(userId, id);
 

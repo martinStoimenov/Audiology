@@ -46,6 +46,21 @@ namespace Audiology.Data.Models
         [MaxLength(600)]
         public string ProfilePicUrl { get; set; }
 
+        [MaxLength(600)]
+        public string InstagramUrl { get; set; }
+
+        [MaxLength(600)]
+        public string FacebookUrl { get; set; }
+
+        [MaxLength(600)]
+        public string TwitterUrl { get; set; }
+
+        [MaxLength(600)]
+        public string YouTubeUrl { get; set; }
+
+        [MaxLength(600)]
+        public string SondcloudUrl { get; set; }
+
         public Gender Gender { get; set; }
 
         [Column(TypeName = "date")]

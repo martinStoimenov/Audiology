@@ -54,6 +54,11 @@
         [MaxLength(500)]
         public string SoundcloudUrl { get; set; }
 
+        [MaxLength(500)]
+        public string InstagramPostUrl { get; set; }
+
+        public int? FavouritesCount { get; set; }
+
         public virtual ICollection<Favourites> Favourites { get; set; }
 
         public virtual ICollection<PlaylistsSongs> PlaylistsSongs { get; set; }

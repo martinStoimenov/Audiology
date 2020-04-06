@@ -12,7 +12,6 @@
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h4>Create a new account.</h4>
             <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Input.ProfilePicUrl"></label>
                 <input asp-for="Input.ProfilePicUrl" class="form-control" />
@@ -58,14 +57,41 @@
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <div id="additionalProps" style="display: none;">
+                <div class="form-group">
+                    <label asp-for="Input.InstagramUrl"></label>
+                    <input asp-for="Input.InstagramUrl" class="form-control" />
+                    <span asp-validation-for="Input.InstagramUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.FacebookUrl"></label>
+                    <input asp-for="Input.FacebookUrl" class="form-control" />
+                    <span asp-validation-for="Input.FacebookUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.YouTubeUrl"></label>
+                    <input asp-for="Input.YouTubeUrl" class="form-control" />
+                    <span asp-validation-for="Input.YouTubeUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.TwitterUrl"></label>
+                    <input asp-for="Input.TwitterUrl" class="form-control" />
+                    <span asp-validation-for="Input.TwitterUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.SondcloudUrl"></label>
+                    <input asp-for="Input.SondcloudUrl" class="form-control" />
+                    <span asp-validation-for="Input.SondcloudUrl" class="text-danger"></span>
+                </div>
+            </div>
             <div>
                 <label><input type="radio" asp-for="Input.Gender" value="Male" />Male</label>
 
                 <label><input type="radio" asp-for="Input.Gender" value="Female" />Female</label>
             </div>
-
+            <button id="additionalPropsBtn" class="btn btn-outline-dark">Show more</button>
             <hr />
-            <button type="submit" class="btn btn-dark">Register</button>
+            <button type="submit" class="btn btn-dark"><i class="fas fa-sign-in-alt"></i> Register</button>
         </form>
     </div>
     <div class="col-md-6 col-md-offset-2">
@@ -102,4 +128,12 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $('#additionalPropsBtn').on('click', function () {
+            $('#additionalProps').slideDown(700).show();
+            $('#additionalPropsBtn').hide(400);
+        });
+    </script>
+
 }

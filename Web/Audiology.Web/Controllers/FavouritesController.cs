@@ -22,7 +22,7 @@
             this.userManager = userManager;
         }
 
-        // Request {"userId":"43452d61-619b-48db-b859-3146df33f3df","songId":2,"albumId":9}       works without authentication in postman
+        // Request {"userId":"43452d61-619b-48db-b859-3146df33f3df","songId":2,"albumId":9}
         [HttpPost]
         public async Task<ActionResult<FavouritesOutputModel>> Post(FavouritesInputViewModel input)
         {
@@ -39,7 +39,7 @@
             var userId = this.userManager.GetUserId(this.User);
 
             var all = await this.favouritesService.GetAllAsync<FavouritesViewModel>(userId);
-
+            // add value to fav count here
             return this.View(all);
         }
     }

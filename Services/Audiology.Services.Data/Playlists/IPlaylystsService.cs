@@ -11,6 +11,8 @@
 
         Task AddAsync(string userId, int playlistId, int songId);
 
+        Task RemoveAsync(string userId, int playlistId, int songId);
+
         Task<IEnumerable<T>> GetAllPlaylistsAsync<T>(string userId);
     }
 }

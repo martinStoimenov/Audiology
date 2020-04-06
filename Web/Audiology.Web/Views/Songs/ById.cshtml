@@ -3,22 +3,14 @@
     @model Audiology.Web.ViewModels.Songs.SongViewModel
 }
 
-
-
 <img src="@(Model.SongArtUrl == null ? Model.AlbumCoverUrl : Model.SongArtUrl)" class="img-fluid" style="width: 100%; height: 25rem" alt="Song cover can't be found sorry  :)" />
 <hr />
 <div class="row">
     <div class="col-md-6">
         <h1>@Model.Name</h1>
+
         <hr />
-        @if (this.User.IsInRole("Artist"))
-        {
-            <div id="lyrics">If lyrics are not shown here rename your song. Lyrics come from <a href="https://lyrics.ovh/" target="_blank">lirycs.ovh</a>.</div>
-        }
-        @if (this.User.IsInRole("User"))
-        {
-            <div id="lyrics">Sent Email to artist to update the lyrics.</div>
-        }
+        <div id="lyrics">If lyrics are not shown here rename this song or send email to the artist. Lyrics come from <a href="https://lyrics.ovh/" target="_blank">lirycs.ovh</a>.</div>
     </div>
 
     <hr />
@@ -115,8 +107,12 @@
                     src="https://www.youtube.com/embed/YAt60oZ_J-4?controls=1">
             </iframe>
         </div>
-        <hr />
 
+        <hr />
+        <div id="instagramPost" style="margin-left: 2rem;">
+            <iframe src="https://www.instagram.com/p/ByV1qWqgJsg/embed/captioned" width="400" height="505" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+        </div>
+        <hr />
         <div id="soundCloudPlayer">
             <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/436863855&color=%234d544d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
         </div>
@@ -140,7 +136,7 @@
         }
 
 
-        <form enctype="multipart/form-data" asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
+        <form asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
             <input type="hidden" name="Id" value="@this.Model.Id" />
             <input type="hidden" name="UserUserName" value="@this.Model.UserUserName" />
             <div>
@@ -216,11 +212,16 @@
                     <input asp-for="SoundcloudUrl" class="form-control" />
                     <span asp-validation-for="SoundcloudUrl" class="text-danger"></span>
                 </div>
+                <div class="col">
+                    <label asp-for="InstagramPostUrl"></label>
+                    <input asp-for="InstagramPostUrl" class="form-control" />
+                    <span asp-validation-for="InstagramPostUrl" class="text-danger"></span>
+                </div>
             </div>
 
             <hr />
             <button asp-controller="Songs" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-music" style="margin-right: 1rem;"></i>UPDATE</button>
-            <button asp-controller="Songs" asp-action="Delete" asp-route-id="@Model.Id" type="submit" class="btn btn-outline-danger btn-block">DELETE</button>
+            <button asp-controller="Songs" asp-action="Delete" asp-route-id="@Model.Id" id="delete" type="submit" class="btn btn-outline-danger btn-block" data-toggle="tooltip" data-placement="left" title="This Action is irreversible are you sure?">DELETE</button>
         </form>
 
         @if (this.User.IsInRole("Artist") && this.User.Identity.Name == Model.UserUserName || this.User.IsInRole("Administrator"))
@@ -238,12 +239,10 @@
     <div class="font-weight-lighter text-left" style="margin-left: 1rem;">@Model.Name</div>
 
     <audio id="player" controls style="width: 100%;">
-        <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).@Model.FileExtension" type="audio/@Model.FileExtension"> <!-- Fix extension and type -->
+        <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).@Model.FileExtension" type="audio/@Model.FileExtension">
     </audio>
 </div>
 <h1>text after the view component</h1>
-// Big song player , next to him more songs from the same album if there's any and below song lyrics
-
 
 @section Scripts{
     <script>

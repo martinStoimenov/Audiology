@@ -81,7 +81,7 @@
             await this.songRepository.SaveChangesAsync();
         }
 
-        public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, string producer, int? albumId, Enum genre, int year, string userId, string songArt, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl)
+        public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, string producer, int? albumId, Enum genre, int year, string userId, string songArt, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl, string instagramPostUrl)
         {
             var dotIndex = input.FileName.LastIndexOf('.');
             var fileExtension = input.FileName.Substring(dotIndex);
@@ -129,6 +129,11 @@
                 throw new ArgumentOutOfRangeException("Soundcloud url cannot be more than 500 characters!");
             }
 
+            if (instagramPostUrl == null || instagramPostUrl.Length > 500) // refactor these validations
+            {
+                throw new ArgumentOutOfRangeException("Instagram url cannot be more than 500 characters!");
+            }
+
             string name = songName + fileExtension;
 
             var filePath = Path.Combine(webRootPath, username, name);
@@ -152,6 +157,7 @@
                 WrittenBy = writtenBy,
                 YoutubeUrl = youtubeUrl,
                 SoundcloudUrl = soundcloudUrl,
+                InstagramPostUrl = instagramPostUrl,
             };
 
             await this.songRepository.AddAsync(song);
@@ -159,7 +165,7 @@
             return song.Id;
         }
 
-        public async Task<int> EditSongAsync(int id, string username, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl)
+        public async Task<int> EditSongAsync(int id, string username, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl, string instagramPostUrl)
         {
             var song = this.songRepository.All().Where(s => s.Id == id).FirstOrDefault();
 
@@ -227,6 +233,11 @@
                 if (soundcloudUrl.Length <= 500 && soundcloudUrl != null)
                 {
                     song.SoundcloudUrl = soundcloudUrl;
+                }
+
+                if (instagramPostUrl.Length <= 500 && instagramPostUrl != null)
+                {
+                    song.InstagramPostUrl = instagramPostUrl;
                 }
             }
 

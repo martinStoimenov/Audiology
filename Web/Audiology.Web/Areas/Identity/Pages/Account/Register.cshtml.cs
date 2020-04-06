@@ -85,6 +85,26 @@
             [Display(Name = "Profile picture url")]
             public string ProfilePicUrl { get; set; }
 
+            [MaxLength(600)]
+            [Display(Name = "Instagram profile url")]
+            public string InstagramUrl { get; set; }
+
+            [MaxLength(600)]
+            [Display(Name = "Facebook profile url")]
+            public string FacebookUrl { get; set; }
+
+            [MaxLength(600)]
+            [Display(Name = "Twitter profile url")]
+            public string TwitterUrl { get; set; }
+
+            [MaxLength(600)]
+            [Display(Name = "You Tube profile url")]
+            public string YouTubeUrl { get; set; }
+
+            [MaxLength(600)]
+            [Display(Name = "Soundcloud profile url")]
+            public string SondcloudUrl { get; set; }
+
             [DataType(DataType.Date)]
             public DateTime? Birthday { get; set; }
 
@@ -110,7 +130,7 @@
             this.ExternalLogins = (await this._signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email, FirstName = this.Input.FirstName, LastName = this.Input.LastName, ProfilePicUrl = this.Input.ProfilePicUrl, Birthday = this.Input.Birthday, Gender = this.Input.Gender };
+                var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email, FirstName = this.Input.FirstName, LastName = this.Input.LastName, ProfilePicUrl = this.Input.ProfilePicUrl, Birthday = this.Input.Birthday, Gender = this.Input.Gender, InstagramUrl = this.Input.InstagramUrl, FacebookUrl = this.Input.FacebookUrl, TwitterUrl = this.Input.TwitterUrl, YouTubeUrl = this.Input.YouTubeUrl, SondcloudUrl = this.Input.SondcloudUrl };
                 var result = await this._userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {

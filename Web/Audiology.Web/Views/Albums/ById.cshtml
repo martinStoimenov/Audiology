@@ -84,7 +84,7 @@
 
         <hr />
         <button asp-controller="Albums" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-compact-disc" style="margin-right: 1rem;"></i>UPDATE</button>
-        <button asp-controller="Albums" asp-action="Delete" asp-route-id="@Model.Id" type="submit" class="btn btn-outline-danger btn-block">DELETE</button>
+        <button asp-controller="Albums" asp-action="Delete" asp-route-id="@Model.Id" type="submit" class="btn btn-outline-danger btn-block" data-toggle="tooltip" data-placement="left" title="This will delete all songs in the album.">DELETE</button>
     </form>
 
     @if (this.User.IsInRole("Artist") || this.User.IsInRole("Administrator"))

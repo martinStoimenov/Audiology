@@ -13,12 +13,11 @@
 {
     <hr />
     <div>/ @liked.SongId  /</div>
-    <div>/ @liked.AlbumId  /</div>
     <div>/ @liked.SongGenre  /</div>
     <div>/ @liked.SongName  /</div>
-    <div>/ @liked.SongProducer  /</div>
-    <div>/ @liked.SongUserUserName  /</div>
-    <div>/ @liked.SongYear  /</div>
+    <div>Producer/ @liked.SongProducer  /</div>
+    <div>Artist/ @liked.SongUserUserName  /</div>
+    <div>Year/ @liked.SongYear  /</div>
     <div>/ @liked.UserId  /</div>
     <div>/ @liked.SongUserUserName  /</div>
     <div>/ @liked.SongSoundcloudUrl  /</div>
@@ -42,7 +41,7 @@
             <div class="ml-auto p-2 bd-highlight">
                 <form id="votesForm" method="post"></form>
                 <a href="#" onclick="favourite('@userId',@liked.SongId,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
-                <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@liked.FavouritesCount</div>
+                <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@liked.SongFavouritesCount</div>
             </div>
         </div>
         <span class="d-flex justify-content-start align-self-end">

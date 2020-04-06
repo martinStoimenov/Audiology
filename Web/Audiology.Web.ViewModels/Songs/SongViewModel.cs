@@ -53,6 +53,9 @@
         [MaxLength(500)]
         public string SoundcloudUrl { get; set; }
 
+        [MaxLength(500)]
+        public string InstagramPostUrl { get; set; }
+
         public string AlbumName { get; set; }
 
         public DateTime? AlbumReleaseDate { get; set; }

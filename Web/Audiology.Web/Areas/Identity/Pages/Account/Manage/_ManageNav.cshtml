@@ -2,18 +2,6 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-
-    <style>
-        .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-        color:white;
-        background-color:black;
-        }
-
-        .btn-primary {
-	    background-color: black;
-        }
-    </style>
-
 <ul class="nav nav-pills flex-column">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>

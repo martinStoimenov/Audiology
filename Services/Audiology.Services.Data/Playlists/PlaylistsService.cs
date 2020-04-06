@@ -26,7 +26,7 @@
 
         public async Task AddAsync(string userId, int playlistId, int songId)
         {
-            var song = await this.playlistsSongsRepository.All().Where(ps => ps.SongId == songId && ps.PlaylistId == playlistId).FirstOrDefaultAsync();
+            var song = await this.playlistsSongsRepository.AllWithDeleted().Where(ps => ps.SongId == songId && ps.PlaylistId == playlistId).FirstOrDefaultAsync();
             var isPlaylistToUser = await this.playlistRepository.All().Where(p => p.Id == playlistId && p.UserId == userId).FirstOrDefaultAsync();
 
             if (isPlaylistToUser != null)
@@ -40,6 +40,11 @@
                     };
 
                     await this.playlistsSongsRepository.AddAsync(playlistSong);
+                }
+                else
+                {
+                    song.IsDeleted = false;
+                    this.playlistsSongsRepository.Update(song);
                 }
             }
 
@@ -92,6 +97,18 @@
             var playlistSongs = await this.playlistsSongsRepository.All().Where(ps => ps.PlaylistId == playlistId).Select(x => x.Song).To<T>().ToListAsync();
 
             return playlistSongs;
+        }
+
+        public async Task RemoveAsync(string userId, int playlistId, int songId)
+        {
+            var song = await this.playlistsSongsRepository.All().Where(ps => ps.PlaylistId == playlistId && ps.SongId == songId && ps.Song.UserId == userId).FirstOrDefaultAsync();
+
+            if (song != null)
+            {
+                this.playlistsSongsRepository.Delete(song);
+            }
+
+            await this.playlistsSongsRepository.SaveChangesAsync();
         }
     }
 }

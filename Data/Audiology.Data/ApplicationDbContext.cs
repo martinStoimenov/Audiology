@@ -79,7 +79,7 @@
                 method.Invoke(null, new object[] { builder });
             }
 
-            // Disable cascade delete
+            // Disable cascade delete                       Add cascade delete only to user
             var foreignKeys = entityTypes
                 .SelectMany(e => e.GetForeignKeys().Where(f => f.DeleteBehavior == DeleteBehavior.Cascade));
             foreach (var foreignKey in foreignKeys)

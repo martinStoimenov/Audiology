@@ -3,48 +3,63 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-@{ var userProfilePic = this.UserManager.GetUserAsync(this.User).Result.ProfilePicUrl; }
 
-    <ul class="navbar-nav">
-        @if (this.SignInManager.IsSignedIn(this.User))
-        {
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@(this.User.Identity.Name)</a>
-            </li>
-            <div class="dropdown pmd-dropdown pmd-user-info ml-auto">
-                <a href="javascript:void(0);" class="btn-user dropdown-toggle media align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="mr-2" src="@userProfilePic" width="40" height="40" alt="Avatar">
-                    
-                    <i class="far fa-caret-circle-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fas fa-sliders-h"></i> Edit Profile</a>
+@{ var userProfilePic = string.Empty;
+    var userId = string.Empty;
+    if (this.User.Identity.IsAuthenticated)
+    {
+        userProfilePic = this.UserManager.GetUserAsync(this.User).Result.ProfilePicUrl;
+        userId = this.UserManager.GetUserId(this.User);
+    }
+    else
+    {
+        userProfilePic = string.Empty;
+    }
+}
+
+<ul class="navbar-nav">
+    @if (this.SignInManager.IsSignedIn(this.User))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@(this.User.Identity.Name)</a>
+        </li>
+        <div class="dropdown pmd-dropdown pmd-user-info ml-auto">
+            <a href="javascript:void(0);" class="btn-user dropdown-toggle media align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img class="mr-2" src="@userProfilePic" width="50" height="50" alt="Avatar">
+
+                <i class="far fa-caret-circle-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-id="@userId"><i class="fas fa-sliders-h"></i> Profile</a>
+                @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || (this.User.IsInRole(GlobalConstants.ArtistRoleName)))
+                {
                     <a class="dropdown-item" asp-controller="Songs" asp-action="Index"><i class="fas fa-music"></i> Songs</a>
                     <a class="dropdown-item" asp-controller="Albums" asp-action="Index"><i class="fas fa-compact-disc"></i> Albums</a>
                     <a class="dropdown-item" asp-controller="Favourites" asp-action="Index"><i class="fab fa-gratipay"></i> Favourites</a>
                     <a class="dropdown-item" asp-controller="Playlists" asp-action="Index"><i class="fas fa-headphones"></i> Playlists</a>
-                    <a class="dropdown-item" href ="#"><i class="fas fa-brain"></i> Contact</a>
-                </ul>
-            </div>
-            if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-            {
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
-                </li>
-            }
-            <li class="nav-item">
-                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
-                    <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
-                </form>
-            </li>
-        }
-        else
+                }
+                <a class="dropdown-item" href="#"><i class="fas fa-brain"></i> Contact</a>
+            </ul>
+        </div>
+        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
         {
             <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a class="nav-link text-white" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
             </li>
         }
-    </ul>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+                <button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>

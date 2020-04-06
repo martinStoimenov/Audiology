@@ -54,6 +54,10 @@
         [MaxLength(500)]
         public string SoundcloudUrl { get; set; }
 
+        [MaxLength(500)]
+        [Display(Name = "Instagram post url")]
+        public string InstagramPostUrl { get; set; }
+
         [Required]
         [MaxFileSize(24 * 1024 * 1024)]
         [AllowedExtensions(new string [] { ".mp3", ".wav", ".ogg" })]
