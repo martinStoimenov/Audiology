@@ -1,10 +1,11 @@
 ﻿namespace Audiology.Web.Controllers
 {
+    using System.Threading.Tasks;
+
     using Audiology.Common;
     using Audiology.Services.Data.Profile;
     using Audiology.Web.ViewModels.Profile;
     using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
 
     public class ProfileController : Controller
     {

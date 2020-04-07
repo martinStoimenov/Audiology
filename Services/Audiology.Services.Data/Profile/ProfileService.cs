@@ -1,13 +1,14 @@
-﻿using Audiology.Data.Common.Repositories;
-using Audiology.Data.Models;
-using Audiology.Services.Mapping;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Audiology.Services.Data.Profile
+﻿namespace Audiology.Services.Data.Profile
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Audiology.Data.Common.Repositories;
+    using Audiology.Data.Models;
+    using Audiology.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
+
     public class ProfileService : IProfileService
     {
         private readonly IRepository<ApplicationUser> repository;

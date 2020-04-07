@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
     using Audiology.Data;
@@ -83,6 +85,7 @@
 
         public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, string producer, int? albumId, Enum genre, int year, string userId, string songArt, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl, string instagramPostUrl)
         {
+            // TODO: Add hangfire task scheduler for api calls
             var dotIndex = input.FileName.LastIndexOf('.');
             var fileExtension = input.FileName.Substring(dotIndex);
             var originalFileName = input.FileName.Substring(0, dotIndex);
@@ -162,6 +165,19 @@
 
             await this.songRepository.AddAsync(song);
             await this.songRepository.SaveChangesAsync();
+
+            var lyrics = await this.GetApiSeedLyrics(username, name, "?apikey=qnvwwzXwsPeyGI7KUILgQSTjlzoBywKYIp1l7KPe0al9jiwYT4qms0UzDJozxM2i");
+
+            using (StreamWriter stream = File.CreateText(@"C:\Users\haloho\Desktop\lyrics.txt"))
+            {
+                stream.WriteLine("Created on: ");
+                stream.WriteLine(DateTime.Now);
+                stream.Write(lyrics);
+                stream.WriteLine();
+                stream.WriteLine();
+                stream.WriteLine();
+            }
+
             return song.Id;
         }
 
@@ -332,6 +348,56 @@
                             }
                         }*/
             return duration.ToString(@"hh\:mm\:ss");
+        }
+
+        public async Task<string> GetApiSeedLyrics(string artist, string song, string appKey)
+        {
+            var apiSeedsClient = new HttpClient();
+
+            string baseUrl = "https://orion.apiseeds.com/api/music/lyric/";
+            string artistName = artist;
+            string songName = $"/{song}";
+            string apiKey = appKey;
+            string search = baseUrl + artistName + songName + apiKey;
+
+            var jsonResultString = await apiSeedsClient.GetAsync(search);
+            string lyrics = string.Empty;
+
+            if (!jsonResultString.IsSuccessStatusCode)
+            {
+                // throw new ArgumentException("Song lyrics can't be found right now");
+                return null;
+            }
+            else
+            {
+                var jsonStr = await jsonResultString.Content.ReadAsStringAsync();
+
+                var json = JsonDocument.Parse(jsonStr);
+
+                lyrics = json.RootElement.GetProperty("result").GetProperty("track").GetProperty("text").ToString();
+            }
+
+            return lyrics;
+        }
+
+        /// <summary>
+        /// Gets the top favourited Songs.
+        /// </summary>
+        /// <typeparam name="T">View model</typeparam>
+        /// <param name="howMuch">How many songs to get.</param>
+        /// <returns></returns>
+        public async Task<IEnumerable<T>> GetTopFavouritedSongs<T>(int howMuch)
+        {
+            var songs = await this.songRepository.All().OrderByDescending(s => s.FavouritesCount).Take(howMuch).To<T>().ToListAsync();
+
+            return songs;
+        }
+
+        public async Task<IEnumerable<T>> GetTopUsers<T>(int count)
+        {
+            var users = await this.songRepository.All().OrderByDescending(s => s.FavouritesCount).Take(count).Select(s => s.User).To<T>().ToListAsync();
+
+            return users;
         }
     }
 }

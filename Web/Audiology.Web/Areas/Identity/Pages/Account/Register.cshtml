@@ -9,14 +9,14 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form asp-route-returnUrl="@Model.ReturnUrl" enctype="multipart/form-data" method="post">
             <h4>Create a new account.</h4>
             <hr />
             <div class="form-group">
                 <label asp-for="Input.ProfilePicUrl"></label>
-                <input asp-for="Input.ProfilePicUrl" class="form-control" />
-                <span asp-validation-for="Input.ProfilePicUrl" class="text-danger"></span>
+                <input asp-for="Input.ProfilePicUrl" type="file" class="form-control">
             </div>
+            <br />
             <div class="form-group">
                 <label asp-for="Input.SelectedRole"></label>
                 <select asp-for="Input.SelectedRole" class="form-control" asp-items="@Html.GetEnumSelectList<RolesEnum>()"></select>

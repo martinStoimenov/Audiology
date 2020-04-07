@@ -8,6 +8,8 @@
 
     public class ArtistProfileViewModel : IMapFrom<ApplicationUser>
     {
+        public string Id { get; set; }
+
         public string UserName { get; set; }
 
         public string FirstName { get; set; }
@@ -29,5 +31,7 @@
         public Gender Gender { get; set; }
 
         public DateTime? Birthday { get; set; }
+
+        public string AlbumName { get; set; }
     }
 }

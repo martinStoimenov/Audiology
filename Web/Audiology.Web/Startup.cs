@@ -16,6 +16,7 @@
     using Audiology.Services.Mapping;
     using Audiology.Services.Messaging;
     using Audiology.Web.ViewModels;
+    using CloudinaryDotNet;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -81,6 +82,16 @@
             services.AddTransient<IFavouritesService, FavouritesService>();
             services.AddTransient<IPlaylistsService, PlaylistsService>();
             services.AddTransient<IProfileService, ProfileService>();
+
+            // Cloudinary
+            Account account = new Account(
+                this.configuration["Cloudinary:AppName"],
+                this.configuration["Cloudinary:AppKey"],
+                this.configuration["Cloudinary:AppSecret"]);
+
+            Cloudinary cloudinary = new Cloudinary(account);
+
+            services.AddSingleton(cloudinary);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +111,7 @@
 
                 new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
             }
+
 
             if (env.IsDevelopment())
             {

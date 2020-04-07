@@ -1,31 +1,43 @@
-﻿@{ 
+﻿@{
     @model Audiology.Data.Models.ApplicationUser
 }
 
-    <div class="row text-center">
+<div class="row text-center">
 
-        <div class="col font-weight-lighter">
-            <span class="d-block">Artist first name:</span>
-            <hr />
-            <span class="d-block">Artist last name:</span>
-            <hr />
-            <span class="d-block">Country:</span>
-            <hr />
-            <span class="d-block">Birthday:</span>
-            <hr />
-        </div>
-
-        <div class="col">
-            <span class="d-block">@Model.FirstName</span>
-            <hr />
-            <span class="d-block">@Model.LastName</span>
-            <hr />
-            <span class="d-block">Bulgaria</span>
-            <hr />
-            <span class="d-block">@Model.Birthday</span>
-            <hr />
-        </div>
-
+    <div class="col font-weight-lighter">
+        <span class="d-block">Artist first name:</span>
+        <hr />
+        <span class="d-block">Artist last name:</span>
+        <hr />
+        <span class="d-block">Birthday:</span>
+        <hr />
+    </div>
+    <div class="col">
+        <span class="d-block">@Model.FirstName</span>
+        <hr />
+        <span class="d-block">@Model.LastName</span>
+        <hr />
+        <span class="d-block">@Model.Birthday</span>
+        <hr />
     </div>
 
+</div>
+
+<div class="row">
+    <div class="col">
+        <a href="@Model.FacebookUrl"><i class="fab fa-facebook fa-2x"></i></a>
+    </div>
+    <div class="col">
+        <a href="@Model.YouTubeUrl"><i class="fab fa-youtube fa-2x"></i></a>
+    </div>
+    <div class="col">
+        <a href="@Model.SondcloudUrl"><i class="fab fa-soundcloud fa-2x"></i></a>
+    </div>
+    <div class="col">
+        <a href="@Model.TwitterUrl"><i class="fab fa-twitter fa-2x"></i></a>
+    </div>
+    <div class="col">
+        <a href="@Model.InstagramUrl"><i class="fab fa-instagram fa-2x"></i></a>
+    </div>
+</div>
 

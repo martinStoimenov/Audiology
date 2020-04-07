@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
@@ -11,8 +12,11 @@
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
+    using CloudinaryDotNet;
+    using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.AspNetCore.Mvc;
@@ -28,17 +32,20 @@
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly Cloudinary cloudinary;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            Cloudinary cloudinary)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._logger = logger;
             this._emailSender = emailSender;
+            this.cloudinary = cloudinary;
         }
 
         [BindProperty]
@@ -81,9 +88,7 @@
             public string LastName { get; set; }
 
             [Required]
-            [MaxLength(600)]
-            [Display(Name = "Profile picture url")]
-            public string ProfilePicUrl { get; set; }
+            public IFormFile ProfilePicUrl { get; set; }
 
             [MaxLength(600)]
             [Display(Name = "Instagram profile url")]
@@ -114,8 +119,6 @@
             [Required]
             [Display(Name = "Select Role")]
             public RolesEnum SelectedRole { get; set; }
-
-            // public IEnumerable<SelectListItem> Roles { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -130,7 +133,8 @@
             this.ExternalLogins = (await this._signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email, FirstName = this.Input.FirstName, LastName = this.Input.LastName, ProfilePicUrl = this.Input.ProfilePicUrl, Birthday = this.Input.Birthday, Gender = this.Input.Gender, InstagramUrl = this.Input.InstagramUrl, FacebookUrl = this.Input.FacebookUrl, TwitterUrl = this.Input.TwitterUrl, YouTubeUrl = this.Input.YouTubeUrl, SondcloudUrl = this.Input.SondcloudUrl };
+                var imageUrl = await this.ImageUpload(this.Input.ProfilePicUrl);
+                var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email, FirstName = this.Input.FirstName, LastName = this.Input.LastName, ProfilePicUrl = imageUrl, Birthday = this.Input.Birthday, Gender = this.Input.Gender, InstagramUrl = this.Input.InstagramUrl, FacebookUrl = this.Input.FacebookUrl, TwitterUrl = this.Input.TwitterUrl, YouTubeUrl = this.Input.YouTubeUrl, SondcloudUrl = this.Input.SondcloudUrl };
                 var result = await this._userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
@@ -163,6 +167,7 @@
                         return this.LocalRedirect(returnUrl);
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
                     this.ModelState.AddModelError(string.Empty, error.Description);
@@ -171,6 +176,30 @@
 
             // If we got this far, something failed, redisplay form
             return this.Page();
+        }
+
+        public async Task<string> ImageUpload(IFormFile image)
+        {
+            string imagePath = string.Empty;
+            byte[] destinationImage;
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await image.CopyToAsync(memoryStream);
+                destinationImage = memoryStream.ToArray();
+            }
+
+            using (var destinationStream = new MemoryStream(destinationImage))
+            {
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(image.FileName, destinationStream),
+                };
+                var uploadResult = this.cloudinary.UploadAsync(uploadParams);
+                imagePath = uploadResult.Result.Uri.AbsoluteUri;
+            }
+
+            return imagePath;
         }
     }
 }

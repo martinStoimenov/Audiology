@@ -15,6 +15,8 @@
 
         Task DeleteSong(int songId);
 
+        Task<IEnumerable<T>> GetTopFavouritedSongs<T>(int howMuch);
+
         Task<IEnumerable<T>> GetSongsByAlbumAsync<T>(int? albumId);
 
         IEnumerable<T> GetAllSongsForUserAsync<T>(string userId);

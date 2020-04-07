@@ -27,6 +27,7 @@
         public IActionResult Index()
         {
             var songsView = this.songsServcie.GetAll<SongListViewModel>();
+            // this.songsServcie.GetTopFavouritedSongs<SongListViewModel>(1);
 
             return this.View(songsView);
         }
