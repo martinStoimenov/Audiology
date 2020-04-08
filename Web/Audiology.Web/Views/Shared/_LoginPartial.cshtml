@@ -30,7 +30,7 @@
                 <i class="far fa-caret-circle-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-id="@userId"><i class="fas fa-sliders-h"></i> Profile</a>
+                <a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-id="@userId"><i class="fas fa-user-circle"></i> Profile</a>
                 @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || (this.User.IsInRole(GlobalConstants.ArtistRoleName)))
                 {
                     <a class="dropdown-item" asp-controller="Songs" asp-action="Index"><i class="fas fa-music"></i> Songs</a>

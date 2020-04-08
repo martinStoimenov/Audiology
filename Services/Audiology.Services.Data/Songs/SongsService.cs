@@ -18,6 +18,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
     using NAudio.Wave;
 
     public class SongsService : ISongsServcie
@@ -27,19 +28,22 @@
         private readonly IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo;
         private readonly IDeletableEntityRepository<Favourites> favouritesRepo;
         private readonly IRepository<ApplicationUser> userRepo;
+        private readonly IConfiguration configuration;
 
         public SongsService(
             IHostingEnvironment env,
             IRepository<Song> songRepository,
             IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo,
             IDeletableEntityRepository<Favourites> favouritesRepo,
-            IRepository<ApplicationUser> userRepo)
+            IRepository<ApplicationUser> userRepo,
+            IConfiguration configuration)
         {
             this.env = env;
             this.songRepository = songRepository;
             this.playlistsSongsRepo = playlistsSongsRepo;
             this.favouritesRepo = favouritesRepo;
             this.userRepo = userRepo;
+            this.configuration = configuration;
         }
 
         public async Task DeleteSong(int songId)
@@ -127,13 +131,13 @@
                 throw new ArgumentOutOfRangeException("You Tube url cannot be more than 500 characters!");
             }
 
-            if (soundcloudUrl == null || soundcloudUrl.Length > 500) // refactor these validations
-            {
+            if (soundcloudUrl == null || soundcloudUrl.Length > 500)
+            { // refactor these validations
                 throw new ArgumentOutOfRangeException("Soundcloud url cannot be more than 500 characters!");
             }
 
-            if (instagramPostUrl == null || instagramPostUrl.Length > 500) // refactor these validations
-            {
+            if (instagramPostUrl == null || instagramPostUrl.Length > 500)
+            { // refactor these validations
                 throw new ArgumentOutOfRangeException("Instagram url cannot be more than 500 characters!");
             }
 
@@ -166,9 +170,15 @@
             await this.songRepository.AddAsync(song);
             await this.songRepository.SaveChangesAsync();
 
-            var lyrics = await this.GetApiSeedLyrics(username, name, "?apikey=qnvwwzXwsPeyGI7KUILgQSTjlzoBywKYIp1l7KPe0al9jiwYT4qms0UzDJozxM2i");
+            // var lyrics = await this.GetApiSeedLyrics(username, name, this.configuration["ApiSeedsLyrics:AppKey"]);
 
-            using (StreamWriter stream = File.CreateText(@"C:\Users\haloho\Desktop\lyrics.txt"))
+          /*  if (lyrics != null)
+            {
+                // Save to database to reduce web api traffic
+                // TODO: Add Comments
+            }
+
+            using (StreamWriter stream = File.CreateText(@"C:\Users\haloho\Desktop\lyrics.txt")) // TODO: Save incomplete tasks somewhere
             {
                 stream.WriteLine("Created on: ");
                 stream.WriteLine(DateTime.Now);
@@ -177,7 +187,7 @@
                 stream.WriteLine();
                 stream.WriteLine();
             }
-
+*/
             return song.Id;
         }
 
@@ -303,7 +313,7 @@
 
         public IEnumerable<T> GetNewestSongs<T>()
         {
-            var songs = this.songRepository.All().OrderBy(x => x.CreatedOn).To<T>().ToList();
+            var songs = this.songRepository.All().OrderByDescending(x => x.CreatedOn).To<T>().ToList();
             return songs;
         }
 
@@ -383,7 +393,7 @@
         /// <summary>
         /// Gets the top favourited Songs.
         /// </summary>
-        /// <typeparam name="T">View model</typeparam>
+        /// <typeparam name="T">View model.</typeparam>
         /// <param name="howMuch">How many songs to get.</param>
         /// <returns></returns>
         public async Task<IEnumerable<T>> GetTopFavouritedSongs<T>(int howMuch)
@@ -398,6 +408,13 @@
             var users = await this.songRepository.All().OrderByDescending(s => s.FavouritesCount).Take(count).Select(s => s.User).To<T>().ToListAsync();
 
             return users;
+        }
+
+        public async Task<IEnumerable<T>> GetTopSongsByGenre<T>(Genre genre)
+        {
+            var songs = await this.songRepository.All().Where(s => s.Genre == genre).OrderByDescending(s => s.FavouritesCount).To<T>().ToListAsync();
+
+            return songs;
         }
     }
 }

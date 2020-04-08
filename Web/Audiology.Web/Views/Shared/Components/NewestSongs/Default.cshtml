@@ -2,7 +2,6 @@
     @using Microsoft.AspNetCore.Identity;
     @using Audiology.Data.Models;
     @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
-    Layout = "";
     @inject UserManager<ApplicationUser> UserManager
     string userId = this.UserManager.GetUserId(this.User);
 }

@@ -4,26 +4,46 @@
     @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
     this.ViewData["Title"] = "Home Page";
 }
+
 <div class="text-center">
     <div class="d-block text-center" style="margin-bottom: 2rem;">
         <h3 class="d-inline p-2 text-white bg-dark"> Random Kanye West quotes every minute: </h3>
     </div>
     <div id="kanye" class="d-inline p-2 text-center text-white bg-dark">
-        
+
     </div>
 </div>
 <h1 class="text-center">All Songs</h1>
 
-<div>
-    <vc:newest-songs></vc:newest-songs>
+<div><h2>Newest songs:</h2></div> <!-- Add more carousels with genres -->
+<div class="newest-songs">
+    @foreach (var song in Model)
+    {
+        <div>
+            <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" width="200" height="200" alt="Image not found" />
+            <div class="text-center" style="width: 50%">
+                <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a>
+                <h5 class="">@this.User.Identity.Name</h5>
+            </div>
+        </div>
+    }
 </div>
+
+<!--<vc:newest-songs></vc:newest-songs>-->
+<hr />
+<br />
+<br />
+<br />
+<br />
+<vc:top-songs></vc:top-songs>
+    </div>
 
 
 
 
 @section Scripts{
     <script>
-        function kanye () {
+        function kanye() {
             $.ajax({
                 url: "https://api.kanye.rest/?format=text",
                 type: "GET",
@@ -37,5 +57,44 @@
                 }
             });
         };
+
+        $(document).ready(function () {
+            $('.newest-songs').slick({
+                dots: true,
+                infinite: true,
+                slidesToShow: 2,
+                slidesToScroll: 1,
+                centerMode: true,
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 3,
+                            infinite: true,
+                            dots: true
+                        }
+                    },
+                    {
+                        breakpoint: 600,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2
+                        }
+                    },
+                    {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1,
+                            slidesToScroll: 1
+                        }
+                    }
+                    // You can unslick at a given breakpoint now by adding:
+                    // settings: "unslick"
+                    // instead of a settings object
+                ]
+            });
+        });
     </script>
+
 }

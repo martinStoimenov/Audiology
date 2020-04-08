@@ -1,0 +1,32 @@
+﻿@{ 
+    @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
+}
+    @{ int count = 1; }
+
+    <div class="text-center"><h1 class="text-uppercase font-weight-bold" style="margin-top: 5rem;">charts</h1>
+                             <span class="text-uppercase text-danger">Trending on Audiology</span>
+    </div>
+
+@foreach (var song in Model)
+{
+    <div class="row align-items-center table-hover">
+        <a href="#" class="" style="text-decoration: none; color: black; display: contents">
+            <div class="col-1">
+                <span>@count++; .</span>
+            </div>
+            <div class="col-1">
+                <img src="@song.SongArtUrl" width="60" height="60" class="rounded" alt="Alternate Text" />
+            </div>
+            <div class="col-5">
+                <div class="font-weight-bolder">@song.Name <span class="text-uppercase font-weight-light">Lyrics</span></div>
+            </div>
+            <div class="col-3">
+                <div>@song.UserUserName</div>
+            </div>
+            <div class="col-1">
+                <div><i class="far fa-heart"></i> @song.FavouritesCount</div>
+            </div>
+        </a>
+    </div>
+    <hr />
+}

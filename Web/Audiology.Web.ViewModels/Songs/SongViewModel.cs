@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
@@ -69,6 +70,8 @@
         public string UserId { get; set; }
 
         public string UserUserName { get; set; }
+
+        public int FavouritesCount { get; set; }
 
         public IEnumerable<PlaylistChooseViewModel> Playlists { get; set; }
 

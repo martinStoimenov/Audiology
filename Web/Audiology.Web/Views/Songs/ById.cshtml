@@ -15,8 +15,9 @@
 
     <hr />
     <div class="col-md-6 border-left">
-        <h6>Add to playlist:</h6>
-        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target=".bd-example-modal-sm" style="width: 4rem; height: 3rem;"><i class="fas fa-plus-circle"></i></button>
+        <span class="font-weight-bold">Add to playlist: </span>
+        <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target=".bd-example-modal-sm" style="width: 4rem; height: 3rem;"><i class="fas fa-plus-circle fa-2x fa-spin"></i></button>
+        <div class="align-self-end"><i class="far fa-heart"></i> @Model.FavouritesCount</div>
 
         <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -63,15 +64,16 @@
         </div>
 
         <hr />
-        <span>Song description :</span>
-        <div>Description goes here</div>
-
-        // favourites
+        <div>
+            <span class="d-block font-weight-bolder">About "@Model.Name"</span>
+            <span>@Model.Description</span>
+        </div>
+        <br />
 
         // Add social media links here
 
-        <h6 class="text-uppercase">"@Model.Name" Track Info:</h6>
-        <hr />
+        <h6 class="text-uppercase">Track Info:</h6>
+        <br />
 
         <div class="row justify-content-sm-center">
             <div class="col-sm text-md-center font-weight-lighter">
@@ -101,7 +103,8 @@
             </div>
 
         </div>
-
+        <hr />
+        <span class="font-weight-bolder" style="margin-bottom: 1rem;">Is there a music video?</span>
         <div id="youTubePlayer">
             <iframe width="520" height="315"
                     src="https://www.youtube.com/embed/YAt60oZ_J-4?controls=1">
@@ -112,6 +115,7 @@
         <div id="instagramPost" style="margin-left: 2rem;">
             <iframe src="https://www.instagram.com/p/ByV1qWqgJsg/embed/captioned" width="400" height="505" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
         </div>
+
         <hr />
         <div id="soundCloudPlayer">
             <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/436863855&color=%234d544d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
