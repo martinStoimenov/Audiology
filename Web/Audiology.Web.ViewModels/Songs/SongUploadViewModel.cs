@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
     using Audiology.Data.Common.ValidationAttributes;
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
@@ -16,7 +17,7 @@
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(1000)]
         public string Description { get; set; }
 
         [Display(Name = "Album")]

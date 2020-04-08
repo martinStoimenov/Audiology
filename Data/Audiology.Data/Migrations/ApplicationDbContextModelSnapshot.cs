@@ -40,6 +40,9 @@ namespace Audiology.Data.Migrations
                         .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
+                    b.Property<int>("FavouritesCount")
+                        .HasColumnType("int");
+
                     b.Property<int>("Genre")
                         .HasColumnType("int");
 
@@ -239,6 +242,46 @@ namespace Audiology.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Audiology.Data.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(1000)")
+                        .HasMaxLength(1000);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("SongId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Audiology.Data.Models.Favourites", b =>
                 {
                     b.Property<int>("Id")
@@ -278,6 +321,42 @@ namespace Audiology.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Favourites");
+                });
+
+            modelBuilder.Entity("Audiology.Data.Models.Lyrics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(5000);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("SongId");
+
+                    b.ToTable("Lyrics");
                 });
 
             modelBuilder.Entity("Audiology.Data.Models.Playlist", b =>
@@ -547,6 +626,19 @@ namespace Audiology.Data.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("Audiology.Data.Models.Comment", b =>
+                {
+                    b.HasOne("Audiology.Data.Models.Song", "Song")
+                        .WithMany()
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Audiology.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("Audiology.Data.Models.Favourites", b =>
                 {
                     b.HasOne("Audiology.Data.Models.Album", "Album")
@@ -560,6 +652,15 @@ namespace Audiology.Data.Migrations
                     b.HasOne("Audiology.Data.Models.ApplicationUser", "User")
                         .WithMany("Favourites")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Audiology.Data.Models.Lyrics", b =>
+                {
+                    b.HasOne("Audiology.Data.Models.Song", "Song")
+                        .WithMany()
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Audiology.Data.Models.Playlist", b =>

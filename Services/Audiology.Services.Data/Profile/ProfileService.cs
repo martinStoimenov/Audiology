@@ -1,6 +1,7 @@
 ﻿namespace Audiology.Services.Data.Profile
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -26,6 +27,13 @@
             {
                 throw new ArgumentNullException("Requested user wasn't found.");
             }
+
+            return user;
+        }
+
+        public async Task<ApplicationUser> GetUserAsync(string userId)
+        {
+            var user = await this.repository.All().Where(u => u.Id == userId).FirstOrDefaultAsync();
 
             return user;
         }

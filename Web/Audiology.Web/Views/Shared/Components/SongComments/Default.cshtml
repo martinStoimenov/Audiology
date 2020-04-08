@@ -1,0 +1,30 @@
+﻿@{
+    @using Microsoft.AspNetCore.Identity;
+    @using Audiology.Data.Models;
+    @model IEnumerable<Audiology.Web.ViewModels.Comments.CommentViewModel>
+    @inject UserManager<ApplicationUser> UserManager
+    string userId = this.UserManager.GetUserId(this.User);
+}
+
+@foreach (var item in Model)
+{
+    <hr />
+    <div>
+        <img src="@item.UserProfilePicUrl" width="30" height="30" class="rounded-circle" alt="Profile pic" />
+        <span class="font-weight-bold">@item.UserUserName</span>
+    </div>
+    if (item.UserId == userId)
+    {
+        <form asp-controller="Songs" asp-action="DeleteComment" method="post">
+            <input type="hidden" name="Id" value="@item.Id" />
+            <input type="hidden" name="UserId" value="@item.UserId" />
+            <input type="hidden" name="SongId" value="@item.SongId" />
+            <div class="float-right">
+                <button asp-controller="Songs" asp-action="DeleteComment" type="submit" class="btn btn-outline-danger btn-sm"><i class="fas fa-eraser"></i></button>
+            </div>
+        </form>
+    }
+    <div style="margin-top: 0.5rem; margin-left: 2rem; margin-right: 2rem">
+        <span>@item.Content</span>
+    </div>
+}

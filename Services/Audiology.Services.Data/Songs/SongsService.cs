@@ -96,50 +96,50 @@
 
             string webRootPath = this.env.WebRootPath + "\\Songs\\";
 
-            if (!Directory.Exists(webRootPath + username))
-            {
-                Directory.CreateDirectory(webRootPath + username);
-            }
+            /*  if (!Directory.Exists(webRootPath + username))
+              {
+                  Directory.CreateDirectory(webRootPath + username);
+              }
 
-            if (songName.Length > 50 || songName == null)
-            {
-                throw new ArgumentOutOfRangeException("Song name cannot be more than 50 characters!");
-            }
+              if (songName.Length > 50 || songName == null)
+              {
+                  throw new ArgumentOutOfRangeException("Song name cannot be more than 50 characters!");
+              }
 
-            if (description.Length > 100)
-            {
-                throw new ArgumentOutOfRangeException("Description cannot be more than 100 characters!");
-            }
+              if (description.Length > 100)
+              {
+                  throw new ArgumentOutOfRangeException("Description cannot be more than 100 characters!");
+              }
 
-            if (year > 2020)
-            {
-                throw new ArgumentOutOfRangeException("Year cannot be more than the current one!");
-            }
+              if (year > 2020)
+              {
+                  throw new ArgumentOutOfRangeException("Year cannot be more than the current one!");
+              }
 
-            if (featuring.Length > 100)
-            {
-                throw new ArgumentOutOfRangeException("Featuring cannot be more than 100 characters!");
-            }
+              if (featuring != null || featuring.Length > 100)
+              {
+                  throw new ArgumentOutOfRangeException("Featuring cannot be more than 100 characters!");
+              }
 
-            if (writtenBy.Length > 100)
-            {
-                throw new ArgumentOutOfRangeException("WrittenBy cannot be more than 100 characters!");
-            }
+              if (writtenBy != null || writtenBy.Length > 100)
+              {
+                  throw new ArgumentOutOfRangeException("WrittenBy cannot be more than 100 characters!");
+              }
 
-            if (youtubeUrl.Length > 500)
-            {
-                throw new ArgumentOutOfRangeException("You Tube url cannot be more than 500 characters!");
-            }
+              if (youtubeUrl != null || youtubeUrl.Length > 500)
+              {
+                  throw new ArgumentOutOfRangeException("You Tube url cannot be more than 500 characters!");
+              }
 
-            if (soundcloudUrl == null || soundcloudUrl.Length > 500)
-            { // refactor these validations
-                throw new ArgumentOutOfRangeException("Soundcloud url cannot be more than 500 characters!");
-            }
+              if (soundcloudUrl != null || soundcloudUrl.Length > 500)
+              { // refactor these validations
+                  throw new ArgumentOutOfRangeException("Soundcloud url cannot be more than 500 characters!");
+              }
 
-            if (instagramPostUrl == null || instagramPostUrl.Length > 500)
-            { // refactor these validations
-                throw new ArgumentOutOfRangeException("Instagram url cannot be more than 500 characters!");
-            }
+              if (instagramPostUrl != null || instagramPostUrl.Length > 500)
+              { // refactor these validations
+                  throw new ArgumentOutOfRangeException("Instagram url cannot be more than 500 characters!");
+              }*/
 
             string name = songName + fileExtension;
 
@@ -170,24 +170,26 @@
             await this.songRepository.AddAsync(song);
             await this.songRepository.SaveChangesAsync();
 
-            // var lyrics = await this.GetApiSeedLyrics(username, name, this.configuration["ApiSeedsLyrics:AppKey"]);
+            var lyrics = await this.GetApiSeedLyrics(username, name, this.configuration["ApiSeedsLyrics:AppKey"]);
 
-          /*  if (lyrics != null)
+            if (lyrics != null)
             {
                 // Save to database to reduce web api traffic
                 // TODO: Add Comments
             }
-
-            using (StreamWriter stream = File.CreateText(@"C:\Users\haloho\Desktop\lyrics.txt")) // TODO: Save incomplete tasks somewhere
+            else
             {
-                stream.WriteLine("Created on: ");
-                stream.WriteLine(DateTime.Now);
-                stream.Write(lyrics);
-                stream.WriteLine();
-                stream.WriteLine();
-                stream.WriteLine();
+                using (StreamWriter stream = File.CreateText(@"C:\Users\haloho\Desktop\lyrics.txt")) // TODO: Save incomplete tasks somewhere
+                {
+                    stream.WriteLine("Created on: ");
+                    stream.WriteLine(DateTime.Now);
+                    stream.Write(lyrics);
+                    stream.WriteLine();
+                    stream.WriteLine();
+                    stream.WriteLine();
+                }
             }
-*/
+
             return song.Id;
         }
 
@@ -241,27 +243,27 @@
                     song.Genre = (Genre)genre;
                 }
 
-                if (featuring.Length <= 100 && featuring != null)
+                if (featuring != null)
                 {
                     song.Featuring = featuring;
                 }
 
-                if (writtenBy.Length <= 100 && writtenBy != null)
+                if (writtenBy != null)
                 {
                     song.WrittenBy = writtenBy;
                 }
 
-                if (youtubeUrl.Length <= 500 && youtubeUrl != null)
+                if (youtubeUrl != null)
                 {
                     song.YoutubeUrl = youtubeUrl;
                 }
 
-                if (soundcloudUrl.Length <= 500 && soundcloudUrl != null)
+                if (soundcloudUrl != null)
                 {
                     song.SoundcloudUrl = soundcloudUrl;
                 }
 
-                if (instagramPostUrl.Length <= 500 && instagramPostUrl != null)
+                if (instagramPostUrl != null)
                 {
                     song.InstagramPostUrl = instagramPostUrl;
                 }
@@ -307,6 +309,13 @@
         public IEnumerable<T> GetAllSongsForUserAsync<T>(string userId)
         {
             var songs = this.songRepository.All().Where(s => s.UserId == userId).To<T>().ToList();
+
+            return songs;
+        }
+
+        public async Task<IEnumerable<T>> GetTopSongsForUserAsync<T>(string userId, int count)
+        {
+            var songs = await this.songRepository.All().Where(s => s.UserId == userId).OrderByDescending(s => s.FavouritesCount).Take(count).To<T>().ToListAsync();
 
             return songs;
         }

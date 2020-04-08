@@ -194,6 +194,7 @@
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(image.FileName, destinationStream),
+                    Folder = "Audiology/Profile pictures",
                 };
                 var uploadResult = this.cloudinary.UploadAsync(uploadParams);
                 imagePath = uploadResult.Result.Uri.AbsoluteUri;

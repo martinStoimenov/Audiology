@@ -1,6 +1,10 @@
 ﻿@{
+    @using Microsoft.AspNetCore.Identity;
+    @using Audiology.Data.Models;
     @using Audiology.Data.Models.Enumerations;
     @model Audiology.Web.ViewModels.Songs.SongViewModel
+    @inject UserManager<ApplicationUser> UserManager
+    string userId = this.UserManager.GetUserId(this.User);
 }
 
 <img src="@(Model.SongArtUrl == null ? Model.AlbumCoverUrl : Model.SongArtUrl)" class="img-fluid" style="width: 100%; height: 25rem" alt="Song cover can't be found sorry  :)" />
@@ -11,6 +15,18 @@
 
         <hr />
         <div id="lyrics">If lyrics are not shown here rename this song or send email to the artist. Lyrics come from <a href="https://lyrics.ovh/" target="_blank">lirycs.ovh</a>.</div>
+
+        <div class="input-group mb-3" style="margin-top: 2rem;">
+            <form class="d-inline-flex" asp-controller="Songs" asp-action="Comment">
+                <input type="hidden" name="songId" value="@Model.Id" />
+                <input type="hidden" name="userId" value="@userId" />
+                <input type="text" name="Content" class="form-control" style="width: 29rem;" placeholder="Add comment" aria-label="Content" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                    <button asp-controller="Songs" asp-action="Comment" class="btn btn-outline-success" type="submit" id="button-addon2">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div><vc:song-comments song-id="@Model.Id"></vc:song-comments></div>
     </div>
 
     <hr />
@@ -65,7 +81,7 @@
 
         <hr />
         <div>
-            <span class="d-block font-weight-bolder">About "@Model.Name"</span>
+            <span class="d-block font-weight-bolder">About "@Model.Name":</span>
             <span>@Model.Description</span>
         </div>
         <br />
@@ -85,7 +101,7 @@
                 <hr />
                 <span class="d-block">Producer</span>
                 <hr />
-                <span class="d-block">Release Date</span>
+                <span class="d-block">Year of release</span>
                 <hr />
             </div>
 
@@ -112,7 +128,8 @@
         </div>
 
         <hr />
-        <div id="instagramPost" style="margin-left: 2rem;">
+        <span class="font-weight-bolder" style="margin-bottom: 1rem;">Cover art for the song?</span>
+        <div id="instagramPost" style="margin-left: 4rem;">
             <iframe src="https://www.instagram.com/p/ByV1qWqgJsg/embed/captioned" width="400" height="505" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
         </div>
 
@@ -122,23 +139,25 @@
         </div>
 
         <hr />
+        <span class="font-weight-bolder" style="margin-bottom: 1rem;"></span>
         @if (Model.AlbumId != null)
         {
-            <div class="d-block">
-                <img src="@Model.AlbumCoverUrl" class="img-thumbnail rounded float-left" style="width: 7rem; height: 7rem;" alt="Alternate Text" />
-                <div class="text-left d-block">
-                    <span class="float-sm-right">@Model.AlbumName</span>
-                </div>
-                <span>@Model.AlbumProducer</span>
-                <span>@Model.AlbumReleaseDate</span>
-                <span>@Model.AlbumDuration</span>
+            <div class="row align-items-center">
+                <div class="col-3"><img src="@Model.AlbumCoverUrl" class="img-thumbnail rounded float-left" style="width: 7rem; height: 7rem;" alt="Alternate Text" /></div>
 
+                <div class="col">
+                    <a asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId"><span>@Model.AlbumName</span></a>
+                    <span class="font-weight-lighter">(@Model.AlbumReleaseDate)</span>
+                    <div><span class="font-weight-bold">@Model.AlbumProducer</span></div>
+                </div>
             </div>
 
-            <hr />
+            <br />
             <div><vc:songs-by-album album-id="@Model.AlbumId"></vc:songs-by-album></div>
-        }
 
+        }
+        <hr />
+        <div><vc:songs-by-user user-id="@Model.UserId"></vc:songs-by-user></div>
 
         <form asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
             <input type="hidden" name="Id" value="@this.Model.Id" />

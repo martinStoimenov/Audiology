@@ -59,6 +59,8 @@
 
         public int? FavouritesCount { get; set; }
 
+        public virtual Lyrics Lyrics { get; set; }
+
         public virtual ICollection<Favourites> Favourites { get; set; }
 
         public virtual ICollection<PlaylistsSongs> PlaylistsSongs { get; set; }

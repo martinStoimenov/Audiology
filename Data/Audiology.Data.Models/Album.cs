@@ -40,6 +40,8 @@
         [Column(TypeName = "date")]
         public DateTime? ReleaseDate { get; set; }
 
+        public int FavouritesCount { get; set; }
+
         public virtual ICollection<Song> Songs { get; set; }
     }
 }

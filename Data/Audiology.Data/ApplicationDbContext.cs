@@ -34,6 +34,10 @@
 
         public DbSet<PlaylistsSongs> PlaylistsSongs { get; set; }
 
+        public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<Lyrics> Lyrics { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

@@ -6,11 +6,14 @@
     using System.Linq;
     using System.Net.Http;
     using System.Threading.Tasks;
+
     using Audiology.Data.Models;
     using Audiology.Services.Data.Albums;
+    using Audiology.Services.Data.Comments;
     using Audiology.Services.Data.Playlists;
     using Audiology.Services.Data.Songs;
     using Audiology.Web.ViewModels.Albums;
+    using Audiology.Web.ViewModels.Comments;
     using Audiology.Web.ViewModels.Playlists;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Http;
@@ -23,17 +26,20 @@
         private readonly IAlbumsService albumsService;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IPlaylistsService playlistsService;
+        private readonly ICommentsService commentsService;
 
         public SongsController(
             ISongsServcie songsService,
             IAlbumsService albumsService,
             UserManager<ApplicationUser> userManager,
-            IPlaylistsService playlistsService)
+            IPlaylistsService playlistsService,
+            ICommentsService commentsService)
         {
             this.songsService = songsService;
             this.albumsService = albumsService;
             this.userManager = userManager;
             this.playlistsService = playlistsService;
+            this.commentsService = commentsService;
         }
 
         public async Task<IActionResult> ById(int id)
@@ -126,6 +132,29 @@
             await this.songsService.DeleteSong(id);
 
             return this.RedirectToAction(nameof(this.Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Comment(CommentViewModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest();
+            }
+
+            await this.commentsService.AddComment(input.UserId, input.SongId, input.Content);
+
+            return this.RedirectToAction(nameof(this.ById), new { id = input.SongId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteComment(CommentViewModel input)
+        {
+            await this.commentsService.Delete(input.UserId, input.SongId, input.Id);
+
+            return this.RedirectToAction(nameof(this.ById), new { id = input.SongId });
         }
     }
 }
