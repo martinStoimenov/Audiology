@@ -13,9 +13,15 @@
     <div class="col-md-6">
         <h1>@Model.Name</h1>
 
-        <hr />
-        <div id="lyrics">If lyrics are not shown here rename this song or send email to the artist. Lyrics come from <a href="https://lyrics.ovh/" target="_blank">lirycs.ovh</a>.</div>
+        @if (Model.LyricsText == null)
+        {
+            <hr />
+            <div id="">If lyrics are not shown here rename this song or send email to the artist. Lyrics come from <a href="https://lyrics.ovh/" target="_blank">lirycs.ovh</a>.</div>
+        }
 
+        <br />
+        @Html.Raw(@Model.LyricsText)
+        
         <div class="input-group mb-3" style="margin-top: 2rem;">
             <form class="d-inline-flex" asp-controller="Songs" asp-action="Comment">
                 <input type="hidden" name="songId" value="@Model.Id" />
@@ -275,22 +281,5 @@
                 scrollTop: $('#updateForm').offset().top
             }, 500);
         }
-
-        $(document).ready (function() {
-            var artist = '@Model.UserUserName';
-            var song = '@Model.Name';
-
-            $.get("https://api.lyrics.ovh/v1/" + artist + "/" + song ,
-
-                function (data) {
-                    if (data.hasOwnProperty('error') == true) {
-                    document.getElementById("lyrics").innerHTML = "Lyrics cannot be found";
-                    }
-                    else {
-                    document.getElementById("lyrics").innerHTML = data.lyrics.replace(new RegExp("\n","g"), "<br>");
-                    }
-
-                })
-        });
     </script>
 }

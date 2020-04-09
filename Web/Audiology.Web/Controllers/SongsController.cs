@@ -46,7 +46,7 @@
         {
             string userId = this.userManager.GetUserId(this.User);
 
-            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
+            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(userId);
 
             var song = await this.songsService.GetSong<SongViewModel>(id);
 
@@ -58,6 +58,7 @@
             song.Albums = albums;
             song.FileExtension = fileExtension;
             song.Name = songName;
+
             return this.View(song);
         }
 

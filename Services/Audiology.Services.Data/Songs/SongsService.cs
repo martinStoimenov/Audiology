@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Text.Json;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using Audiology.Data;
@@ -28,6 +29,7 @@
         private readonly IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo;
         private readonly IDeletableEntityRepository<Favourites> favouritesRepo;
         private readonly IRepository<ApplicationUser> userRepo;
+        private readonly IDeletableEntityRepository<Lyrics> lyricsRepository;
         private readonly IConfiguration configuration;
 
         public SongsService(
@@ -36,6 +38,7 @@
             IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo,
             IDeletableEntityRepository<Favourites> favouritesRepo,
             IRepository<ApplicationUser> userRepo,
+            IDeletableEntityRepository<Lyrics> lyricsRepository,
             IConfiguration configuration)
         {
             this.env = env;
@@ -43,8 +46,11 @@
             this.playlistsSongsRepo = playlistsSongsRepo;
             this.favouritesRepo = favouritesRepo;
             this.userRepo = userRepo;
+            this.lyricsRepository = lyricsRepository;
             this.configuration = configuration;
         }
+
+        // Write query/method that gets songIds from db without lyrics and fire recurring job based on these ids once in a week if they are smaller than 15 songs and gets the lyrics from many apis.
 
         public async Task DeleteSong(int songId)
         {
@@ -170,32 +176,12 @@
             await this.songRepository.AddAsync(song);
             await this.songRepository.SaveChangesAsync();
 
-            var lyrics = await this.GetApiSeedLyrics(username, name, this.configuration["ApiSeedsLyrics:AppKey"]);
-
-            if (lyrics != null)
-            {
-                // Save to database to reduce web api traffic
-                // TODO: Add Comments
-            }
-            else
-            {
-                using (StreamWriter stream = File.CreateText(@"C:\Users\haloho\Desktop\lyrics.txt")) // TODO: Save incomplete tasks somewhere
-                {
-                    stream.WriteLine("Created on: ");
-                    stream.WriteLine(DateTime.Now);
-                    stream.Write(lyrics);
-                    stream.WriteLine();
-                    stream.WriteLine();
-                    stream.WriteLine();
-                }
-            }
-
             return song.Id;
         }
 
         public async Task<int> EditSongAsync(int id, string username, string name, string description, int? albumId, string producer, string songArtUrl, Enum genre, int year, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl, string instagramPostUrl)
         {
-            var song = this.songRepository.All().Where(s => s.Id == id).FirstOrDefault();
+            var song = this.songRepository.All().Where(s => s.Id == id).Include(s => s.User).FirstOrDefault();
 
             int dotIndex = song.Name.LastIndexOf(".");
             if (dotIndex == -1)
@@ -281,6 +267,8 @@
 
             file.MoveTo(newPath);
 
+            bool isFound = await this.GetLyricsForSong(song);
+
             this.songRepository.Update(song);
             await this.songRepository.SaveChangesAsync();
 
@@ -290,7 +278,6 @@
         public async Task<T> GetSong<T>(int songId)
         {
             var song = await this.songRepository.All().Where(s => s.Id == songId).To<T>().FirstOrDefaultAsync();
-
             return song;
         }
 
@@ -369,36 +356,6 @@
             return duration.ToString(@"hh\:mm\:ss");
         }
 
-        public async Task<string> GetApiSeedLyrics(string artist, string song, string appKey)
-        {
-            var apiSeedsClient = new HttpClient();
-
-            string baseUrl = "https://orion.apiseeds.com/api/music/lyric/";
-            string artistName = artist;
-            string songName = $"/{song}";
-            string apiKey = appKey;
-            string search = baseUrl + artistName + songName + apiKey;
-
-            var jsonResultString = await apiSeedsClient.GetAsync(search);
-            string lyrics = string.Empty;
-
-            if (!jsonResultString.IsSuccessStatusCode)
-            {
-                // throw new ArgumentException("Song lyrics can't be found right now");
-                return null;
-            }
-            else
-            {
-                var jsonStr = await jsonResultString.Content.ReadAsStringAsync();
-
-                var json = JsonDocument.Parse(jsonStr);
-
-                lyrics = json.RootElement.GetProperty("result").GetProperty("track").GetProperty("text").ToString();
-            }
-
-            return lyrics;
-        }
-
         /// <summary>
         /// Gets the top favourited Songs.
         /// </summary>
@@ -425,5 +382,136 @@
 
             return songs;
         }
+
+        public async Task<IEnumerable<Song>> GetSongsWithoutLyrics()
+        {
+            var lyrics = await this.songRepository.All().Select(s => s.Lyrics.SongId).ToListAsync();
+
+            var missingSongsLyrics = await this.songRepository.All().Where(s => lyrics.All(l => l != s.Id)).Include(s => s.User).ToListAsync();
+            ;
+            return missingSongsLyrics;
+        }
+
+        public async Task<bool> GetLyricsForSong(Song song)
+        {
+            var ovhLyrics = await this.GetOvhLyrics(song.User.UserName, song.Name, song.Id);
+            if (ovhLyrics == null)
+            {
+                var apiSeedsLyrics = await this.GetApiSeedLyrics(song.User.UserName, song.Name, this.configuration["ApiSeedsLyrics:AppKey"], song.Id);
+                if (apiSeedsLyrics == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public async Task BackgroundLyricsGathering()
+        {
+            var songs = await this.GetSongsWithoutLyrics();
+
+            foreach (var song in songs)
+            {
+                int dotIndex = song.Name.LastIndexOf(".");
+                song.Name.Remove(dotIndex);
+                await this.GetLyricsForSong(song);
+            }
+        }
+
+        private async Task<string> GetApiSeedLyrics(string artist, string song, string appKey, int songId)
+        {
+            // Add featuring
+            var apiSeedsClient = new HttpClient();
+
+            var dotIndex = song.LastIndexOf(".");
+            string baseUrl = "https://orion.apiseeds.com/api/music/lyric/";
+            string artistName = artist;
+            string songName = $"/{song.Remove(dotIndex)}";
+            string apiKey = appKey;
+            string search = baseUrl + artistName + songName + apiKey;
+
+            var jsonResultString = await apiSeedsClient.GetAsync(search);
+            string lyrics = string.Empty;
+
+            if (!jsonResultString.IsSuccessStatusCode)
+            {
+                // throw new ArgumentException("Song lyrics can't be found right now");
+                return null;
+            }
+            else
+            {
+                var jsonStr = await jsonResultString.Content.ReadAsStringAsync();
+
+                var json = JsonDocument.Parse(jsonStr);
+
+                lyrics = json.RootElement.GetProperty("result").GetProperty("track").GetProperty("text").ToString();
+
+                string modifiedLyrics = Regex.Replace(lyrics, @"(\r\n)|\n|\r", "<br>");
+
+                var lyricsEntity = new Lyrics
+                {
+                    Text = modifiedLyrics,
+                    SongId = songId,
+                };
+                await this.lyricsRepository.AddAsync(lyricsEntity);
+                await this.lyricsRepository.SaveChangesAsync();
+            }
+
+            return lyrics;
+        }
+
+        private async Task<string> GetOvhLyrics(string artist, string song, int songId)
+        {
+            // Add featuring
+            var ovhClient = new HttpClient();
+            string lyrics = string.Empty;
+
+            var dotIndex = song.LastIndexOf(".");
+            var artistName = artist;
+            var songName = song.Remove(dotIndex);
+
+            var response = await ovhClient.GetAsync("https://api.lyrics.ovh/v1/" + artistName + "/" + songName);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                // throw new ArgumentException("Song lyrics can't be found right now");
+                return null;
+            }
+            else
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+
+                var json = JsonDocument.Parse(jsonString);
+
+                lyrics = json.RootElement.GetProperty("lyrics").ToString();
+
+                if (lyrics.Length > 5)
+                {
+                    string modifiedLyrics = Regex.Replace(lyrics, @"(\r\n)|\n|\r", "<br>");
+
+                    var lyricsEntity = new Lyrics
+                    {
+                        Text = modifiedLyrics,
+                        SongId = songId,
+                    };
+                    await this.lyricsRepository.AddAsync(lyricsEntity);
+                    await this.lyricsRepository.SaveChangesAsync();
+                }
+            }
+
+            return lyrics;
+        }
+    }
+
+    public class SongsWithoutLyricsModel : IMapFrom<Song>
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Featuring { get; set; }
+
+        public string UserUserName { get; set; }
     }
 }

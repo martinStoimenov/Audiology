@@ -73,6 +73,8 @@
 
         public int FavouritesCount { get; set; }
 
+        public string LyricsText { get; set; }
+
         public IEnumerable<PlaylistChooseViewModel> Playlists { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

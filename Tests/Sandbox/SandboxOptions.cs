@@ -2,8 +2,9 @@
 {
     using System;
     using System.Net.Http;
-    using System.Threading.Tasks;
     using System.Text.Json;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     using CommandLine;
 
@@ -14,7 +15,31 @@
         {
             var client = new HttpClient();
 
-            var kanye = await client.GetStringAsync("https://api.kanye.rest/?format=text");
+            var artist = "2pac";
+            var song = "Better Dayz";
+
+            var response = await client.GetAsync("https://api.lyrics.ovh/v1/" + artist + "/" + song);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ArgumentException("Song lyrics can't be found right now");
+            }
+            else
+            {
+                var jsonString = await response.Content.ReadAsStringAsync();
+
+                var json = JsonDocument.Parse(jsonString);
+
+                var lyrics = json.RootElement.GetProperty("lyrics").ToString();
+
+                string modifiedString = Regex.Replace(lyrics, @"(\r\n)|\n|\r", "<br/>");
+
+                Console.WriteLine(modifiedString);
+            }
+
+            //------------------------------------------------------------------------------------------------------------------------------------
+
+            /*var kanye = await client.GetStringAsync("https://api.kanye.rest/?format=text");
 
             Console.WriteLine(kanye);
             Console.WriteLine("----------------------------------------------------------------------------------");
@@ -42,7 +67,7 @@
                 var lyrics = json.RootElement.GetProperty("result").GetProperty("track").GetProperty("text").ToString();
 
                 Console.WriteLine(lyrics);
-            }
+            }*/
         }
     }
 }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
     using Audiology.Data.Models.Enumerations;
     using Audiology.Web.ViewModels.Songs;
     using Microsoft.AspNetCore.Http;
@@ -23,11 +24,13 @@
 
         Task<IEnumerable<T>> GetTopSongsForUserAsync<T>(string userId, int count);
 
+        Task<T> GetSong<T>(int songId);
+
+        Task BackgroundLyricsGathering();
+
         IEnumerable<T> GetAllSongsForUserAsync<T>(string userId);
 
         IEnumerable<T> GetNewestSongs<T>();
-
-        Task<T> GetSong<T>(int songId);
 
         IEnumerable<T> GetAll<T>(int? count = null);
 
