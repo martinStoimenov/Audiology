@@ -164,7 +164,7 @@
                         endpoints.MapRazorPages();
                     });
 
-            recurringJobManager.AddOrUpdate("Gather-song-lyrics", () => serviceProvider.GetService<ISongsServcie>().BackgroundLyricsGathering(), Cron.Minutely);
+            recurringJobManager.AddOrUpdate("Gather-song-lyrics", () => serviceProvider.GetService<ISongsServcie>().BackgroundLyricsGathering(), Cron.Weekly(DayOfWeek.Friday));
         }
     }
 }

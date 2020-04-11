@@ -50,7 +50,7 @@
             this.configuration = configuration;
         }
 
-        // Write query/method that gets songIds from db without lyrics and fire recurring job based on these ids once in a week if they are smaller than 15 songs and gets the lyrics from many apis.
+        // once in a week if they are smaller than 15 songs and gets the lyrics from many apis.
 
         public async Task DeleteSong(int songId)
         {
@@ -93,6 +93,7 @@
             await this.songRepository.SaveChangesAsync();
         }
 
+        // Add the method for lyrics search
         public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, string producer, int? albumId, Enum genre, int year, string userId, string songArt, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl, string instagramPostUrl)
         {
             // TODO: Add hangfire task scheduler for api calls
@@ -293,9 +294,9 @@
             return query.To<T>().ToList();
         }
 
-        public IEnumerable<T> GetAllSongsForUserAsync<T>(string userId)
+        public async Task<IEnumerable<T>> GetAllSongsForUserAsync<T>(string userId)
         {
-            var songs = this.songRepository.All().Where(s => s.UserId == userId).To<T>().ToList();
+            var songs = await this.songRepository.All().Where(s => s.UserId == userId).OrderByDescending(s => s.CreatedOn).To<T>().ToListAsync();
 
             return songs;
         }
@@ -383,16 +384,19 @@
             return songs;
         }
 
-        public async Task<IEnumerable<Song>> GetSongsWithoutLyrics()
+        public async Task BackgroundLyricsGathering()
         {
-            var lyrics = await this.songRepository.All().Select(s => s.Lyrics.SongId).ToListAsync();
+            var songs = await this.GetSongsWithoutLyrics();
 
-            var missingSongsLyrics = await this.songRepository.All().Where(s => lyrics.All(l => l != s.Id)).Include(s => s.User).ToListAsync();
-            ;
-            return missingSongsLyrics;
+            foreach (var song in songs)
+            {
+                int dotIndex = song.Name.LastIndexOf(".");
+                song.Name.Remove(dotIndex);
+                await this.GetLyricsForSong(song);
+            }
         }
 
-        public async Task<bool> GetLyricsForSong(Song song)
+        private async Task<bool> GetLyricsForSong(Song song)
         {
             var ovhLyrics = await this.GetOvhLyrics(song.User.UserName, song.Name, song.Id);
             if (ovhLyrics == null)
@@ -407,16 +411,13 @@
             return true;
         }
 
-        public async Task BackgroundLyricsGathering()
+        private async Task<IEnumerable<Song>> GetSongsWithoutLyrics()
         {
-            var songs = await this.GetSongsWithoutLyrics();
+            var lyrics = await this.songRepository.All().Select(s => s.Lyrics.SongId).ToListAsync();
 
-            foreach (var song in songs)
-            {
-                int dotIndex = song.Name.LastIndexOf(".");
-                song.Name.Remove(dotIndex);
-                await this.GetLyricsForSong(song);
-            }
+            var missingSongsLyrics = await this.songRepository.All().Where(s => lyrics.All(l => l != s.Id)).Include(s => s.User).ToListAsync();
+            ;
+            return missingSongsLyrics;
         }
 
         private async Task<string> GetApiSeedLyrics(string artist, string song, string appKey, int songId)
@@ -504,7 +505,7 @@
         }
     }
 
-    public class SongsWithoutLyricsModel : IMapFrom<Song>
+   /* public class SongsWithoutLyricsModel : IMapFrom<Song>
     {
         public int Id { get; set; }
 
@@ -513,5 +514,5 @@
         public string Featuring { get; set; }
 
         public string UserUserName { get; set; }
-    }
+    }*/
 }

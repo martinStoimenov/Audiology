@@ -1,18 +1,16 @@
 ﻿@{
+    @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
     @using Microsoft.AspNetCore.Identity;
     @using Audiology.Data.Models;
-    @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
-    this.ViewData["Title"] = "All Songs";
     @inject UserManager<ApplicationUser> UserManager
     string userId = this.UserManager.GetUserId(this.User);
 }
+<h3>Recent</h3>
 
-<h1 class="text-center">All Songs</h1>
-
-<div>
+<div style="width: 38rem";>
     @foreach (var song in Model)
     {
-        <div class="text-left shadow-lg p-3 mb-5 rounded" style="width: 52rem; background-color: #f4f4f4; margin-top: 2rem;">
+        <div class="text-left shadow-lg p-3 mb-5 rounded" style="width: inherit; background-color: #f4f4f4; margin-top: 2rem;">
 
             <div class="d-flex flex-row bd-highlight mb-3" style="margin: 0 !important;">
                 <div class="align-self-end">

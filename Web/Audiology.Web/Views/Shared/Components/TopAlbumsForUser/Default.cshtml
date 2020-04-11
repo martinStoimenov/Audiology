@@ -1,0 +1,31 @@
+﻿@{
+    @using Microsoft.AspNetCore.Identity;
+    @using Audiology.Data.Models;
+    @using Audiology.Web.ViewModels.Albums
+    @model IEnumerable<AlbumsListViewModel>
+    @inject UserManager<ApplicationUser> UserManager
+    string userId = this.UserManager.GetUserId(this.User);
+}
+
+    <span class="font-weight-bold">Top 3 albums :</span>
+<div class="row">
+    @foreach (var album in Model)
+    {
+        <div class="col-md-4 mt-md-5">
+            <div class="card" style="width: inherit; height: 11rem;">
+                <img src="@album.CoverUrl" class="card-img-top img-fluid" style="width: 10rem; height: 5rem;" alt=" Sorry album cover not found :)">
+                <div class="card-body">
+                    <div>
+                        <form id="votesForm" method="post"></form>
+                        <span class="font-weight-lighter">Liked : </span>
+                        <a href="#" onclick="favourite('@userId',null,@album.Id)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                        <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@album.FavouritesCount</div>
+                    </div>
+                    <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id">@album.Name</a>
+                        
+                </div>
+                
+            </div>
+        </div>
+    }
+</div>

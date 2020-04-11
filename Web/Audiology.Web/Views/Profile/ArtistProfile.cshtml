@@ -2,21 +2,25 @@
     @model Audiology.Web.ViewModels.Profile.ArtistProfileViewModel
 }
 
-<div class="row align-items-center" style="background: linear-gradient(black, white); width: 100%; height: 20rem; margin-bottom: 2rem;">
+<div class="row align-items-center" style="background: linear-gradient(rgba(2,0,36,1) 0%, rgba(0,0,0,1) 5%, rgba(255,255,255,1) 98%); height: 20rem; margin-bottom: 2rem;">
     <div class="col-3"><img src="@Model.ProfilePicUrl" alt="Alternate Text" class="rounded-circle" width="250" /></div>
     <div class="col-2"><h1 class="text-center text-white bg-dark">@Model.UserName</h1></div>
 </div>
 <div class="row">
     <div class="col">
-        <vc:newest-songs></vc:newest-songs>
+        <div>
+            <vc:all-songs-for-artist user-id="@Model.Id"></vc:all-songs-for-artist>
+            <br />
+            <vc:all-albums-for-artist user-id="@Model.Id"></vc:all-albums-for-artist>
+        </div>
     </div>
 
     <div class="col-5 border-left">
-        <div>
-
-        </div>
-
         <vc:user-details user-id="@Model.Id"></vc:user-details>
+        <br />
+        <vc:songs-by-user user-id="@Model.Id"></vc:songs-by-user>
+        <br />
+        <vc:top-albums-for-user user-id="@Model.Id"></vc:top-albums-for-user>
     </div>
 </div>
 

@@ -26,8 +26,7 @@
         [HttpPost]
         public async Task<ActionResult<FavouritesOutputModel>> Post(FavouritesInputViewModel input)
         {
-            string userId = this.userManager.GetUserId(this.User);
-            await this.favouritesService.FavouritedAsync(input.SongId, input.AlbumId, userId);
+            await this.favouritesService.FavouritedAsync(input.SongId, input.AlbumId, input.UserId);
             var favouritesCount = this.favouritesService.GetCount(input.SongId, input.AlbumId);
 
             return new FavouritesOutputModel { FavouritesCount = favouritesCount };
@@ -39,7 +38,7 @@
             var userId = this.userManager.GetUserId(this.User);
 
             var all = await this.favouritesService.GetAllAsync<FavouritesViewModel>(userId);
-            // add value to fav count here
+
             return this.View(all);
         }
     }

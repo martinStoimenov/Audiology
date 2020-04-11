@@ -9,9 +9,13 @@
 
     public interface IAlbumsService
     {
-        IEnumerable<T> GetAllForUser<T>(string userId);
+        Task<IEnumerable<T>> GetAllForUser<T>(string userId);
 
         T GetCurrentAlbumById<T>(int albumId);
+
+        Task<IEnumerable<T>> NewestAlbumsAsync<T>();
+
+        Task<IEnumerable<T>> TopAlbumsForUser<T>(string userId);
 
         Task DeleteAlbum(int albumId);
 

@@ -31,9 +31,9 @@
             this.songsServcie = songsServcie;
         }
 
-        public IEnumerable<T> GetAllForUser<T>(string userId)
+        public async Task<IEnumerable<T>> GetAllForUser<T>(string userId)
         {
-            var result = this.repository.All().Where(a => a.UserId == userId).To<T>().ToList();
+            var result = await this.repository.All().Where(a => a.UserId == userId).OrderByDescending(a => a.CreatedOn).To<T>().ToListAsync();
 
             return result;
         }
@@ -134,6 +134,20 @@
                 this.repository.Delete(album);
                 await this.repository.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<T>> NewestAlbumsAsync<T>()
+        {
+            var albums = await this.repository.All().OrderByDescending(a => a.CreatedOn).Take(12).To<T>().ToListAsync();
+
+            return albums;
+        }
+
+        public async Task<IEnumerable<T>> TopAlbumsForUser<T>(string userId)
+        {
+            var albums = await this.repository.All().Where(a => a.UserId == userId).OrderByDescending(a => a.FavouritesCount).Take(3).To<T>().ToListAsync();
+
+            return albums;
         }
     }
 }

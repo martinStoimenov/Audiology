@@ -164,6 +164,8 @@
         }
         <hr />
         <div><vc:songs-by-user user-id="@Model.UserId"></vc:songs-by-user></div>
+        <br />
+        <vc:top-albums-for-user user-id="@Model.UserId"></vc:top-albums-for-user>
 
         <form asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
             <input type="hidden" name="Id" value="@this.Model.Id" />

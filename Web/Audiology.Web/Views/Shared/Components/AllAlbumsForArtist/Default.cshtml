@@ -1,24 +1,21 @@
 ﻿@{
+    @model IEnumerable<Audiology.Web.ViewModels.Albums.AlbumsListViewModel>
     @using Microsoft.AspNetCore.Identity;
     @using Audiology.Data.Models;
-    @using Audiology.Web.ViewModels.Albums
-    @model IEnumerable<AlbumsListViewModel>
-    this.ViewData["Title"] = "Albums";
     @inject UserManager<ApplicationUser> UserManager
     string userId = this.UserManager.GetUserId(this.User);
 }
-
-<h1 class="text-center">Albums</h1>
+    <br />
 <div class="row">
     @foreach (var album in Model)
     {
-        <div class="col-md-4 mt-md-5">
+        <div class="col-md-6 mt-md-5">
             <div class="card" style="width: 18rem;">
                 <img src="@album.CoverUrl" class="card-img-top img-fluid" style="width: 18rem; height: 11rem;" alt=" Sorry album cover not found :)">
                 <div class="card-body">
                     <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id"><h6 class="card-text text-center">@album.Name</h6></a>
 
-                    <div class="justify-content-center" >
+                    <div class="justify-content-center">
                         <div style="margin-left: 4rem;">
                             <form id="votesForm" method="post"></form>
                             <a href="#" onclick="favourite('@userId',null,@album.Id)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
@@ -26,9 +23,9 @@
                         </div>
                     </div>
                 </div>
-                    <h6 class="card-text text-center">@album.Producer</h6>
-                    <p class="card-text text-center">@album.ShortDescription</p>
-                </div>
+                <h6 class="card-text text-center">@album.Producer</h6>
+                <p class="card-text text-center">@album.ShortDescription</p>
             </div>
+        </div>
     }
 </div>

@@ -46,7 +46,7 @@
         {
             string userId = this.userManager.GetUserId(this.User);
 
-            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(userId);
+            var albums = await this.albumsService.GetAllForUser<AlbumDropDownViewModel>(userId);
 
             var song = await this.songsService.GetSong<SongViewModel>(id);
 
@@ -62,11 +62,11 @@
             return this.View(song);
         }
 
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             string userName = this.User.Identity.Name;
             string userId = this.userManager.GetUserId(this.User);
-            var songs = this.songsService.GetAllSongsForUserAsync<SongListViewModel>(userId);
+            var songs = await this.songsService.GetAllSongsForUserAsync<SongListViewModel>(userId);
 
             foreach (var song in songs)
             {
@@ -77,24 +77,9 @@
             return this.View(songs);
         }
 
-        public ActionResult All()
+        public async Task<IActionResult> Upload()
         {
-            string userName = this.User.Identity.Name;
-            string userId = this.userManager.GetUserId(this.User);
-            var songs = this.songsService.GetAllSongsForUserAsync<SongListViewModel>(userId);
-
-            foreach (var song in songs)
-            {
-                var songDuration = this.songsService.GetMediaDuration(song.Name, userName);
-                song.SongDuration = songDuration;
-            }
-
-            return this.View(songs);
-        }
-
-        public ActionResult Upload()
-        {
-            var albums = this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
+            var albums = await this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
             var viewModel = new SongUploadViewModel
             {
                 Albums = albums,

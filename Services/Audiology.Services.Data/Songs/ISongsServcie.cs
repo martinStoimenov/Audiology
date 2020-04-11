@@ -28,7 +28,7 @@
 
         Task BackgroundLyricsGathering();
 
-        IEnumerable<T> GetAllSongsForUserAsync<T>(string userId);
+        Task<IEnumerable<T>> GetAllSongsForUserAsync<T>(string userId);
 
         IEnumerable<T> GetNewestSongs<T>();
 

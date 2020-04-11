@@ -1,0 +1,19 @@
+﻿@{
+    @model IEnumerable<Audiology.Web.ViewModels.Albums.AlbumsListViewModel>
+}
+
+    <h4>Newest Albums :</h4>
+<div class="row" >
+    @foreach (var album in Model)
+    {
+        <div class="col-lg-4 col-md-6 col-xl-3" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem;">
+            <img src="@album.CoverUrl" width="100%" height="135" alt="Alternate Text" />
+
+            <div class="text-center"><a asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id"><span class="font-weight-bold">@album.Name</span></a></div>
+
+            <div><span>@album.ShortDescription</span></div>
+
+            <div><span class="font-weight-light">@album.ReleaseDate</span></div>
+        </div>
+    }
+</div>

@@ -1,5 +1,6 @@
 ﻿namespace Audiology.Web.ViewModels.Albums
 {
+    using System;
     using System.Net;
     using System.Text.RegularExpressions;
 
@@ -12,13 +13,15 @@
 
         public string Name { get; set; }
 
-        public string Producer { get; set; }
-
         public string CoverUrl { get; set; }
 
         public int FavouritesCount { get; set; }
 
         public string Description { get; set; }
+
+        public string Producer { get; set; }
+
+        public DateTime ReleaseDate { get; set; }
 
         public string ShortDescription
         {

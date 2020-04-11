@@ -1,15 +1,15 @@
 ﻿@{
     @model IEnumerable<Audiology.Web.ViewModels.Songs.TopSongsForUserViewModel>
 }
-    <span class="font-weight-bold">Top 5 songs:</span>
+<span class="font-weight-bold">Top 5 songs:</span>
 @foreach (var item in Model)
 {
     <div class="row align-items-center" style="margin-top: 1rem;">
-        <div class="col-2">
+        <div class="col-3">
             <img src="@item.SongArtUrl" class="rounded-circle" width="80" height="80" alt="Alternate Text" />
         </div>
         <div class="col-7">
-            <a asp-controller="Songs" asp-action="ById" asp-route-id="@item.Id"><span> @item.Name</span></a>
+            <a style="text-decoration:none;" asp-controller="Songs" asp-action="ById" asp-route-id="@item.Id"><span> @item.Name.Replace(".mp3","")</span></a>
         </div>
         <div class="col">
             @item.UserUserName

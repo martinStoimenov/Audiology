@@ -13,11 +13,16 @@
     {
         private readonly IDeletableEntityRepository<Favourites> repository;
         private readonly IDeletableEntityRepository<Song> songRepository;
+        private readonly IDeletableEntityRepository<Album> albumRepository;
 
-        public FavouritesService(IDeletableEntityRepository<Favourites> repository, IDeletableEntityRepository<Song> songRepository)
+        public FavouritesService(
+            IDeletableEntityRepository<Favourites> repository,
+            IDeletableEntityRepository<Song> songRepository,
+            IDeletableEntityRepository<Album> albumRepository)
         {
             this.repository = repository;
             this.songRepository = songRepository;
+            this.albumRepository = albumRepository;
         }
 
         public int GetCount(int? songId, int? albumId)
@@ -30,7 +35,6 @@
         public async Task FavouritedAsync(int? songId, int? albumId, string userId)
         {
             var favourite = await this.repository.All().Where(f => f.SongId == songId && f.AlbumId == albumId && f.UserId == userId).FirstOrDefaultAsync();
-            var song = await this.songRepository.All().Where(s => s.Id == songId).FirstOrDefaultAsync();
 
             if (favourite == null)
             {
@@ -43,22 +47,49 @@
 
                 await this.repository.AddAsync(liked);
 
-                if (song.FavouritesCount == null)
+                if (songId != null)
                 {
-                    song.FavouritesCount = 0;
+                    var song = await this.songRepository.All().Where(s => s.Id == songId).FirstOrDefaultAsync();
+                    if (song.FavouritesCount == null)
+                    {
+                        song.FavouritesCount = 0;
+                    }
+
+                    song.FavouritesCount += 1;
                 }
 
-                song.FavouritesCount += 1;
+                if (albumId != null)
+                {
+                    var album = await this.albumRepository.All().Where(a => a.Id == albumId).FirstOrDefaultAsync();
+
+                    album.FavouritesCount += 1;
+                }
             }
             else if (favourite.SongId == songId && favourite.AlbumId == albumId)
             {
+                if (songId != null)
+                {
+                    var song = await this.songRepository.All().Where(s => s.Id == songId).FirstOrDefaultAsync();
+
+                    song.FavouritesCount -= 1;
+
+                    this.songRepository.Update(song);
+                    await this.songRepository.SaveChangesAsync();
+                }
+
+                if (albumId != null)
+                {
+                    var album = await this.albumRepository.All().Where(a => a.Id == albumId).FirstOrDefaultAsync();
+
+                    album.FavouritesCount -= 1;
+
+                    this.albumRepository.Update(album);
+                    await this.albumRepository.SaveChangesAsync();
+                }
+
                 this.repository.HardDelete(favourite);
-                song.FavouritesCount -= 1;
             }
 
-            this.songRepository.Update(song);
-
-            await this.songRepository.SaveChangesAsync();
             await this.repository.SaveChangesAsync();
         }
 

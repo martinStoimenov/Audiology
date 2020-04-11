@@ -5,22 +5,21 @@
     this.ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <div class="d-block text-center" style="margin-bottom: 2rem;">
-        <h3 class="d-inline p-2 text-white bg-dark"> Random Kanye West quotes every minute: </h3>
+<div class="text-center" style="margin-bottom: 1rem;">
+    <div class="d-block text-center" style="margin-bottom: 1rem; padding-top: 2rem;">
+        <h6 class="d-inline p-2 text-white bg-dark"> Here is a random Kanye West quote : </h6>
     </div>
-    <div id="kanye" class="d-inline p-2 text-center text-white bg-dark">
+    <div id="kanye" class="d-inline p-2 text-center text-white bg-dark font-weight-bold">
 
     </div>
 </div>
-<h1 class="text-center">All Songs</h1>
 
-<div><h2>Newest songs:</h2></div> <!-- Add more carousels with genres -->
+<div><h4>Newest songs :</h4></div> <!-- Add more carousels with genres -->
 <div class="newest-songs">
     @foreach (var song in Model)
     {
         <div>
-            <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" width="200" height="200" alt="Image not found" />
+            <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" width="180" height="160" alt="Image not found" />
             <div class="text-center" style="width: 50%">
                 <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a>
                 <h5 class="">@this.User.Identity.Name</h5>
@@ -29,42 +28,39 @@
     }
 </div>
 
-<!--<vc:newest-songs></vc:newest-songs>-->
-<hr />
 <br />
-<br />
-<br />
-<br />
-<vc:top-songs></vc:top-songs>
-<hr />
-<hr />
-<hr />
 <vc:rap-songs></vc:rap-songs>
+
+<hr />
+<vc:newest-albums></vc:newest-albums>
+
+<hr />
+<vc:top-songs></vc:top-songs>
+
 
 
 @section Scripts{
     <script>
-        function kanye() {
+        $(document).ready(function () {
             $.ajax({
                 url: "https://api.kanye.rest/?format=text",
                 type: "GET",
                 contentType: "text/plain",
                 success: function (data) {
                     $("#kanye").html(data);
-                    setTimeout(kanye, 60000)
                 },
                 error: function (req, status, error) {
                     console.log(error);
                 }
             });
-        };
+        });
 
         $(document).ready(function () {
             $('.newest-songs').slick({
                 dots: true,
                 infinite: true,
-                slidesToShow: 2,
-                slidesToScroll: 1,
+                slidesToShow: 4,
+                slidesToScroll: 3,
                 centerMode: true,
                 responsive: [
                     {
