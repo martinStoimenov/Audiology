@@ -17,6 +17,7 @@
     using Audiology.Services.Data.Songs;
     using Audiology.Services.Mapping;
     using Audiology.Services.Messaging;
+    using Audiology.Web.Hubs;
     using Audiology.Web.ViewModels;
     using CloudinaryDotNet;
     using Hangfire;
@@ -98,6 +99,11 @@
 
             services.AddSingleton(cloudinary);
 
+            // SignalR
+            services.AddSignalR(options =>
+                options.EnableDetailedErrors = true)
+                .AddMessagePackProtocol();
+
             // Hangfire
             services.AddHangfire(configuration => configuration
     .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -159,6 +165,7 @@
             app.UseEndpoints(
                 endpoints =>
                     {
+                        endpoints.MapHub<ChatHub>("/chat");
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
