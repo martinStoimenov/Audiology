@@ -107,6 +107,11 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(SongViewModel input)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.RedirectToAction(nameof(this.ById), new { id = input.Id });
+            }
+
             var songId = await this.songsService.EditSongAsync(input.Id, input.UserUserName, input.Name, input.Description, input.AlbumId, input.Producer, input.SongArtUrl, input.Genre, input.Year, input.Featuring, input.WrittenBy, input.YoutubeUrl, input.SoundcloudUrl, input.InstagramPostUrl);
             return this.RedirectToAction(nameof(this.ById), new { id = songId });
         }

@@ -9,7 +9,7 @@
 <h2>Here is all of your favourites</h2>
 
 <div class="row">
-    <div class="col-8">
+    <div class="col-10">
         @foreach (var liked in Model)
         {
             if (liked.SongName != null)
@@ -44,21 +44,21 @@
         }
     </div>
 
-    <div class="col-4">
+    <div class="col-2">
         @foreach (var album in Model)
         {
             if (album.AlbumName != null)
             {
-            <div class="col-md-4 mt-md-5">
+            <div class="col-md-4 mt-md-4" style="margin-left: -17rem; padding-left: 0rem; left: 7rem;">
                 <div class="card shadow-lg p-3 mb-5 rounded" style="width: 14rem; margin-left: 6rem;">
                     <img src="@album.AlbumCoverUrl" class="card-img-top img-fluid" style="width: 18rem; height: 9rem;" alt=" Sorry album cover not found :)">
                     <div class="card-body">
-                        <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id"><h6 class="card-text text-center">@album.AlbumName</h6></a>
+                        <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.AlbumId"><h6 class="card-text text-center">@album.AlbumName</h6></a>
 
                         <div class="justify-content-center">
                             <div style="margin-left: 4rem;">
                                 <form id="votesForm" method="post"></form>
-                                <a href="#" onclick="favourite('@userId',null,@album.Id)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                                <a href="#" onclick="favourite('@userId',null,@album.AlbumId)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
                                 <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@album.AlbumFavouritesCount</div>
                             </div>
                         </div>

@@ -25,35 +25,33 @@
 
     public class SongsService : ISongsServcie
     {
-        private static readonly char slash = Path.DirectorySeparatorChar;
+        private static readonly char Slash = Path.DirectorySeparatorChar;
 
         private readonly IHostingEnvironment env;
-        private readonly IRepository<Song> songRepository;
         private readonly IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo;
         private readonly IDeletableEntityRepository<Favourites> favouritesRepo;
-        private readonly IRepository<ApplicationUser> userRepo;
         private readonly IDeletableEntityRepository<Lyrics> lyricsRepository;
+        private readonly IRepository<ApplicationUser> userRepo;
+        private readonly IRepository<Song> songRepository;
         private readonly IConfiguration configuration;
 
         public SongsService(
             IHostingEnvironment env,
-            IRepository<Song> songRepository,
             IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo,
             IDeletableEntityRepository<Favourites> favouritesRepo,
-            IRepository<ApplicationUser> userRepo,
             IDeletableEntityRepository<Lyrics> lyricsRepository,
+            IDeletableEntityRepository<Song> songRepository,
+            IRepository<ApplicationUser> userRepo,
             IConfiguration configuration)
         {
             this.env = env;
-            this.songRepository = songRepository;
             this.playlistsSongsRepo = playlistsSongsRepo;
-            this.favouritesRepo = favouritesRepo;
-            this.userRepo = userRepo;
             this.lyricsRepository = lyricsRepository;
+            this.songRepository = songRepository;
+            this.favouritesRepo = favouritesRepo;
             this.configuration = configuration;
+            this.userRepo = userRepo;
         }
-
-        // once in a week if they are smaller than 15 songs and gets the lyrics from many apis.
 
         public async Task DeleteSong(int songId)
         {
@@ -91,22 +89,28 @@
                 string fullPath = Path.Combine(webRootPath, username, songName);
 
                 this.songRepository.Delete(song);
+                await this.songRepository.SaveChangesAsync();
 
                 if (File.Exists(fullPath))
                 {
                     File.Delete(fullPath);
                 }
-
-                await this.songRepository.SaveChangesAsync();
             }
         }
 
         public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, string producer, int? albumId, Enum genre, int year, string userId, string songArt, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl, string instagramPostUrl)
         {
+            var songExists = await this.songRepository.All().Where(s => s.UserId == userId && s.Name == songName).FirstOrDefaultAsync();
+
+            if (songExists != null)
+            {
+                throw new ArgumentException("Song alredy exist.");
+            }
+
             var dotIndex = input.FileName.LastIndexOf('.');
             var fileExtension = input.FileName.Substring(dotIndex);
 
-            string webRootPath = this.env.WebRootPath + slash + "Songs" + slash;
+            string webRootPath = this.env.WebRootPath + Slash + "Songs" + Slash;
 
             if (!Directory.Exists(webRootPath + username))
             {
@@ -140,11 +144,9 @@
             };
 
             await this.songRepository.AddAsync(song);
-
-            song.User.UserName = username;
-            bool isFound = await this.GetLyricsForSong(song);
-
             await this.songRepository.SaveChangesAsync();
+
+            bool isFound = await this.GetLyricsForSong(song, username);
 
             return song.Id;
         }
@@ -154,90 +156,41 @@
             var song = this.songRepository.All().Where(s => s.Id == id).Include(s => s.User).FirstOrDefault();
 
             int dotIndex = song.Name.LastIndexOf(".");
+            string fileExtension = song.Name.Substring(dotIndex);
             if (dotIndex == -1)
             {
                 throw new IndexOutOfRangeException("file extension is missing");
             }
 
-            string songName = song.Name.Substring(0, dotIndex);
-            string fileExtension = song.Name.Substring(dotIndex);
-
-            if (song != null)
+            if (song.Name != name + fileExtension)
             {
-                if (producer.Length <= 100 && producer != null)
-                {
-                    song.Producer = producer;
-                }
+                string newName = name + fileExtension;
 
-                if (name.Length <= 50 && name != null)
-                {
-                    song.Name = name + fileExtension;
-                }
+                string webRootPath = this.env.WebRootPath + Slash + "Songs" + Slash;
 
-                if (description.Length <= 100 && description != null)
-                {
-                    song.Description = description;
-                }
+                var newPath = Path.Combine(webRootPath, username, newName);
 
-                if (year > 1 || year < 2020)
-                {
-                    song.Year = year;
-                }
+                string oldPath = webRootPath + username + Slash + song.Name;
 
-                if (songArtUrl.Length <= 500 && songArtUrl != null)
-                {
-                    song.SongArtUrl = songArtUrl;
-                }
+                var file = new FileInfo(oldPath);
 
-                if (albumId != null)
-                {
-                    song.AlbumId = albumId;  // album can be null add check if selected one is valid
-                }
+                file.MoveTo(newPath);
 
-                if (Enum.IsDefined(typeof(Genre), genre))
-                {
-                    song.Genre = (Genre)genre;
-                }
-
-                if (featuring != null)
-                {
-                    song.Featuring = featuring;
-                }
-
-                if (writtenBy != null)
-                {
-                    song.WrittenBy = writtenBy;
-                }
-
-                if (youtubeUrl != null)
-                {
-                    song.YoutubeUrl = youtubeUrl;
-                }
-
-                if (soundcloudUrl != null)
-                {
-                    song.SoundcloudUrl = soundcloudUrl;
-                }
-
-                if (instagramPostUrl != null)
-                {
-                    song.InstagramPostUrl = instagramPostUrl;
-                }
+                bool isFound = await this.GetLyricsForSong(song);
             }
 
-            string newName = name + fileExtension;
-
-            string webRootPath = this.env.WebRootPath + slash + "Songs" + slash;
-
-            var newPath = Path.Combine(webRootPath, username, newName);
-
-            string oldPath = webRootPath + username + slash + songName + fileExtension;
-
-            var file = new FileInfo(oldPath);
-
-            file.MoveTo(newPath);
-
-            bool isFound = await this.GetLyricsForSong(song);
+            song.Name = name + fileExtension;
+            song.Year = year;
+            song.AlbumId = albumId;
+            song.Producer = producer;
+            song.Genre = (Genre)genre;
+            song.Featuring = featuring;
+            song.WrittenBy = writtenBy;
+            song.YoutubeUrl = youtubeUrl;
+            song.SongArtUrl = songArtUrl;
+            song.Description = description;
+            song.SoundcloudUrl = soundcloudUrl;
+            song.InstagramPostUrl = instagramPostUrl;
 
             this.songRepository.Update(song);
             await this.songRepository.SaveChangesAsync();
@@ -373,7 +326,26 @@
                 var apiSeedsLyrics = await this.GetApiSeedLyrics(song.User.UserName, song.Name, this.configuration["ApiSeedsLyrics:AppKey"], song.Id);
                 if (apiSeedsLyrics == null || apiSeedsLyrics == string.Empty)
                 {
-                    var geniusLyrics = await this.GeniusLyricsCrawler(song.User.UserName, song.Name, song.Id);
+                    var geniusLyrics = await this.GeniusLyricsScraper(song.User.UserName, song.Name, song.Id);
+                    if (geniusLyrics == null || geniusLyrics == string.Empty)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private async Task<bool> GetLyricsForSong(Song song, string username)
+        {
+            var ovhLyrics = await this.GetOvhLyrics(username, song.Name, song.Id);
+            if (ovhLyrics == null || ovhLyrics == string.Empty)
+            {
+                var apiSeedsLyrics = await this.GetApiSeedLyrics(username, song.Name, this.configuration["ApiSeedsLyrics:AppKey"], song.Id);
+                if (apiSeedsLyrics == null || apiSeedsLyrics == string.Empty)
+                {
+                    var geniusLyrics = await this.GeniusLyricsScraper(username, song.Name, song.Id);
                     if (geniusLyrics == null || geniusLyrics == string.Empty)
                     {
                         return false;
@@ -477,7 +449,7 @@
             return lyrics;
         }
 
-        private async Task<string> GeniusLyricsCrawler(string artist, string song, int songId)
+        private async Task<string> GeniusLyricsScraper(string artist, string song, int songId)
         {
             var geniusClient = new HttpClient();
             var lyrics = string.Empty;
