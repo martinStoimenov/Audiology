@@ -7,8 +7,10 @@
     using Audiology.Common;
     using Audiology.Data;
     using Audiology.Data.Models;
+    using Audiology.Data.Models.Enumerations;
     using Audiology.Data.Seeding;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
 
     internal class RolesSeeder : ISeeder
@@ -16,6 +18,29 @@
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            if (!await userManager.Users.AnyAsync())
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = "admin",
+                    Email = "admin@gmail.com",
+                    EmailConfirmed = true,
+                    FirstName = "Admin",
+                    LastName = "Admin",
+                    Gender = Gender.Male,
+                };
+
+                var password = "123456";
+
+                var result = await userManager.CreateAsync(user, password);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
+                }
+            }
 
             await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
 
@@ -35,6 +60,8 @@
                     throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
                 }
             }
+
+
         }
     }
 }

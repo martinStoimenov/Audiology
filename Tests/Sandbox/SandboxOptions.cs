@@ -2,18 +2,49 @@
 {
     using System;
     using System.Net.Http;
+    using System.Text;
     using System.Text.Json;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using CommandLine;
+    using HtmlAgilityPack;
 
     [Verb("sandbox", HelpText = "Run sandbox code.")]
     public static class SandboxOptions
     {
-        public static async Task Main()
+       /* public static async Task Main()
         {
-            var client = new HttpClient();
+            var geniusClient = new HttpClient();
+
+            var baseUrl = "https://genius.com";
+            var artist = "Gzuz";
+
+            var song = "Was erlebt";
+
+            var query = $"/{artist}-{song}-lyrics";
+
+            var search = Regex.Replace(query, "( )+", "-");
+
+            var content = await geniusClient.GetAsync(baseUrl + search);
+
+            if (!content.IsSuccessStatusCode)
+            {
+                throw new ArgumentException("Song lyrics can't be found right now");
+            }
+            else
+            {
+                var htmlDoc = new HtmlDocument();
+                var body = await content.Content.ReadAsStringAsync();
+                htmlDoc.LoadHtml(body);
+
+                var lyrics = htmlDoc.DocumentNode.SelectSingleNode("//*[@class = 'lyrics']/p").InnerText.Trim();
+                string modifiedLyrics = Regex.Replace(lyrics, @"(\r\n)|\n|\r", "<br/>");
+
+                Console.WriteLine(modifiedLyrics);
+            }*/
+
+            /*var client = new HttpClient();
 
             var artist = "2pac";
             var song = "Better Dayz";
@@ -35,7 +66,7 @@
                 string modifiedString = Regex.Replace(lyrics, @"(\r\n)|\n|\r", "<br/>");
 
                 Console.WriteLine(modifiedString);
-            }
+            }*/
 
             //------------------------------------------------------------------------------------------------------------------------------------
 

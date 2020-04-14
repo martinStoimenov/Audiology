@@ -1,6 +1,7 @@
 ﻿namespace Audiology.Web.Hubs
 {
     using System.Threading.Tasks;
+
     using Audiology.Web.ViewModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;

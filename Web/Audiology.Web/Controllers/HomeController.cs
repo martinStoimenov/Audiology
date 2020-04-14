@@ -49,11 +49,5 @@
         {
             return this.View();
         }
-
-        [Authorize]
-        public async Task<IActionResult> Chat()
-        {
-            return this.View();
-        }
     }
 }

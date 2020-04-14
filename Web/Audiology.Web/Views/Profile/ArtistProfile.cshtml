@@ -21,6 +21,13 @@
         <vc:songs-by-user user-id="@Model.Id"></vc:songs-by-user>
         <br />
         <vc:top-albums-for-user user-id="@Model.Id"></vc:top-albums-for-user>
+
+        @if (User.IsInRole("User") || User.IsInRole("Administrator"))
+        {
+            <hr />
+            <vc:chat artist-id="@Model.Id"></vc:chat>
+        }
+
     </div>
 </div>
 

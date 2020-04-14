@@ -18,6 +18,7 @@
         <link href="~/css/site.min.css" rel="stylesheet" asp-append-version="true" />
     </environment>
 </head>
+
 <body style="background-color: #f2f2f2;">
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark box-shadow mb-3" style="margin-bottom: 0 !important;">
@@ -44,12 +45,14 @@
             </div>
         </nav>
     </header>
+    <div id="particles-js">
 
-    <div class="container">
-        <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3" style="background-color: white; padding-left: 1rem; padding-right: 1rem;">
-            @this.RenderBody()
-        </main>
+        <div class="container" style="position: absolute; margin-left: 17rem;">
+            <partial name="_CookieConsentPartial" />
+            <main role="main" class="pb-3" style="background-color: white; padding-left: 1rem; padding-right: 1rem;">
+                @this.RenderBody()
+            </main>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted bg-dark">
@@ -59,13 +62,16 @@
     </footer>
 
     <environment names="Development">
+        <script async src="//genius.codes"></script>
+        <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
         <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js" asp-append-version="true"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/slick/slick.js"></script>
-        <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
+        <script src="~/js/particles.js"></script>
+        <script src="~/js/app.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
@@ -83,6 +89,7 @@
     {
         @this.RenderSection("PlayerScripts", required: false)
     }
+    <canvas class="background"></canvas>
+</body>
 
-    </body>
 </html>

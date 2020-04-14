@@ -15,6 +15,7 @@
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
     using Audiology.Web.ViewModels.Songs;
+    using HtmlAgilityPack;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
@@ -24,6 +25,8 @@
 
     public class SongsService : ISongsServcie
     {
+        private static readonly char slash = Path.DirectorySeparatorChar;
+
         private readonly IHostingEnvironment env;
         private readonly IRepository<Song> songRepository;
         private readonly IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo;
@@ -57,6 +60,7 @@
             var song = await this.songRepository.All().Where(s => s.Id == songId).FirstOrDefaultAsync();
             var playlistSong = await this.playlistsSongsRepo.All().Where(ps => ps.SongId == song.Id).FirstOrDefaultAsync();
             var favouritedSong = await this.favouritesRepo.All().Where(f => f.SongId == songId).FirstOrDefaultAsync();
+            var lyricsSong = await this.lyricsRepository.All().Where(l => l.SongId == songId).FirstOrDefaultAsync();
             var userName = await this.userRepo.All().Where(u => u.Id == song.UserId).Select(x => x.UserName).FirstOrDefaultAsync();
 
             if (song != null)
@@ -73,80 +77,41 @@
                     await this.favouritesRepo.SaveChangesAsync();
                 }
 
+                if (lyricsSong != null)
+                {
+                    this.lyricsRepository.Delete(lyricsSong);
+                    await this.lyricsRepository.SaveChangesAsync();
+                }
+
+                string webRootPath = Path.Combine(this.env.WebRootPath, "Songs");
+
+                string songName = song.Name;
+                string username = userName;
+
+                string fullPath = Path.Combine(webRootPath, username, songName);
+
                 this.songRepository.Delete(song);
+
+                if (File.Exists(fullPath))
+                {
+                    File.Delete(fullPath);
+                }
+
+                await this.songRepository.SaveChangesAsync();
             }
-
-            string webRootPath = Path.Combine(this.env.WebRootPath, "Songs");
-
-            string songName = song.Name;
-            string username = userName;
-
-            string fullPath = Path.Combine(webRootPath, username, songName);
-
-            this.songRepository.Delete(song);
-
-            if (File.Exists(fullPath))
-            {
-                File.Delete(fullPath);
-            }
-
-            await this.songRepository.SaveChangesAsync();
         }
 
-        // Add the method for lyrics search
         public async Task<int> UploadAsync(IFormFile input, string username, string songName, string description, string producer, int? albumId, Enum genre, int year, string userId, string songArt, string featuring, string writtenBy, string youtubeUrl, string soundcloudUrl, string instagramPostUrl)
         {
-            // TODO: Add hangfire task scheduler for api calls
             var dotIndex = input.FileName.LastIndexOf('.');
             var fileExtension = input.FileName.Substring(dotIndex);
-            var originalFileName = input.FileName.Substring(0, dotIndex);
 
-            string webRootPath = this.env.WebRootPath + "\\Songs\\";
+            string webRootPath = this.env.WebRootPath + slash + "Songs" + slash;
 
-            /*  if (!Directory.Exists(webRootPath + username))
-              {
-                  Directory.CreateDirectory(webRootPath + username);
-              }
-
-              if (songName.Length > 50 || songName == null)
-              {
-                  throw new ArgumentOutOfRangeException("Song name cannot be more than 50 characters!");
-              }
-
-              if (description.Length > 100)
-              {
-                  throw new ArgumentOutOfRangeException("Description cannot be more than 100 characters!");
-              }
-
-              if (year > 2020)
-              {
-                  throw new ArgumentOutOfRangeException("Year cannot be more than the current one!");
-              }
-
-              if (featuring != null || featuring.Length > 100)
-              {
-                  throw new ArgumentOutOfRangeException("Featuring cannot be more than 100 characters!");
-              }
-
-              if (writtenBy != null || writtenBy.Length > 100)
-              {
-                  throw new ArgumentOutOfRangeException("WrittenBy cannot be more than 100 characters!");
-              }
-
-              if (youtubeUrl != null || youtubeUrl.Length > 500)
-              {
-                  throw new ArgumentOutOfRangeException("You Tube url cannot be more than 500 characters!");
-              }
-
-              if (soundcloudUrl != null || soundcloudUrl.Length > 500)
-              { // refactor these validations
-                  throw new ArgumentOutOfRangeException("Soundcloud url cannot be more than 500 characters!");
-              }
-
-              if (instagramPostUrl != null || instagramPostUrl.Length > 500)
-              { // refactor these validations
-                  throw new ArgumentOutOfRangeException("Instagram url cannot be more than 500 characters!");
-              }*/
+            if (!Directory.Exists(webRootPath + username))
+            {
+                Directory.CreateDirectory(webRootPath + username);
+            }
 
             string name = songName + fileExtension;
 
@@ -175,6 +140,10 @@
             };
 
             await this.songRepository.AddAsync(song);
+
+            song.User.UserName = username;
+            bool isFound = await this.GetLyricsForSong(song);
+
             await this.songRepository.SaveChangesAsync();
 
             return song.Id;
@@ -258,11 +227,11 @@
 
             string newName = name + fileExtension;
 
-            string webRootPath = this.env.WebRootPath + "\\Songs\\";
+            string webRootPath = this.env.WebRootPath + slash + "Songs" + slash;
 
             var newPath = Path.Combine(webRootPath, username, newName);
 
-            string oldPath = webRootPath + username + "\\" + songName + fileExtension;
+            string oldPath = webRootPath + username + slash + songName + fileExtension;
 
             var file = new FileInfo(oldPath);
 
@@ -399,12 +368,16 @@
         private async Task<bool> GetLyricsForSong(Song song)
         {
             var ovhLyrics = await this.GetOvhLyrics(song.User.UserName, song.Name, song.Id);
-            if (ovhLyrics == null)
+            if (ovhLyrics == null || ovhLyrics == string.Empty)
             {
                 var apiSeedsLyrics = await this.GetApiSeedLyrics(song.User.UserName, song.Name, this.configuration["ApiSeedsLyrics:AppKey"], song.Id);
-                if (apiSeedsLyrics == null)
+                if (apiSeedsLyrics == null || apiSeedsLyrics == string.Empty)
                 {
-                    return false;
+                    var geniusLyrics = await this.GeniusLyricsCrawler(song.User.UserName, song.Name, song.Id);
+                    if (geniusLyrics == null || geniusLyrics == string.Empty)
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -503,16 +476,55 @@
 
             return lyrics;
         }
+
+        private async Task<string> GeniusLyricsCrawler(string artist, string song, int songId)
+        {
+            var geniusClient = new HttpClient();
+            var lyrics = string.Empty;
+
+            var baseUrl = "https://genius.com";
+            var artistName = artist;
+            var songName = song;
+
+            var query = $"/{artistName}-{songName}-lyrics";
+            var search = Regex.Replace(query, "( )+", "-");
+
+            var content = await geniusClient.GetAsync(baseUrl + search);
+
+            if (!content.IsSuccessStatusCode)
+            {
+                throw new ArgumentException("Song lyrics can't be found right now");
+            }
+            else
+            {
+                var htmlDoc = new HtmlDocument();
+                var body = await content.Content.ReadAsStringAsync();
+                htmlDoc.LoadHtml(body);
+
+                lyrics = htmlDoc.DocumentNode.SelectSingleNode("//*[@class = 'lyrics']/p").InnerText.Trim();
+                string modifiedLyrics = Regex.Replace(lyrics, @"(\r\n)|\n|\r", "<br/>");
+
+                var lyricsEntity = new Lyrics
+                {
+                    Text = modifiedLyrics,
+                    SongId = songId,
+                };
+                await this.lyricsRepository.AddAsync(lyricsEntity);
+                await this.lyricsRepository.SaveChangesAsync();
+            }
+
+            return lyrics;
+        }
     }
 
-   /* public class SongsWithoutLyricsModel : IMapFrom<Song>
-    {
-        public int Id { get; set; }
+    /* public class SongsWithoutLyricsModel : IMapFrom<Song>
+     {
+         public int Id { get; set; }
 
-        public string Name { get; set; }
+         public string Name { get; set; }
 
-        public string Featuring { get; set; }
+         public string Featuring { get; set; }
 
-        public string UserUserName { get; set; }
-    }*/
+         public string UserUserName { get; set; }
+     }*/
 }

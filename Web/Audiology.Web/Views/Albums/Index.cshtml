@@ -3,7 +3,6 @@
     @using Audiology.Data.Models;
     @using Audiology.Web.ViewModels.Albums
     @model IEnumerable<AlbumsListViewModel>
-    this.ViewData["Title"] = "Albums";
     @inject UserManager<ApplicationUser> UserManager
     string userId = this.UserManager.GetUserId(this.User);
 }

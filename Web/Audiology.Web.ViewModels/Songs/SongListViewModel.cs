@@ -17,6 +17,8 @@
 
         public string UserUserName { get; set; }
 
+        public string UserId { get; set; }
+
         public string SongType { get; set; }
 
         public string SongArtUrl { get; set; }

@@ -81,13 +81,14 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
+            services.AddTransient<IEmailSender>(x => new SendGridEmailSender(this.configuration["SendGrid:AppKey"]));
             services.AddTransient<ISongsServcie, SongsService>();
             services.AddTransient<IAlbumsService, AlbumsService>();
             services.AddTransient<IFavouritesService, FavouritesService>();
             services.AddTransient<IPlaylistsService, PlaylistsService>();
             services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<ICommentsService, CommentsService>();
+
 
             // Cloudinary
             Account account = new Account(

@@ -26,10 +26,10 @@
             this.userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             string userId = this.userManager.GetUserId(this.User);
-            var viewModel = this.albumsService.GetAllForUser<AlbumsListViewModel>(userId);
+            var viewModel = await this.albumsService.GetAllForUser<AlbumsListViewModel>(userId);
 
             return this.View(viewModel);
         }

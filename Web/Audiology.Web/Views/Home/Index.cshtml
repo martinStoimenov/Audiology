@@ -5,39 +5,39 @@
     this.ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center" style="margin-bottom: 1rem;">
+<div class="text-center" style="margin-bottom: 6rem;">
     <div class="d-block text-center" style="margin-bottom: 1rem; padding-top: 2rem;">
-        <h6 class="d-inline p-2 text-white bg-dark"> Here is a random Kanye West quote : </h6>
+        <h6 class="d-inline p-2 text-white bg-dark"> Here is a Kanye West quote for you : </h6>
     </div>
     <div id="kanye" class="d-inline p-2 text-center text-white bg-dark font-weight-bold">
 
     </div>
 </div>
 
-<div><h4>Newest songs :</h4></div> <!-- Add more carousels with genres -->
-<div class="newest-songs">
+<div><h4 class="font-weight-normal">Newest songs :</h4></div> <!-- Add more carousels with genres -->
+<div class="newest-songs" style="margin-bottom: 4rem;">
     @foreach (var song in Model)
     {
         <div>
             <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" width="180" height="160" alt="Image not found" />
             <div class="text-center" style="width: 50%">
                 <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a>
-                <h5 class="">@this.User.Identity.Name</h5>
+                <a asp-controller="Profile" asp-action="Index" asp-route-id="@song.UserId" style="text-decoration: none; color: black;"><h5 class="">@song.UserUserName</h5></a>
             </div>
         </div>
     }
 </div>
 
-<br />
+<hr />
 <vc:rap-songs></vc:rap-songs>
 
 <hr />
-<vc:newest-albums></vc:newest-albums>
+<div style="margin-bottom: 4rem; margin-top: 4rem;">
+    <vc:newest-albums></vc:newest-albums>
+</div>
 
 <hr />
 <vc:top-songs></vc:top-songs>
-
-
 
 @section Scripts{
     <script>
