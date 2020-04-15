@@ -27,7 +27,6 @@
         public IActionResult Index()
         {
             var songsView = this.songsServcie.GetAll<SongListViewModel>();
-            // this.songsServcie.GetTopFavouritedSongs<SongListViewModel>(1);
 
             return this.View(songsView);
         }
@@ -44,10 +43,16 @@
                 new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Profile(string userId)
+        [HttpGet]
+        public async Task<IActionResult> Search(string search)
         {
-            return this.View();
+            if (search != string.Empty)
+            {
+                var songs = await this.songsServcie.Search<SearchSongsViewModel>(search);
+                return this.View(songs);
+            }
+
+            return this.NotFound();
         }
     }
 }

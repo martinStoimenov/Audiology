@@ -23,7 +23,7 @@
     using Microsoft.Extensions.Configuration;
     using NAudio.Wave;
 
-    public class SongsService : ISongsServcie
+    public class ISongsService : ISongsServcie
     {
         private static readonly char Slash = Path.DirectorySeparatorChar;
 
@@ -35,7 +35,7 @@
         private readonly IRepository<Song> songRepository;
         private readonly IConfiguration configuration;
 
-        public SongsService(
+        public ISongsService(
             IHostingEnvironment env,
             IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo,
             IDeletableEntityRepository<Favourites> favouritesRepo,
@@ -316,6 +316,13 @@
                 song.Name.Remove(dotIndex);
                 await this.GetLyricsForSong(song);
             }
+        }
+
+        public async Task<IEnumerable<T>> Search<T>(string searchTerm)
+        {
+            var result = await this.songRepository.AllAsNoTracking().Where(s => s.Name.Contains(searchTerm) || s.Album.Name.Contains(searchTerm)).To<T>().ToListAsync();
+            ;
+            return result;
         }
 
         private async Task<bool> GetLyricsForSong(Song song)

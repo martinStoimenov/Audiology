@@ -30,6 +30,8 @@
 
         Task<IEnumerable<T>> GetAllSongsForUserAsync<T>(string userId);
 
+        Task<IEnumerable<T>> Search<T>(string searchTerm);
+
         IEnumerable<T> GetNewestSongs<T>();
 
         IEnumerable<T> GetAll<T>(int? count = null);

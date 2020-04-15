@@ -1,10 +1,5 @@
 ﻿namespace Audiology.Web.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Net.Http;
     using System.Threading.Tasks;
 
     using Audiology.Data.Models;
@@ -16,7 +11,6 @@
     using Audiology.Web.ViewModels.Comments;
     using Audiology.Web.ViewModels.Playlists;
     using Audiology.Web.ViewModels.Songs;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 

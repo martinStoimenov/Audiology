@@ -1,0 +1,75 @@
+﻿@{
+    @using Microsoft.AspNetCore.Identity;
+    @using Audiology.Data.Models;
+    @model IEnumerable<Audiology.Web.ViewModels.SearchSongsViewModel>
+    @inject UserManager<ApplicationUser> UserManager
+    string userId = this.UserManager.GetUserId(this.User);
+}
+
+    <span>search results :</span>
+<div class="row">
+    <div class="col-10">
+        @foreach (var song in Model)
+        {
+            if (song.Name != null)
+            {
+                <div class="text-left shadow-lg p-3 mb-5 rounded" style="width: 52rem; background-color: #f4f4f4; margin-top: 2rem;">
+
+                    <div class="d-flex flex-row bd-highlight mb-3" style="margin: 0 !important;">
+                        <div class="align-self-end">
+                            <img src="@(song.SongArtUrl == null ? song.SongAlbumCoverUrl : song.SongArtUrl)" class="rounded" style="width: 7rem; height: 7rem;" alt="Image not found" />
+                        </div>
+                        <div class="d-block" style="margin-left: 1rem;">
+                            <div class="d-block p-2 w-100 bd-highlight">
+                                <h5 class="font-weight-lighter h-25 d-inline-block">@song.UserUserName</h5>
+                            </div>
+                            <div class="text-wrap p-2 w-100 bd-highlight"><a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@(song.Name != null ? song.Name.Replace(song.Extension, "") : "")</a></div>
+
+                        </div>
+
+                        <div class="ml-auto p-2 bd-highlight">
+                            <form id="votesForm" method="post"></form>
+                            <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                            <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.SongFavouritesCount</div>
+                        </div>
+                    </div>
+                    <span class="d-flex justify-content-start align-self-end">
+                        <audio id="player" style="width: 52rem" controls>
+                            <source src="~/Songs//@song.UserUserName/@song.Name" type="audio/@song.Extension">
+                        </audio>
+                    </span>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="col-2">
+        @foreach (var album in Model)
+        {
+            if (album.AlbumName != null)
+            {
+                <div class="col-md-4 mt-md-4" style="margin-left: -17rem; padding-left: 0rem; left: 7rem;">
+                    <div class="card shadow-lg p-3 mb-5 rounded" style="width: 14rem; margin-left: 6rem;">
+                        <img src="@album.AlbumCoverUrl" class="card-img-top img-fluid" style="width: 18rem; height: 9rem;" alt=" Sorry album cover not found :)">
+                        <div class="card-body">
+                            <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.AlbumId"><h6 class="card-text text-center">@album.AlbumName</h6></a>
+
+                            <div class="justify-content-center">
+                                <div style="margin-left: 4rem;">
+                                    <form id="votesForm" method="post"></form>
+                                    <a href="#" onclick="favourite('@userId',null,@album.AlbumId)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                                    <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@album.AlbumFavouritesCount</div>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="card-text text-center">@album.AlbumProducer</h6>
+                        @if (album.AlbumDescription != null)
+                        {
+                            <p class="card-text text-center">@album.ShortDescription</p>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
