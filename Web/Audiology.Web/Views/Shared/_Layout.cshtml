@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
+    <link href="~/css/easy-autocomplete.css" rel="stylesheet" />
     <link href="~/slick/slick.css" rel="stylesheet" />
     <link href="~/slick/slick-theme.css" rel="stylesheet" />
     <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" asp-append-version="true" />
@@ -31,8 +32,8 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
 
-                    <form asp-controller="Home" asp-action="Search" class="form-inline" method="get" style="width: 60%;">
-                        <input name="Search" class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" style="width: 60%;">
+                    <form asp-controller="Home" asp-action="Search" class="form-inline" method="post" style="width: 60%;">
+                        <input name="Search" class="form-control mr-sm-2" type="search" id="search" placeholder="Search..." aria-label="Search" style="width: 60%;">
                         <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
                     </form>
 
@@ -45,15 +46,22 @@
             </div>
         </nav>
     </header>
-    <div id="particles-js">
-
-        <div class="container" style="position: absolute; margin-left: 17rem;">
+        <div class="container" style="position: absolute; margin-left: 17rem; z-index: 10;">
             <partial name="_CookieConsentPartial" />
             <main role="main" class="pb-3" style="background-color: white; padding-left: 1rem; padding-right: 1rem;">
                 @this.RenderBody()
             </main>
         </div>
-    </div>
+        <div class="animation-area">
+            <ul class="box-area">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
 
     <footer class="border-top footer text-muted bg-dark">
         <div class="container">
@@ -62,6 +70,7 @@
     </footer>
 
     <environment names="Development">
+        <script src="~/js/jquery.easy-autocomplete.js"></script>
         <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
         <script src="~/lib/jquery/dist/jquery.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.js" asp-append-version="true"></script>
@@ -69,8 +78,6 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/slick/slick.js"></script>
-        <script src="~/js/particles.js"></script>
-        <script src="~/js/app.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>

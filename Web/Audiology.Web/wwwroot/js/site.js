@@ -55,3 +55,31 @@ function escapeHtml(unsafe) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+    var options = {
+
+        url: function(search) {
+    return "Home/Search";
+  },
+
+  getValue: function(element) {
+    return element.name;
+  },
+
+  ajaxSettings: {
+        dataType: "json",
+    method: "POST",
+    data: {
+        dataType: "json"
+  }
+},
+
+            preparePostData: function (data) {
+        data.search = $("#search").val();
+return data;
+},
+
+requestDelay: 400
+};
+
+$("#search").easyAutocomplete(options);

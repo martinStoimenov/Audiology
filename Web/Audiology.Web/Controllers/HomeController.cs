@@ -43,13 +43,12 @@
                 new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
         public async Task<IActionResult> Search(string search)
         {
             if (search != string.Empty)
             {
                 var songs = await this.songsServcie.Search<SearchSongsViewModel>(search);
-                return this.View(songs);
+                return this.Json(songs);
             }
 
             return this.NotFound();
