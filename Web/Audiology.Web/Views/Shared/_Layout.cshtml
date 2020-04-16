@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@this.ViewData["Title"] - @GlobalConstants.SystemName</title>
+
+    <link href="~/css/easy-autocomplete.min.css" rel="stylesheet" />
     <link href="~/slick/slick.css" rel="stylesheet" />
     <link href="~/slick/slick-theme.css" rel="stylesheet" />
     <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" asp-append-version="true" />
@@ -32,8 +34,8 @@
                     <partial name="_LoginPartial" />
 
                     <form asp-controller="Home" asp-action="Search" class="form-inline" method="get" style="width: 60%;">
-                        <input name="Search" class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" style="width: 60%;">
-                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                        <input name="Search" class="form-control mr-sm-2" type="search" id="search" placeholder="Search..." aria-label="Search" style="width: 60%;">
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" id="searchSubmit">Search</button>
                     </form>
 
                     <ul class="navbar-nav flex-grow-1">
@@ -45,14 +47,11 @@
             </div>
         </nav>
     </header>
-    <div id="particles-js">
-
-        <div class="container" style="position: absolute; margin-left: 17rem;">
-            <partial name="_CookieConsentPartial" />
-            <main role="main" class="pb-3" style="background-color: white; padding-left: 1rem; padding-right: 1rem;">
-                @this.RenderBody()
-            </main>
-        </div>
+    <div class="container" style="position: absolute; margin-left: 17rem; margin-bottom: 60px;">
+        <partial name="_CookieConsentPartial" />
+        <main role="main" class="pb-3" style="background-color: white; padding-left: 1rem; padding-right: 1rem;">
+            @this.RenderBody()
+        </main>
     </div>
 
     <footer class="border-top footer text-muted bg-dark">
@@ -69,8 +68,6 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.js" asp-append-version="true"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="~/slick/slick.js"></script>
-        <script src="~/js/particles.js"></script>
-        <script src="~/js/app.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>

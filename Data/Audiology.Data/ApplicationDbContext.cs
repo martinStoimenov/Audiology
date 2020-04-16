@@ -38,6 +38,8 @@
 
         public DbSet<Lyrics> Lyrics { get; set; }
 
+        public DbSet<Messages> Messages { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

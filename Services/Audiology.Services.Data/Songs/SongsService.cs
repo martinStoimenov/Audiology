@@ -320,8 +320,12 @@
 
         public async Task<IEnumerable<T>> Search<T>(string searchTerm)
         {
-            var result = await this.songRepository.AllAsNoTracking().Where(s => s.Name.Contains(searchTerm) || s.Album.Name.Contains(searchTerm)).To<T>().ToListAsync();
-            ;
+            var result = await this.songRepository.AllAsNoTracking().Where(
+                s => s.Name.Contains(searchTerm) ||
+                s.Album.Name.Contains(searchTerm) ||
+                s.Album.User.UserName.Contains(searchTerm) ||
+                s.User.UserName.Contains(searchTerm)).To<T>().ToListAsync();
+
             return result;
         }
 

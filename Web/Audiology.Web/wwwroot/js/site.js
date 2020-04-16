@@ -34,14 +34,25 @@ var connection =
 
 connection.on("NewMessage",
     function (message) {
-        var chatInfo = `<div>[${message.user}] ${escapeHtml(message.text)}</div>`;
+        var chatInfo = `<div style="overflow-wrap: break-word;">[${message.user}] ${escapeHtml(message.text)}</div>`;
         $("#messagesList").append(chatInfo);
     });
 
+var artistId = $("#artistId").text();
 $("#sendButton").click(function () {
+    if ($("#userId").val() === "") {
+
+    }
+    else {
+        artistId = $("#userId option:selected").val();
+    }
     var message = $("#messageInput").val();
-    connection.invoke("Send", message);
+    connection.invoke("Send", message, artistId);
+    var chatInfo = `<div style="overflow-wrap: break-word;"> ${(message)}</div>`;
+    $("#messagesList").append(chatInfo);
 });
+
+$('#messagesList').css("overflow-y", "scroll");
 
 connection.start().catch(function (err) {
     return console.error(err.toString());

@@ -1,9 +1,12 @@
 ﻿namespace Audiology.Web.ViewModels
 {
-    public class Message
+    using System.ComponentModel.DataAnnotations;
+
+    public class MessageModel
     {
         public string User { get; set; }
 
+        [MaxLength(1000)]
         public string Text { get; set; }
     }
 }

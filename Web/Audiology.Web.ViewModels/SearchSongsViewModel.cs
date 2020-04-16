@@ -62,10 +62,15 @@
         {
             get
             {
-                var content = WebUtility.HtmlDecode(Regex.Replace(this.AlbumDescription, @"<[^>]+>", string.Empty));
-                return content.Length > 57
-                        ? content.Substring(0, 57) + "..."
-                        : content;
+                if (this.AlbumDescription != null)
+                {
+                    var content = WebUtility.HtmlDecode(Regex.Replace(this.AlbumDescription, @"<[^>]+>", string.Empty));
+                    return content.Length > 57
+                            ? content.Substring(0, 57) + "..."
+                            : content;
+                }
+
+                return string.Empty;
             }
         }
 

@@ -13,9 +13,9 @@
     [Verb("sandbox", HelpText = "Run sandbox code.")]
     public static class SandboxOptions
     {
-       /* public static async Task Main()
+        public static async Task Main()
         {
-            var geniusClient = new HttpClient();
+           /* var geniusClient = new HttpClient();
 
             var baseUrl = "https://genius.com";
             var artist = "Gzuz";
