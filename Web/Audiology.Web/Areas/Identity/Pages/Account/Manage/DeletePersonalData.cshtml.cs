@@ -67,6 +67,11 @@ namespace Audiology.Web.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            var roles = await this._userManager.GetRolesAsync(user);
+            var role = roles[0];
+
+            await this._userManager.RemoveFromRoleAsync(user, role);
+
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)

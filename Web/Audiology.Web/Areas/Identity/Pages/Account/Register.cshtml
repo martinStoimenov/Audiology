@@ -13,13 +13,15 @@
             <h4>Create a new account.</h4>
             <hr />
             <div class="form-group">
-                <label asp-for="Input.ProfilePicUrl"></label>
-                <input asp-for="Input.ProfilePicUrl" type="file" class="form-control">
+                <label>Upload profile pic :</label>
+                <input asp-for="Input.ProfilePicUrl" type="file">
             </div>
             <br />
             <div class="form-group">
                 <label asp-for="Input.SelectedRole"></label>
-                <select asp-for="Input.SelectedRole" class="form-control" asp-items="@Html.GetEnumSelectList<RolesEnum>()"></select>
+                <select id="role" asp-for="Input.SelectedRole" class="form-control" asp-items="@Html.GetEnumSelectList<RolesEnum>()">
+                    <option selected default disabled value=""></option>
+                </select>
                 <span asp-validation-for="Input.SelectedRole" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -85,11 +87,10 @@
                 </div>
             </div>
             <div>
-                <label><input type="radio" asp-for="Input.Gender" value="Male" />Male</label>
+                <label><input type="radio" asp-for="Input.Gender" value="Male" id="male" />Male</label>
 
                 <label><input type="radio" asp-for="Input.Gender" value="Female" />Female</label>
             </div>
-            <button id="additionalPropsBtn" class="btn btn-outline-dark">Show more</button>
             <hr />
             <button type="submit" class="btn btn-dark"><i class="fas fa-sign-in-alt"></i> Register</button>
         </form>
@@ -130,10 +131,14 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        $('#additionalPropsBtn').on('click', function () {
-            $('#additionalProps').slideDown(700).show();
-            $('#additionalPropsBtn').hide(400);
+
+        $("#role").change(function () {
+            var role = $("#role option:selected").text();
+            if (role == "Artist") {
+                $("#additionalProps").slideDown(700).show();
+            }
         });
+
     </script>
 
 }

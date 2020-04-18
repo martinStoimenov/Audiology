@@ -1,20 +1,29 @@
 ﻿@{
+    @using Audiology.Web.ViewModels.Messages;
     this.ViewBag.Title = "Chat";
-    @model IEnumerable<Audiology.Web.ViewModels.Messages.MessagesDropDownViewModel>
+    @model IEnumerable<MessagesDropDownViewModel>
 }
 <br />
 <br />
 <div><span class=" text-success" style="margin-left: 11rem;">chat with artist_</span></div>
-<div id="messagesList" class="border-left border-success border-right border-success" style="height: 10rem; font-size: 21px; padding-left: 1rem; padding-right: 1rem; margin-top: 2rem;">
+<div id="messagesList" class="border-left border-success border-right border-success" style="height: 10rem; font-size: 18px; padding-left: 1rem; padding-right: 1rem; margin-top: 2rem;">
+@foreach (var message in (IEnumerable<MessagesListViewModel>)ViewData["Messages"])
+{
+    <div style="background-color: aliceblue; border-radius: 10px; padding-left: 7px; padding-right: 7px; margin-bottom: 10px;">
+        <span>[@message.UserName]</span>
+        <span>@message.Text</span>
+        <span>[@message.CreatedOn]</span>
+    </div>
+}
 </div>
-<div class="container" style="        width: inherit;
-">
+<div class="container" style="width: inherit;">
     <div id="message-holder" class="mt-3 d-flex justify-content-start">
         <input class="pl-3" type="text" id="messageInput" style="width: 69%;" placeholder="Message..." />
         <button id="sendButton" class="ml-3 btn btn-success btn-lg"><i class="fab fa-facebook-messenger"></i> Send</button>
     </div>
-    <div id="artistId" style="display: none">@ViewData["ArtistId"]</div>
 </div>
+
+<div id="artistId" style="display: none">@((string)ViewData["ArtistId"])</div>
 
 @if (Model != null)
 {

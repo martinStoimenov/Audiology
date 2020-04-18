@@ -34,12 +34,15 @@ var connection =
 
 connection.on("NewMessage",
     function (message) {
-        var chatInfo = `<div style="overflow-wrap: break-word;">[${message.user}] ${escapeHtml(message.text)}</div>`;
+        var chatInfo = `<div style="background-color: aliceblue; border-radius: 10px; padding-left: 7px; padding-right: 7px; margin-bottom: 10px; overflow-wrap: break-word;">[${message.user}] ${escapeHtml(message.text)}</div>`;
         $("#messagesList").append(chatInfo);
     });
 
-var artistId = $("#artistId").text();
+
 $("#sendButton").click(function () {
+
+    var artistId = $("#artistId").text();
+
     if ($("#userId").val() === "") {
 
     }
@@ -48,7 +51,7 @@ $("#sendButton").click(function () {
     }
     var message = $("#messageInput").val();
     connection.invoke("Send", message, artistId);
-    var chatInfo = `<div style="overflow-wrap: break-word;"> ${(message)}</div>`;
+    var chatInfo = `<div style="background-color: aliceblue; border-radius: 10px; padding-left: 7px; padding-right: 7px; margin-bottom: 10px; overflow-wrap: break-word;"> ${(message)}</div>`;
     $("#messagesList").append(chatInfo);
 });
 

@@ -9,6 +9,7 @@
     using Audiology.Data.Models;
     using Audiology.Data.Repositories;
     using Audiology.Data.Seeding;
+    using Audiology.Services.Data.Administration;
     using Audiology.Services.Data.Albums;
     using Audiology.Services.Data.Comments;
     using Audiology.Services.Data.Favourites;
@@ -88,6 +89,7 @@
             services.AddTransient<IPlaylistsService, PlaylistsService>();
             services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<ICommentsService, CommentsService>();
+            services.AddTransient<IAdminService, AdminService>();
 
             // Cloudinary
             Account account = new Account(

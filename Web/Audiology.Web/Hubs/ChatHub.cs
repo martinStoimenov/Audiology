@@ -27,7 +27,7 @@
                 "NewMessage",
                 new MessageModel { User = this.Context.User.Identity.Name, Text = message, });
 
-            if (message.Length < 1000)
+            if (message.Length < 1000 && message.Length > 0)
             {
                 var userId = this.userManager.GetUserId(this.Context.User);
                 var dbMessage = new Messages { ArtistId = artistId, UserId = userId, Text = message };

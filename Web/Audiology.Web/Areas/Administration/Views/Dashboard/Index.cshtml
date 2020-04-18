@@ -2,6 +2,105 @@
 @{
     this.ViewData["Title"] = "Admin dashboard";
 }
+<br />
+<br />
 
-<h1>@this.ViewData["Title"]</h1>
-Settings: @this.Model.SettingsCount
+<div class="row">
+    <div class="col"><a asp-controller="SongsEdit" asp-action="Index" type="button" class="btn btn-dark btn-block">Edit Songs</a></div>
+</div>
+
+
+<br />
+<div class="row">
+
+    <div class="col">
+        <div class="card text-center">
+            <div class="card-header">
+                <h3 class="card-title font-italic">Artists</h3>
+            </div>
+
+            <div class="card-body">
+                @foreach (var artist in Model.Artists)
+                {
+                    <div style="margin-bottom: 7px;">
+                        <a asp-area="Administration" asp-controller="Dashboard" asp-action="Edit" asp-route-id="@artist.Id" style="text-decoration: none; color: black">
+                            <img src="@artist.ProfilePicUrl" width="40" height="40" style="margin-left: 5px;" class="card-text rounded-circle" />
+                            <span class="card-text font-weight-bold">@artist.UserName</span>
+                            <span class="card-text font-weight-lighter">@artist.FirstName</span>
+                            <span class="card-text font-weight-lighter">@artist.LastName</span>
+                            <span style="margin-left: 10px;" class="card-text font-weight-normal font-italic">Registered : </span>
+                            <span class="card-text font-weight-lighter"> @artist.CreatedOn.ToShortDateString()</span>
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <div class="card-footer text-muted">
+                <div class="font-weight-lighter font-italic"> Click on user to edit him</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card text-center">
+            <div class="card-header">
+                <h3 class="card-title font-italic">Users</h3>
+            </div>
+
+            <div class="card-body">
+                @foreach (var user in Model.Users)
+                {
+                    <div style="margin-bottom: 7px;">
+                        <a asp-action="Edit" asp-route-id="@user.Id" style="text-decoration: none; color: black">
+                            <img src="@user.ProfilePicUrl" width="40" height="40" style="margin-left: 5px;" class="card-text rounded-circle" />
+                            <span class="card-text font-weight-bold">@user.UserName</span>
+                            <span class="card-text font-weight-lighter">@user.FirstName</span>
+                            <span class="card-text font-weight-lighter">@user.LastName</span>
+                            <span style="margin-left: 10px;" class="card-text font-weight-normal font-italic">Registered : </span>
+                            <span class="card-text font-weight-lighter"> @user.CreatedOn.ToShortDateString()</span>
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <div class="card-footer text-muted">
+                <div class="font-weight-lighter font-italic"> Click on user to edit him</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<div class="text-center font-italic"> edit songs lyrics</div>
+<br />
+<form id="songsForm" asp-area="Administration" asp-controller="Dashboard" asp-action="EditLyrics" asp-route-id="@Model.SongId" method="post">
+    <select name="id" id="songId" asp-for="SongId" asp-items="@Model.Songs.Select(x=> new SelectListItem(x.Name, x.Id.ToString()))" class="form-control">
+        <option value="" selected disabled hidden>Choose song</option>
+    </select>
+    <span asp-validation-for="SongId" class="text-danger"></span>
+
+    <br />
+    <div class="form-group">
+        <label for="text" class="font-italic">Lyrics</label>
+        <textarea name="text" class="form-control" id="lyricsArea" rows="15"></textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-success btn-block">Edit Lyrics</button>
+</form>
+
+@section Scripts{ 
+    <script>
+        $("#songId").change(function () {
+            var songId = $("#songId option:selected").val();
+
+            var json = { "songId": songId };
+
+            $.get("/Administration/Dashboard/Lyrics/", json, function (data) {
+                var regex = /<br\s*[\/]?>/gi;
+
+                $("#lyricsArea").html(data.replace(regex, "\n"));
+})
+        });
+
+    </script>
+}
