@@ -14,7 +14,53 @@
     public static class SandboxOptions
     {
         public static async Task Main()
-        {
+        {/*
+            var wikiClient = new HttpClient();
+
+            var searchTerm = Regex.Replace("Bonez MC", "( )+", "%20");
+
+            var baseUrl = $"http://en.wikipedia.org/w/api.php?action=query&format=json&list=search&srsearch={searchTerm}";
+
+            var result = await wikiClient.GetAsync(baseUrl);
+            if (!result.IsSuccessStatusCode)
+            {
+                throw new ArgumentNullException("error occured while trying to conect");
+            }
+            else
+            {
+                var jsonStr = await result.Content.ReadAsStringAsync();
+
+                var json = JsonDocument.Parse(jsonStr);
+
+                var titles = json.RootElement.GetProperty("query").GetProperty("search");
+
+                var title = titles[0].GetProperty("title").ToString();
+                var shortDesc = titles[0].GetProperty("snippet").ToString();
+                var pageId = titles[0].GetProperty("pageid").ToString();
+                
+                if (title.Length > 2)
+                {
+                    var htmlPageUrl = $"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&exhtml&redirects=1&titles={searchTerm}";
+
+                    var html = await wikiClient.GetStringAsync(htmlPageUrl);
+
+                    var pageContent = JsonDocument.Parse(html);
+
+                    var intro = pageContent.RootElement.GetProperty("query").GetProperty("pages").GetProperty(pageId).GetProperty("extract").ToString();
+                    
+                    Console.WriteLine(html);
+                }
+
+                Console.WriteLine(title);
+            }*/
+
+
+           // Console.WriteLine(result);
+
+
+           /* if DATA['query']['search'][0]['title'] == SEARCHPAGE:
+    print("Your search page '" + SEARCHPAGE + "' exists on English Wikipedia")*/
+
            /* var geniusClient = new HttpClient();
 
             var baseUrl = "https://genius.com";

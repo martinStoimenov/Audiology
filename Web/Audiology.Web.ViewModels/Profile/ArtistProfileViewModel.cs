@@ -33,5 +33,7 @@
         public DateTime? Birthday { get; set; }
 
         public string AlbumName { get; set; }
+
+        public string Description { get; set; }
     }
 }

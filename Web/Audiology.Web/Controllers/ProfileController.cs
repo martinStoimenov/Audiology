@@ -24,9 +24,11 @@
         {
             var user = await this.service.GetUserAsync<ArtistProfileViewModel>(id);
             var requestedUser = await this.service.GetUserAsync(id);
+            var desc = await this.service.GetArtistDescription(user.UserName);
 
             if (await this.userManager.IsInRoleAsync(requestedUser, GlobalConstants.ArtistRoleName))
             {
+                user.Description = desc;
                 return this.View("ArtistProfile", user);
             }
 

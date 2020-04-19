@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-6">
-        <h1>@Model.Name</h1>
+        <h1>@Model.Name.Replace("." + Model.FileExtension, string.Empty)</h1>
 
         @if (Model.LyricsText == null)
         {
@@ -39,7 +39,11 @@
     <div class="col-md-6 border-left">
         <span class="font-weight-bold">Add to playlist: </span>
         <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target=".bd-example-modal-sm" style="width: 4rem; height: 3rem;"><i class="fas fa-plus-circle fa-2x fa-spin"></i></button>
-        <div class="align-self-end"><i class="far fa-heart"></i> @Model.FavouritesCount</div>
+        <div class="ml-auto p-2 bd-highlight">
+            <form id="votesForm" method="post"></form>
+            <a href="#" onclick="favourite('@userId',@Model.Id,null)"><i class="fas fa-heart fa-3x" style="padding-left: 0px; color: black;"></i></a>
+            <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@Model.FavouritesCount</div>
+        </div>
 
         <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
@@ -87,12 +91,10 @@
 
         <hr />
         <div>
-            <span class="d-block font-weight-bolder">About "@Model.Name":</span>
+            <span class="d-block font-weight-bolder">About "@Model.Name.Replace("." + Model.FileExtension, string.Empty)":</span>
             <span>@Model.Description</span>
         </div>
         <br />
-
-        // Add social media links here
 
         <h6 class="text-uppercase">Track Info:</h6>
         <br />
@@ -112,11 +114,11 @@
             </div>
 
             <div class="col-sm text-md-center">
-                <a href="#" class="text-decoration-none"><span class="d-block">@Model.UserUserName</span></a>
+                <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserId" style="color: black;" class="text-decoration-none"><span class="d-block">@Model.UserUserName</span></a>
                 <hr />
-                <a href="#" class="text-decoration-none"><span class="d-block">@(Model.AlbumName == null ? "It's single" : Model.AlbumName)</span></a>
+                <a asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId" style="color: black;" class="text-decoration-none"><span class="d-block">@(Model.AlbumName == null ? "It's single" : Model.AlbumName)</span></a>
                 <hr />
-                <a href="#" class="text-decoration-none"><span class="d-block">@Model.Genre</span></a>
+                <a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="@Model.Genre.ToString()" style="color: black;" class="text-decoration-none"><span class="d-block">@Model.Genre</span></a>
                 <hr />
                 <span class="d-block">@Model.Producer</span>
                 <hr />
@@ -129,19 +131,19 @@
         <span class="font-weight-bolder" style="margin-bottom: 1rem;">Is there a music video?</span>
         <div id="youTubePlayer">
             <iframe width="520" height="315"
-                    src="https://www.youtube.com/embed/YAt60oZ_J-4?controls=1">
+                    src="@Model.YoutubeLink">
             </iframe>
         </div>
 
         <hr />
         <span class="font-weight-bolder" style="margin-bottom: 1rem;">Cover art for the song?</span>
         <div id="instagramPost" style="margin-left: 4rem;">
-            <iframe src="https://www.instagram.com/p/ByV1qWqgJsg/embed/captioned" width="400" height="505" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            <iframe src="@(Model.InstagramPostUrl)embed/captioned" width="400" height="505" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
         </div>
 
         <hr />
         <div id="soundCloudPlayer">
-            <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/436863855&color=%234d544d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+            <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/@(Model.SoundcloudUrl)&color=%234d544d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
         </div>
 
         <hr />
@@ -152,7 +154,7 @@
                 <div class="col-3"><img src="@Model.AlbumCoverUrl" class="img-thumbnail rounded float-left" style="width: 7rem; height: 7rem;" alt="Alternate Text" /></div>
 
                 <div class="col">
-                    <a asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId"><span>@Model.AlbumName</span></a>
+                    <a style="color: black;" asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId"><span>@Model.AlbumName</span></a>
                     <span class="font-weight-lighter">(@Model.AlbumReleaseDate)</span>
                     <div><span class="font-weight-bold">@Model.AlbumProducer</span></div>
                 </div>
@@ -166,7 +168,7 @@
         <div><vc:songs-by-user user-id="@Model.UserId"></vc:songs-by-user></div>
         <br />
         <vc:top-albums-for-user user-id="@Model.UserId"></vc:top-albums-for-user>
-
+        
         <form asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
             <input type="hidden" name="Id" value="@this.Model.Id" />
             <input type="hidden" name="UserUserName" value="@this.Model.UserUserName" />
@@ -264,10 +266,10 @@
     </div>
 </div>
 <div class="fixed-bottom" style="margin-left: 17rem; width: 71rem;">
-    <div class="font-weight-lighter text-left" style="margin-left: 1rem;">@Model.Name</div>
+    <div class="font-weight-lighter text-left" style="margin-left: 1rem;">@Model.Name.Replace("." + Model.FileExtension, string.Empty)</div>
 
     <audio id="player" controls style="width: 100%;">
-        <source src="~/Songs/@this.Model.UserUserName/@(Model.Name).@Model.FileExtension" type="audio/@Model.FileExtension">
+        <source src="~/Songs/@this.Model.UserUserName/@(Model.Name.Replace("." + Model.FileExtension, string.Empty)).@Model.FileExtension" type="audio/@Model.FileExtension">
     </audio>
 </div>
 <h1>text after the view component</h1>

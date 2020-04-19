@@ -7,7 +7,7 @@
     <div class="col-2"><h1 class="text-center text-white bg-dark">@Model.UserName</h1></div>
 </div>
 <div class="row">
-    <div class="col">
+    <div class="col-7">
         <div>
             <vc:all-songs-for-artist user-id="@Model.Id"></vc:all-songs-for-artist>
             <br />
@@ -15,7 +15,32 @@
         </div>
     </div>
 
-    <div class="col-5 border-left">
+    <div class="col-5 border-left" style="margin-bottom: 8rem;">
+
+        <div class="font-italic font-weight-lighter" style="margin-bottom: 1rem;">Social links:</div>
+        <div class="row" style="margin-bottom: 3rem;">
+            <div class="col">
+                <a href="@Model.FacebookUrl" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
+            </div>
+            <div class="col">
+                <a href="@Model.YouTubeUrl" target="_blank"><i class="fab fa-youtube fa-2x"></i></a>
+            </div>
+            <div class="col">
+                <a href="@Model.SondcloudUrl" target="_blank"><i class="fab fa-soundcloud fa-2x"></i></a>
+            </div>
+            <div class="col">
+                <a href="@Model.TwitterUrl" target="_blank"><i class="fab fa-twitter fa-2x"></i></a>
+            </div>
+            <div class="col">
+                <a href="@Model.InstagramUrl" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
+            </div>
+        </div>
+
+        <div class="font-italic font-weight-lighter">Wiki info:</div>
+        <div class="font-italic" style="margin-bottom: 6rem;">
+            @Html.Raw(Model.Description)
+        </div>
+
         <vc:user-details user-id="@Model.Id"></vc:user-details>
         <br />
         <vc:songs-by-user user-id="@Model.Id"></vc:songs-by-user>
@@ -25,7 +50,7 @@
         <!-- Change Artist to User later -->
         @if (User.IsInRole("Artist") || User.IsInRole("Administrator"))
         {
-            <hr />
+            <br />
             <vc:chat artist-id="@Model.Id"></vc:chat>
         }
 

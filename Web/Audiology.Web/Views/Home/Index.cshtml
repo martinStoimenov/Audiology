@@ -9,9 +9,40 @@
     <div class="d-block text-center" style="margin-bottom: 1rem; padding-top: 2rem;">
         <h6 class="d-inline p-2 text-white bg-dark"> Here is a Kanye West quote for you : </h6>
     </div>
-    <div id="kanye" class="d-inline p-2 text-center text-white bg-dark font-weight-bold">
+    <div id="kanye" class="d-inline p-2 text-center text-white bg-dark font-weight-bold" style="line-height: 37px;">
 
     </div>
+</div>
+
+<div class="row" style="margin-bottom: 5px;">
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Rap" style="text-decoration: none; color: black;">Rap</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="AlternativeRock" style="text-decoration: none; color: black;">AlternativeRock</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Ambient" style="text-decoration: none; color: black;">Ambient</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Classical" style="text-decoration: none; color: black;">Classical</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Country" style="text-decoration: none; color: black;">Country</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Dancehall" style="text-decoration: none; color: black;">Dancehall</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="House" style="text-decoration: none; color: black;">House</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Disco" style="text-decoration: none; color: black;">Disco</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="DnB" style="text-decoration: none; color: black;">DnB</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Dubstep" style="text-decoration: none; color: black;">Dubstep</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Electronic" style="text-decoration: none; color: black;">Electronic</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Piano" style="text-decoration: none; color: black;">Piano</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Indie" style="text-decoration: none; color: black;">Indie</a></div>
+</div>
+<div class="row" style="margin-bottom: 4rem;">
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Jazz" style="text-decoration: none; color: black;">Jazz</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Latin" style="text-decoration: none; color: black;">Latin</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Metal" style="text-decoration: none; color: black;">Metal</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Pop" style="text-decoration: none; color: black;">Pop</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="RnB" style="text-decoration: none; color: black;">RnB</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Reggae" style="text-decoration: none; color: black;">Reggae</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Reggaeton" style="text-decoration: none; color: black;">Reggaeton</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Rock" style="text-decoration: none; color: black;">Rock</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Soundtrack" style="text-decoration: none; color: black;">Soundtrack</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Techno" style="text-decoration: none; color: black;">Techno</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Trance" style="text-decoration: none; color: black;">Trance</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Trap" style="text-decoration: none; color: black;">Trap</a></div>
+    <div class="col btn btn-outline-dark"><a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="Triphop" style="text-decoration: none; color: black;">Triphop</a></div>
 </div>
 
 <div><h4 class="font-weight-normal">Newest songs :</h4></div> <!-- Add more carousels with genres -->
@@ -22,7 +53,7 @@
             <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" width="180" height="160" alt="Image not found" />
             <div class="text-center" style="width: 50%">
                 <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a>
-                <a asp-controller="Profile" asp-action="Index" asp-route-id="@song.UserId" style="text-decoration: none; color: black;"><h5 class="">@song.UserUserName</h5></a>
+                <a asp-controller="Profile" asp-action="Index" asp-route-id="@song.UserId" style="text-decoration: none; color: black;"><h5 class="font-weight-bold">@song.UserUserName</h5></a>
             </div>
         </div>
     }

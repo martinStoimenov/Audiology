@@ -9,5 +9,7 @@ namespace Audiology.Services.Data.Profile
         Task<T> GetUserAsync<T>(string userId);
 
         Task<ApplicationUser> GetUserAsync(string userId);
+
+        Task<string> GetArtistDescription(string artist);
     }
 }

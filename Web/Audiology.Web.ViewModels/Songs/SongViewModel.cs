@@ -16,7 +16,15 @@
     {
         public int Id { get; set; }
 
-        public string FileExtension { get; set; }
+        public string FileExtension
+        {
+            get
+            {
+                int dotIndex = this.Name.LastIndexOf('.');
+                string fileExtension = this.Name.Substring(dotIndex + 1);
+                return fileExtension;
+            }
+        }
 
         [MaxLength(50)]
         public string Name { get; set; }
@@ -72,6 +80,8 @@
         public string UserUserName { get; set; }
 
         public int FavouritesCount { get; set; }
+
+        public string YoutubeLink { get; set; }
 
         public string LyricsText { get; set; }
 

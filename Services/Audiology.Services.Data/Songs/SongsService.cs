@@ -162,7 +162,7 @@
                 throw new IndexOutOfRangeException("file extension is missing");
             }
 
-            if (song.Name != name + fileExtension)
+            if (song.Name != name)
             {
                 string newName = name + fileExtension;
 
@@ -177,9 +177,10 @@
                 file.MoveTo(newPath);
 
                 bool isFound = await this.GetLyricsForSong(song);
+
+                song.Name = newName;
             }
 
-            song.Name = name + fileExtension;
             song.Year = year;
             song.AlbumId = albumId;
             song.Producer = producer;
@@ -327,6 +328,38 @@
                 s.User.UserName.Contains(searchTerm)).To<T>().ToListAsync();
 
             return result;
+        }
+
+        public async Task<IEnumerable<T>> GetSongsByGenre<T>(string genre)
+        {
+            Genre genre1;
+            if (!Enum.TryParse<Genre>(genre, out genre1))
+            {
+                return null;
+            }
+
+            var songs = await this.songRepository.All().Where(s => s.Genre == genre1).OrderByDescending(s => s.CreatedOn).To<T>().ToListAsync();
+
+            return songs;
+        }
+
+        public string EmbedYoutube(string url)
+        {
+            if (url == null)
+            {
+                return null;
+            }
+
+            var videoId = url.Split("v=");
+            var ampersandPosition = videoId[1].IndexOf('&');
+            if (ampersandPosition != -1)
+            {
+                videoId[1] = videoId[1].Substring(0, ampersandPosition);
+            }
+
+            var embed = $"https://www.youtube.com/embed/{videoId[1]}?controls=1";
+
+            return embed;
         }
 
         private async Task<bool> GetLyricsForSong(Song song)

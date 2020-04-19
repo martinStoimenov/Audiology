@@ -32,9 +32,13 @@
 
         Task<IEnumerable<T>> Search<T>(string searchTerm);
 
+        Task<IEnumerable<T>> GetSongsByGenre<T>(string genre);
+
         IEnumerable<T> GetNewestSongs<T>();
 
         IEnumerable<T> GetAll<T>(int? count = null);
+
+        string EmbedYoutube(string url);
 
         string GetMediaDuration(string songName, string username);
     }

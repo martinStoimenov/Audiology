@@ -10,7 +10,7 @@
                 <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" width="180" height="160" alt="Image not found" />
                 <div class="text-center" style="width: 50%">
                     <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a>
-                    <h5 class="font-weight-bold">@this.User.Identity.Name</h5>
+                    <h5 class="font-weight-bold">@song.UserUserName</h5>
                 </div>
             </div>
         }

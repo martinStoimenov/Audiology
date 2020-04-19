@@ -44,16 +44,20 @@
 
             var song = await this.songsService.GetSong<SongViewModel>(id);
 
-            int dotIndex = song.Name.LastIndexOf('.');
-            string fileExtension = song.Name.Substring(dotIndex + 1);
-            string songName = song.Name.Substring(0, dotIndex);
+            var youtubeLink = this.songsService.EmbedYoutube(song.YoutubeUrl);
 
             song.Playlists = await this.playlistsService.GetAllPlaylistsAsync<PlaylistChooseViewModel>(userId);
             song.Albums = albums;
-            song.FileExtension = fileExtension;
-            song.Name = songName;
+            song.YoutubeLink = youtubeLink;
 
             return this.View(song);
+        }
+
+        public async Task<IActionResult> ByGenre(string genre)
+        {
+            var songs = await this.songsService.GetSongsByGenre<SongListViewModel>(genre);
+
+            return this.View(nameof(this.Index), songs);
         }
 
         public async Task<IActionResult> Index()
@@ -83,7 +87,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(SongUploadViewModel input) // Add validation for error 404.13 data length
+        public async Task<IActionResult> Upload(SongUploadViewModel input)
         {
             if (!this.ModelState.IsValid)
             {

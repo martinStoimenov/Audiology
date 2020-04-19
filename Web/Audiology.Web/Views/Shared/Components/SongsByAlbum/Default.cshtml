@@ -5,6 +5,6 @@
 <ol>
     @foreach (var song in Model)
     {
-        <li> <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="text-decoration-none"><span>@song.Name</span></a></li>
+        <li style="margin-bottom: 1rem; text-decoration: none; color: black;"> <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="text-decoration-none"><span>@song.Name</span></a></li>
     }
 </ol>

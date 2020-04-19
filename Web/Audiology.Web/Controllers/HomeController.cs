@@ -17,7 +17,6 @@
     public class HomeController : BaseController
     {
         private readonly ISongsServcie songsServcie;
-        private readonly IRepository<ApplicationUser> userRepo;
 
         public HomeController(ISongsServcie songsServcie)
         {
@@ -36,20 +35,13 @@
             return this.View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return this.View(
-                new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
-        }
-
         [HttpGet]
         public async Task<IActionResult> Search(string search)
         {
             if (search != string.Empty)
             {
-                var songs = await this.songsServcie.Search<SearchSongsViewModel>(search);
-                return this.View(songs);
+                var result = await this.songsServcie.Search<SearchSongsViewModel>(search);
+                return this.View(result);
             }
 
             return this.NotFound();

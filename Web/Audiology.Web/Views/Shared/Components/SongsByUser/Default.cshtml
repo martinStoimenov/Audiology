@@ -1,18 +1,20 @@
 ﻿@{
     @model IEnumerable<Audiology.Web.ViewModels.Songs.TopSongsForUserViewModel>
 }
-<span class="font-weight-bold">Top 5 songs:</span>
-@foreach (var item in Model)
-{
-    <div class="row align-items-center" style="margin-top: 1rem;">
-        <div class="col-3">
-            <img src="@item.SongArtUrl" class="rounded-circle" width="80" height="80" alt="Alternate Text" />
+<div style="margin-bottom: 4rem;">
+    <span class="font-weight-bold">Top 5 songs:</span>
+    @foreach (var item in Model)
+    {
+        <div class="row align-items-center" style="margin-top: 1rem;">
+            <div class="col-3">
+                <img src="@item.SongArtUrl" class="rounded-circle" width="80" height="80" alt="Alternate Text" />
+            </div>
+            <div class="col-7">
+                <a style="text-decoration:none; color: black;" asp-controller="Songs" asp-action="ById" asp-route-id="@item.Id"><span> @item.Name.Replace(".mp3", "")</span></a> <!-- Fix this -->
+            </div>
+            <div class="col">
+                @item.UserUserName
+            </div>
         </div>
-        <div class="col-7">
-            <a style="text-decoration:none;" asp-controller="Songs" asp-action="ById" asp-route-id="@item.Id"><span> @item.Name.Replace(".mp3","")</span></a>
-        </div>
-        <div class="col">
-            @item.UserUserName
-        </div>
-    </div>
-}
+    }
+</div>
