@@ -38,8 +38,18 @@
             return result;
         }
 
-        public async Task<int> AddAsync(string name, string coverUrl, string description, string producer, string userId, DateTime? releaseDate)
+        public async Task<int> AddAsync(string name, string coverUrl, string description, string producer, string userId, DateTime? releaseDate, Genre genre)
         {
+            var albumName = await this.repository.All().Where(a => a.Name == name).Select(a => a.Name).FirstOrDefaultAsync();
+
+            if (albumName != null)
+            {
+                if (albumName == name)
+                {
+                    return 0;
+                }
+            }
+
             var album = new Album
             {
                 UserId = userId,
@@ -48,8 +58,9 @@
                 Description = description,
                 Producer = producer,
                 ReleaseDate = releaseDate,
+                Genre = genre,
             };
-            // Add check for the album name
+
             await this.repository.AddAsync(album);
             await this.repository.SaveChangesAsync();
 

@@ -38,7 +38,7 @@
                     <a class="dropdown-item" asp-controller="Favourites" asp-action="Index"><i class="fab fa-gratipay"></i> Favourites</a>
                     <a class="dropdown-item" asp-controller="Playlists" asp-action="Index"><i class="fas fa-headphones"></i> Playlists</a>
                 }
-                <a class="dropdown-item" href="#"><i class="fas fa-brain"></i> Contact</a>
+                <a asp-controller="Contacts" asp-action="Index" class="dropdown-item"><i class="fas fa-brain"></i> Contact</a>
             </ul>
         </div>
         if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
