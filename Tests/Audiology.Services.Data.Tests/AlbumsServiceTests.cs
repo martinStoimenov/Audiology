@@ -33,6 +33,25 @@
         }
 
         [Fact]
+        public async Task GetAlbumByIdShouldBeSuccesfull()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());
+            var albumRepository = new EfRepository<Album>(new ApplicationDbContext(options.Options));
+            var songRepository = new EfRepository<Song>(new ApplicationDbContext(options.Options));
+            var mockSongsService = new Mock<ISongsServcie>().Object;
+            var service = new AlbumsService(albumRepository, songRepository, mockSongsService);
+
+            int albumId = await service.AddAsync("Makavelli", "https://blabla.png", "description abou the album", "Death Row Records", Guid.NewGuid().ToString(), DateTime.UtcNow, Genre.Rap);
+            int albumId2 = await service.AddAsync("All eyez on me", "https://blabla.png", "description abou the album", "Death Row Records", Guid.NewGuid().ToString(), DateTime.UtcNow, Genre.Rap);
+            await service.AddAsync("asddaasd", "https://blabla.png", "description abou the album", "Death Row Records", Guid.NewGuid().ToString(), DateTime.UtcNow, Genre.Rap);
+            var album = service.GetCurrentAlbumById<AlbumViewModel>(albumId);
+            var album2 = service.GetCurrentAlbumById<AlbumViewModel>(albumId2);
+
+            Assert.NotEqual(new AlbumViewModel(), album);
+            Assert.NotEqual(album2, album);
+        }
+
+        [Fact]
         public async Task UploadingAlbumIsSuccessfull()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(Guid.NewGuid().ToString());

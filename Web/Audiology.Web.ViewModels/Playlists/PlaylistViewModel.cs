@@ -12,6 +12,7 @@
         public string Name { get; set; }
 
         public bool IsPrivate { get; set; }
-        // Add prop for image
+
+        public string SongArtUrl { get; set; }
     }
 }

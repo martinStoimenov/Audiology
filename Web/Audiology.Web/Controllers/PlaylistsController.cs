@@ -54,6 +54,10 @@
             var userId = this.userManager.GetUserId(this.User);
 
             var playlists = await this.service.GetAllPlaylistsAsync<PlaylistViewModel>(userId);
+            foreach (var playlist in playlists)
+            {
+                playlist.SongArtUrl = await this.service.GetPlaylistArt(playlist.Id);
+            }
 
             return this.View(playlists);
         }

@@ -2,17 +2,18 @@
     @model IEnumerable<Audiology.Web.ViewModels.Playlists.PlaylistViewModel>
 }
 
-<h1>Playlist Index View</h1>
+<h4 class="text-center font-italic font-weight-lighter">All of your playlists</h4>
 
 <div class="row">
     @foreach (var playlist in Model)
     {
         <div class="col-md-4" style="height: 12rem;">
+            <img src="@playlist.SongArtUrl" width="303px" height="190px" alt="Add song to see the art :)" />
             <div class="text-center" style="width: 19rem; background-color: #f4f4f4">
                 <a asp-controller="Playlists" asp-action="ById" asp-route-id="@playlist.Id" class="stretched-link" style="text-decoration: none;
-        color: black;">@playlist.Name</a>
-        <h5 class="">@this.User.Identity.Name</h5>
-    </div>
-</div>
-}
+            color: black;">@playlist.Name</a>
+            <h5 class="">@this.User.Identity.Name</h5>
+            </div>
+        </div>
+    }
 </div>

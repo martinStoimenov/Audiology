@@ -79,7 +79,7 @@
         [HttpPost]
         public async Task<IActionResult> EditLyrics(string text, int id)
         {
-            await this.service.AddLyricsAsync(text, id);
+            await this.service.EditLyricsAsync(text, id);
 
             return this.RedirectToAction(nameof(this.Index));
         }

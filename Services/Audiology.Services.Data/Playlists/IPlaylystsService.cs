@@ -14,5 +14,7 @@
         Task RemoveAsync(string userId, int playlistId, int songId);
 
         Task<IEnumerable<T>> GetAllPlaylistsAsync<T>(string userId);
+
+        Task<string> GetPlaylistArt(int playlistId);
     }
 }

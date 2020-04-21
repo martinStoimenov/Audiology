@@ -23,12 +23,12 @@
 
         public async Task<IViewComponentResult> InvokeAsync(string artistId)
         {
-            this.ViewData["ArtistId"] = artistId; // try storing it in viewbag
+            this.ViewBag.ArtistId = artistId; // try storing it in viewbag
 
             // remove the current artist from the list and retrieve the messages stored in DB
             var convos = await this.context.Messages
                 .Where(m => m.ArtistId == artistId)
-                .Select(m => new MessagesDropDownViewModel { UserId = m.UserId, Name = m.User.UserName })
+                .Select(m => new MessagesDropDownViewModel { UserId = m.UserId, Name = m.User.UserName, ArtistId = artistId })
                 .Distinct()
                 .ToListAsync();
 

@@ -2,6 +2,7 @@
     @using Audiology.Web.ViewModels.Messages;
     this.ViewBag.Title = "Chat";
     @model IEnumerable<MessagesDropDownViewModel>
+    string artistId = ViewBag.ArtistId;
 }
 <br />
 <div id="messagesList" class="border-left border-success border-right border-success" style="height: 10rem; font-size: 18px; padding-left: 1rem; padding-right: 1rem; margin-top: 2rem;">
@@ -16,12 +17,14 @@
 </div>
 <div class="container" style="width: inherit;">
     <div id="message-holder" class="mt-3 d-flex justify-content-start">
-        <input class="pl-3" type="text" id="messageInput" style="width: 69%;" placeholder="Message..." />
+        <input id="messageInput" class="pl-3" type="text" style="width: 69%;" placeholder="Message..." />
         <button id="sendButton" class="ml-3 btn btn-success btn-lg"><i class="fab fa-facebook-messenger"></i> Send</button>
     </div>
 </div>
 
-<div id="artistId" style="display: none">@((string)ViewData["ArtistId"])</div>
+    <input id="artistId" type="hidden" value="@Model.Select(x=>x.ArtistId).FirstOrDefault().ToString()" />
+
+
 
 @if (Model != null)
 {

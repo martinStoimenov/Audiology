@@ -6,7 +6,7 @@
 
     public interface IAdminService
     {
-        Task AddLyricsAsync(string text, int songId);
+        Task EditLyricsAsync(string text, int songId);
 
         Task EditUserAsync(string userId, string profilePicUrl, string firstName, string lastName, string username, string email, DateTime? birthday, string instagram, string facebook, string youtube, string twitter, string soundcloud, Enum gender);
 

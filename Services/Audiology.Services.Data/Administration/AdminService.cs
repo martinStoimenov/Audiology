@@ -28,18 +28,25 @@
             this.songsRepository = songsRepository;
         }
 
-        public async Task AddLyricsAsync(string text, int songId)
+        public async Task EditLyricsAsync(string text, int songId)
         {
             var lyrics = await this.lyricsRepository.All().Where(l => l.SongId == songId).FirstOrDefaultAsync();
 
             if (lyrics != null)
             {
-                string html = Regex.Replace(text, @"(\r\n)|\n|\r", "<br>");
+                string html = text == null ? string.Empty : Regex.Replace(text, @"(\r\n)|\n|\r", "<br>");
 
-                if (text.Length < 5000)
-                {
-                    lyrics.Text = html;
-                }
+                lyrics.Text = html;
+
+                this.lyricsRepository.Update(lyrics);
+                await this.lyricsRepository.SaveChangesAsync();
+            }
+            else
+            {
+                string html = text == null ? string.Empty : Regex.Replace(text, @"(\r\n)|\n|\r", "<br>");
+
+                lyrics.SongId = songId;
+                lyrics.Text = html;
 
                 this.lyricsRepository.Update(lyrics);
                 await this.lyricsRepository.SaveChangesAsync();

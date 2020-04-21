@@ -90,6 +90,13 @@
             return playlist;
         }
 
+        public async Task<string> GetPlaylistArt(int playlistId)
+        {
+            var image = await this.playlistsSongsRepository.All().Where(ps => ps.PlaylistId == playlistId).Select(ps => ps.Song.SongArtUrl).FirstOrDefaultAsync();
+
+            return image;
+        }
+
         public async Task<IEnumerable<T>> GetAllSongsInPlaylistAsync<T>(string userId, int playlistId)
         {
             var playlist = await this.playlistRepository.All().Where(p => p.UserId == userId && p.Id == playlistId).To<PlaylistViewModel>().FirstOrDefaultAsync();

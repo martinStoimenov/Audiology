@@ -49,7 +49,7 @@
 
             var userId = this.userManager.GetUserId(this.User);
 
-            var albumId = await this.albumsService.AddAsync(input.Name, input.CoverUrl, input.Description, input.Producer, userId, input.ReleaseDate);
+            var albumId = await this.albumsService.AddAsync(input.Name, input.CoverUrl, input.Description, input.Producer, userId, input.ReleaseDate, input.Genre);
 
             return this.RedirectToAction(nameof(this.ById), new { id = albumId });
         }
