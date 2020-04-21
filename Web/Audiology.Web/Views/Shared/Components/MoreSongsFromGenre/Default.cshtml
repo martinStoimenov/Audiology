@@ -1,0 +1,17 @@
+﻿@{
+    @model IEnumerable<Audiology.Web.ViewModels.Songs.TopSongsForUserViewModel>
+}
+
+<div class="row">
+    @foreach (var song in Model)
+    {
+    <div class="col">
+        <div><img src="@song.SongArtUrl" class="rounded-circle" width="80" height="80" alt="Alternate Text" /></div>
+
+        <div>
+            <div><a asp-action="ById" asp-route-id="@song.Id" style="color: black;">@song.Name.Remove(song.Name.LastIndexOf('.'))</a></div>
+            <div>@song.UserUserName</div>
+        </div>
+    </div>
+    }
+</div>

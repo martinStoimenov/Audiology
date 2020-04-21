@@ -30,6 +30,8 @@
 
         Task<IEnumerable<T>> GetAllSongsForUserAsync<T>(string userId);
 
+        Task<IEnumerable<T>> GetRandomSongsFromGenre<T>(Genre genre);
+
         Task<IEnumerable<T>> Search<T>(string searchTerm);
 
         Task<IEnumerable<T>> GetSongsByGenre<T>(string genre);

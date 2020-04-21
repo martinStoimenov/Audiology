@@ -1,7 +1,7 @@
 ﻿@{
     @model Audiology.Data.Models.ApplicationUser
 }
-    <div class="font-italic font-weight-lighter" style="margin-bottom: 1rem;">User details?</div>
+    <div class="font-weight-bolder" style="margin-bottom: 1rem;">User details.</div>
 <div class="row text-center" style="margin-bottom: 3rem;">
 
     <div class="col font-weight-lighter font-italic">
@@ -17,7 +17,7 @@
         <hr />
         <span class="d-block">@Model.LastName</span>
         <hr />
-        <span class="d-block">@Model.Birthday</span>
+        <span class="d-block">@Model.Birthday?.ToShortDateString()</span>
         <hr />
     </div>
 

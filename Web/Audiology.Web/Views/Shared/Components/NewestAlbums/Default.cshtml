@@ -2,7 +2,7 @@
     @model IEnumerable<Audiology.Web.ViewModels.Albums.AlbumsListViewModel>
 }
 
-    <h4>Newest Albums :</h4>
+    <div class="text-center"><h4 class="text-uppercase font-weight-bold" style="margin-top: 3rem; font-size: 53px;">newest albums</h4></div>
 <div class="row" >
     @foreach (var album in Model)
     {
@@ -13,7 +13,7 @@
 
             <div><span>@album.ShortDescription</span></div>
 
-            <div><span class="font-weight-light">@album.ReleaseDate</span></div>
+            <div class="text-center"><span class="font-weight-light">@album.ReleaseDate.ToShortDateString()</span></div>
         </div>
     }
 </div>

@@ -83,7 +83,7 @@
 
             // Application services
             services.AddTransient<IEmailSender>(x => new SendGridEmailSender(this.configuration["SendGrid:AppKey"]));
-            services.AddTransient<ISongsServcie, ISongsService>();
+            services.AddTransient<ISongsServcie, SongsService>();
             services.AddTransient<IAlbumsService, AlbumsService>();
             services.AddTransient<IFavouritesService, FavouritesService>();
             services.AddTransient<IPlaylistsService, PlaylistsService>();

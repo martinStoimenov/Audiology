@@ -32,6 +32,8 @@
         [DataType(DataType.Date)]
         public DateTime? ReleaseDate { get; set; }
 
+        public string UserId { get; set; }
+
         public int FavouritesCount { get; set; }
 
         public IEnumerable<SongListViewModel> Songs { get; set; }

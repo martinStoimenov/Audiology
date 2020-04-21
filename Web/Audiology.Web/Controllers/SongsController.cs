@@ -129,7 +129,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.BadRequest();
+                return this.RedirectToAction(nameof(this.ById), new { id = input.SongId });
             }
 
             await this.commentsService.AddComment(input.UserId, input.SongId, input.Content);
@@ -141,6 +141,11 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteComment(CommentViewModel input)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest();
+            }
+
             await this.commentsService.Delete(input.UserId, input.SongId, input.Id);
 
             return this.RedirectToAction(nameof(this.ById), new { id = input.SongId });

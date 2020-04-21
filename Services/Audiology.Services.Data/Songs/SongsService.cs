@@ -23,7 +23,7 @@
     using Microsoft.Extensions.Configuration;
     using NAudio.Wave;
 
-    public class ISongsService : ISongsServcie
+    public class SongsService : ISongsServcie
     {
         private static readonly char Slash = Path.DirectorySeparatorChar;
 
@@ -35,7 +35,7 @@
         private readonly IRepository<Song> songRepository;
         private readonly IConfiguration configuration;
 
-        public ISongsService(
+        public SongsService(
             IHostingEnvironment env,
             IDeletableEntityRepository<PlaylistsSongs> playlistsSongsRepo,
             IDeletableEntityRepository<Favourites> favouritesRepo,
@@ -234,6 +234,13 @@
         public IEnumerable<T> GetNewestSongs<T>()
         {
             var songs = this.songRepository.All().OrderByDescending(x => x.CreatedOn).To<T>().ToList();
+            return songs;
+        }
+
+        public async Task<IEnumerable<T>> GetRandomSongsFromGenre<T>(Genre genre)
+        {
+            var songs = await this.songRepository.All().Where(s => s.Genre == genre).OrderBy(s => s.Genre).Take(3).To<T>().ToListAsync();
+
             return songs;
         }
 
@@ -532,15 +539,4 @@
             return lyrics;
         }
     }
-
-    /* public class SongsWithoutLyricsModel : IMapFrom<Song>
-     {
-         public int Id { get; set; }
-
-         public string Name { get; set; }
-
-         public string Featuring { get; set; }
-
-         public string UserUserName { get; set; }
-     }*/
 }

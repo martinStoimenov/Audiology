@@ -10,7 +10,7 @@
                 <img src="@item.SongArtUrl" class="rounded-circle" width="80" height="80" alt="Alternate Text" />
             </div>
             <div class="col-7">
-                <a style="text-decoration:none; color: black;" asp-controller="Songs" asp-action="ById" asp-route-id="@item.Id"><span> @item.Name.Replace(".mp3", "")</span></a> <!-- Fix this -->
+                <a style="color: black;" asp-controller="Songs" asp-action="ById" asp-route-id="@item.Id"><span> @item.Name.Remove(item.Name.LastIndexOf('.'))</span></a> <!-- Fix this -->
             </div>
             <div class="col">
                 @item.UserUserName

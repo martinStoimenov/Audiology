@@ -7,11 +7,9 @@
 
     public interface ICommentsService
     {
-        Task<CommentViewModel> AddComment(string userId, int songId, string content);
+        Task AddComment(string userId, int songId, string content);
 
         Task<IEnumerable<CommentViewModel>> AllComments(int songId);
-
-        Task<int> Edit(string userId, int songId, int commentId, string content);
 
         Task Delete(string userId, int songId, int commentId);
     }

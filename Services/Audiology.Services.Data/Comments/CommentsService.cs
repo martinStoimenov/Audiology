@@ -19,7 +19,7 @@
             this.commentsRepository = commentsRepository;
         }
 
-        public async Task<CommentViewModel> AddComment(string userId, int songId, string content)
+        public async Task AddComment(string userId, int songId, string content)
         {
             var comment = new Comment
             {
@@ -31,7 +31,6 @@
             await this.commentsRepository.AddAsync(comment);
             await this.commentsRepository.SaveChangesAsync();
 
-            return null;
         }
 
         public async Task<IEnumerable<CommentViewModel>> AllComments(int songId)
@@ -51,23 +50,6 @@
             }
 
             await this.commentsRepository.SaveChangesAsync();
-        }
-
-        public async Task<int> Edit(string userId, int songId, int commentId, string content)
-        {
-            var comment = await this.commentsRepository.All().Where(c => c.Id == commentId && c.SongId == songId && c.UserId == userId).FirstOrDefaultAsync();
-
-            if (content != null)
-            {
-                if (content.Length > 1000)
-                {
-                    comment.Content = content;
-                    await this.commentsRepository.AddAsync(comment);
-                }
-            }
-            await this.commentsRepository.SaveChangesAsync();
-
-            return comment.Id;
         }
     }
 }

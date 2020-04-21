@@ -38,10 +38,11 @@
     <hr />
     <div class="col-md-6 border-left">
         <span class="font-weight-bold">Add to playlist: </span>
-        <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target=".bd-example-modal-sm" style="width: 4rem; height: 3rem;"><i class="fas fa-plus-circle fa-2x fa-spin"></i></button>
-        <div class="ml-auto p-2 bd-highlight">
+        <button type="button" class="btn btn-light" data-toggle="modal" data-target=".bd-example-modal-sm" style="width: 4rem; height: 3rem;"><i class="fas fa-plus-circle fa-2x fa-spin"></i></button>
+        <div class="ml-auto p-2 bd-highlight text-center">
             <form id="votesForm" method="post"></form>
-            <a href="#" onclick="favourite('@userId',@Model.Id,null)"><i class="fas fa-heart fa-3x" style="padding-left: 0px; color: black;"></i></a>
+            <span class="font-weight-bolder">Likes</span>
+            <a href="#" onclick="favourite('@userId',@Model.Id,null)"><i class="fas fa-heart fa-2x" style="padding-left: 0px; color: black;"></i></a>
             <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@Model.FavouritesCount</div>
         </div>
 
@@ -94,12 +95,12 @@
             <span class="d-block font-weight-bolder">About "@Model.Name.Replace("." + Model.FileExtension, string.Empty)":</span>
             <span>@Model.Description</span>
         </div>
+        <hr />
+
+        <h6 class="font-weight-bolder">Track Info:</h6>
         <br />
 
-        <h6 class="text-uppercase">Track Info:</h6>
-        <br />
-
-        <div class="row justify-content-sm-center">
+        <div class="row justify-content-sm-center" style="margin-bottom: 3rem;">
             <div class="col-sm text-md-center font-weight-lighter">
                 <span class="d-block">Primary artist</span>
                 <hr />
@@ -116,7 +117,14 @@
             <div class="col-sm text-md-center">
                 <a asp-controller="Profile" asp-action="Index" asp-route-id="@Model.UserId" style="color: black;" class="text-decoration-none"><span class="d-block">@Model.UserUserName</span></a>
                 <hr />
-                <a asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId" style="color: black;" class="text-decoration-none"><span class="d-block">@(Model.AlbumName == null ? "It's single" : Model.AlbumName)</span></a>
+                @if (Model.AlbumName != null)
+                {
+                    <a asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId" style="color: black;" class="text-decoration-none"><span class="d-block">@Model.AlbumName</span></a>
+                }
+                else
+                {
+                    <span>It's single</span>
+                }
                 <hr />
                 <a asp-controller="Songs" asp-action="ByGenre" asp-route-genre="@Model.Genre.ToString()" style="color: black;" class="text-decoration-none"><span class="d-block">@Model.Genre</span></a>
                 <hr />
@@ -127,22 +135,32 @@
             </div>
 
         </div>
-        <hr />
+        <br />
         <span class="font-weight-bolder" style="margin-bottom: 1rem;">Is there a music video?</span>
-        <div id="youTubePlayer">
+        <div id="youTubePlayer" style="margin-bottom: 3rem;">
             <iframe width="520" height="315"
                     src="@Model.YoutubeLink">
             </iframe>
         </div>
 
+        <br />
+        <div><vc:songs-by-user user-id="@Model.UserId"></vc:songs-by-user></div>
+
         <hr />
         <span class="font-weight-bolder" style="margin-bottom: 1rem;">Cover art for the song?</span>
-        <div id="instagramPost" style="margin-left: 4rem;">
+        <div id="instagramPost" style="margin-left: 4rem; margin-bottom: 3rem;">
             <iframe src="@(Model.InstagramPostUrl)embed/captioned" width="400" height="505" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
         </div>
 
+        <br />
+        <vc:top-albums-for-user user-id="@Model.UserId"></vc:top-albums-for-user>
+        
+        <br />
+        <br />
+        <br />
         <hr />
-        <div id="soundCloudPlayer">
+        <span class="font-weight-bolder" style="margin-bottom: 1rem;">Check it out on soundcloud.</span>
+        <div id="soundCloudPlayer" style="margin-bottom: 3rem;">
             <iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/@(Model.SoundcloudUrl)&color=%234d544d&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
         </div>
 
@@ -155,20 +173,18 @@
 
                 <div class="col">
                     <a style="color: black;" asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId"><span>@Model.AlbumName</span></a>
-                    <span class="font-weight-lighter">(@Model.AlbumReleaseDate)</span>
+                    <span class="font-weight-lighter">(@Model.AlbumReleaseDate?.ToShortDateString())</span>
                     <div><span class="font-weight-bold">@Model.AlbumProducer</span></div>
                 </div>
             </div>
 
             <br />
-            <div><vc:songs-by-album album-id="@Model.AlbumId"></vc:songs-by-album></div>
+            <div style="margin-bottom: 5rem;"><vc:songs-by-album album-id="@Model.AlbumId"></vc:songs-by-album></div>
 
         }
-        <hr />
-        <div><vc:songs-by-user user-id="@Model.UserId"></vc:songs-by-user></div>
-        <br />
-        <vc:top-albums-for-user user-id="@Model.UserId"></vc:top-albums-for-user>
-        
+
+
+
         <form asp-controller="Songs" asp-action="Edit" id="updateForm" style="display: none">
             <input type="hidden" name="Id" value="@this.Model.Id" />
             <input type="hidden" name="UserUserName" value="@this.Model.UserUserName" />
@@ -272,7 +288,11 @@
         <source src="~/Songs/@this.Model.UserUserName/@(Model.Name.Replace("." + Model.FileExtension, string.Empty)).@Model.FileExtension" type="audio/@Model.FileExtension">
     </audio>
 </div>
-<h1>text after the view component</h1>
+<div class="text-center" style="margin-top: 5rem;"><h3 class="font-weight-lighter">More on Audiology</h3>
+                         <div>
+                             <vc:more-songs-from-genre genre="@Model.Genre"></vc:more-songs-from-genre>
+                         </div>
+    </div>
 
 @section Scripts{
     <script>

@@ -16,84 +16,104 @@
 <hr />
 
 <div class="row row-cols-2">
-    @foreach (var song in Model.Songs)
-    {
-        <div class="col" style="height: 12rem;">
-            <div class="text-center" style="width: 19rem; background-color: #f4f4f4">
+    <div class="col-md-6">
+        @if (Model.Songs == null)
+        {
+        <div class="font-italic" style="font-size: 30px;">Songs are not added yet.</div>
+        }
+        @foreach (var song in Model.Songs)
+        {
+            <div class="col" style="height: 12rem; margin-bottom: 8rem; margin-left: 7rem;">
+                <div class="text-center" style="width: 19rem; background-color: #f4f4f4">
 
-                <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" style="width: 18rem; height: 10rem;" alt="Image not found" />
-                <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="stretched-link" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a>
+                    <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" style="width: 18rem; height: 10rem;" alt="Image not found" />
+                    <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="stretched-link" style="text-decoration: none; color: black;">@song.Name.Replace(song.FileExtension, "")</a>
 
-                <h5 class="">@this.User.Identity.Name</h5>
-                <form id="votesForm" method="post"></form>
+                    <h5 class="">@song.UserUserName</h5>
+                    <form id="votesForm" method="post"></form>
 
-                <div class="align-content-start">
-                    <a href="#" onclick="favourite('userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
-                    <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
+                    <div class="align-content-start">
+                        <a href="#" onclick="favourite('userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                        <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
+                    </div>
+
+                    <audio id="player" controls>
+                        <source src="~/Songs/@song.UserUserName/@song.Name" type="audio/@song.FileExtension">
+                    </audio>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-6 border-left">
+
+        <div class="ml-auto p-2 bd-highlight text-center" style="margin-bottom: 3rem;">
+            <form id="votesForm" method="post"></form>
+            <span class="font-weight-lighter font-italic" style="font-size: 25px;">Likes :</span>
+            <a href="#" onclick="favourite('@userId',null,@Model.Id)"><i class="fas fa-heart fa-2x" style="padding-left: 0px; color: black;"></i></a>
+            <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@Model.FavouritesCount</div>
+        </div>
+
+        <div style="margin-bottom: 10rem;">
+            <div class="font-weight-bolder" style="margin-bottom: 1rem;">Want to know more about the album ?</div>
+            @Model.Description
+            <hr />
+        </div>
+
+        <div class="text-center" style="margin-bottom: 5rem;">
+            <hr />
+            <span class="font-italic font-weight-lighter">Produced by :</span> <span class="font-weight-bolder"> @Model.Producer</span>
+            <hr />
+        </div>
+
+        <br />
+        <vc:user-details user-id="@Model.UserId"></vc:user-details>
+        <br />
+
+        @if (userId == Model.UserId || this.User.IsInRole("Administrator"))
+        {
+            <form asp-controller="Albums" asp-action="Edit" id="updateForm" style="display: none">
+                <input type="hidden" name="Id" value="@this.Model.Id" />
+                <div>
+                    <label asp-for="Name"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="CoverUrl"></label>
+                    <input asp-for="CoverUrl" class="form-control" />
+                    <span asp-validation-for="CoverUrl" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Genre"></label>
+                    <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
+                    </select>
+                    <span asp-validation-for="Genre" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Producer"></label>
+                    <input asp-for="Producer" class="form-control" />
+                    <span asp-validation-for="Producer" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Description"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="ReleaseDate"></label>
+                    <input asp-for="ReleaseDate" class="form-control" />
+                    <span asp-validation-for="ReleaseDate" class="text-danger"></span>
                 </div>
 
-                <audio id="player" controls>
-                    <source src="~/Songs//@this.User.Identity.Name/@song.Name" type="audio/mp3">
-                </audio>
-            </div>
-        </div>
-    }
-<div class="col border-left">
+                <hr />
+                <button asp-controller="Albums" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-compact-disc" style="margin-right: 1rem;"></i>UPDATE</button>
+                <button asp-controller="Albums" asp-action="Delete" asp-route-id="@Model.Id" type="submit" class="btn btn-outline-danger btn-block" data-toggle="tooltip" data-placement="left" title="This will delete all songs in the album.">DELETE</button>
+            </form>
+            <br />
+            <a href="#" onclick="toggleForm()" class="btn btn-dark btn-lg btn-block">EDIT ALBUM</a>
+        }
 
-    <div class="ml-auto p-2 bd-highlight">
-        <form id="votesForm" method="post"></form>
-        <a href="#" onclick="favourite('@userId',null,@Model.Id)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
-        <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@Model.FavouritesCount</div>
     </div>
-
-    <vc:user-details user-id="@userId"></vc:user-details>
-    <br />
-    <form asp-controller="Albums" asp-action="Edit" id="updateForm" style="display: none">
-        <input type="hidden" name="Id" value="@this.Model.Id" />
-        <div>
-            <label asp-for="Name"></label>
-            <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="CoverUrl"></label>
-            <input asp-for="CoverUrl" class="form-control" />
-            <span asp-validation-for="CoverUrl" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="Genre"></label>
-            <select class="form-control" asp-for="Genre" asp-items="Html.GetEnumSelectList<Genre>()">
-            </select>
-            <span asp-validation-for="Genre" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="Producer"></label>
-            <input asp-for="Producer" class="form-control" />
-            <span asp-validation-for="Producer" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="Description"></label>
-            <input asp-for="Description" class="form-control" />
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        <div>
-            <label asp-for="ReleaseDate"></label>
-            <input asp-for="ReleaseDate" class="form-control" />
-            <span asp-validation-for="ReleaseDate" class="text-danger"></span>
-        </div>
-
-        <hr />
-        <button asp-controller="Albums" asp-action="Edit" type="submit" class="btn btn-dark btn-lg btn-block"><i class="fas fa-compact-disc" style="margin-right: 1rem;"></i>UPDATE</button>
-        <button asp-controller="Albums" asp-action="Delete" asp-route-id="@Model.Id" type="submit" class="btn btn-outline-danger btn-block" data-toggle="tooltip" data-placement="left" title="This will delete all songs in the album.">DELETE</button>
-    </form>
-
-    @if (this.User.IsInRole("Artist") || this.User.IsInRole("Administrator"))
-    {
-        <br />
-        <a href="#" onclick="toggleForm()" class="btn btn-dark btn-lg btn-block">EDIT ALBUM</a>
-    }
-
-</div>
 </div>
 
 

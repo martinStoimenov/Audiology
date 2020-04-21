@@ -18,7 +18,7 @@
         public IViewComponentResult Invoke(string userId)
         {
             var user = this.repository.All().Where(u => u.Id == userId).FirstOrDefault();
-            user.Birthday?.ToString("dd/MM/yyyy");
+            user.Birthday?.ToString("dd.MM.yyyy");
 
             return this.View(user);
         }
