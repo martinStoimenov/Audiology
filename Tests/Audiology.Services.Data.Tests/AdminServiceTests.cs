@@ -51,21 +51,21 @@
             await songRepo.AddAsync(song);
             await songRepo.SaveChangesAsync();
 
-            var song1 = await songRepo.All().Where(s => s.Id == song.Id).FirstOrDefaultAsync();
+            var song1 = await lyricsRepo.All().Where(s => s.Id == song.Id).FirstOrDefaultAsync();
 
-            song1.Lyrics = new Lyrics
+            song1 = new Lyrics
             {
-                Text = "",
+                Text = "asd",
                 SongId = song.Id,
             };
-            songRepo.Update(song1);
-            await songRepo.SaveChangesAsync();
+            await lyricsRepo.AddAsync(song1);
+            await lyricsRepo.SaveChangesAsync();
 
             await service.EditLyricsAsync("opaaa song lyrics by \r\nAdmin \r\n\r\nhere \r\n\r\n\r\nbruh\r\nand again", song1.Id);
 
-            var song2 = await songRepo.All().Where(s => s.Id == song1.Id).FirstOrDefaultAsync();
+            var song2 = await lyricsRepo.All().Where(s => s.Id == song1.Id).FirstOrDefaultAsync();
 
-            Assert.Equal("opaaa song lyrics by <br>Admin <br><br>here <br><br><br>bruh<br>and again", song2.Lyrics.Text);
+            Assert.Equal("opaaa song lyrics by <br>Admin <br><br>here <br><br><br>bruh<br>and again", song2.Text);
         }
 
         [Fact]

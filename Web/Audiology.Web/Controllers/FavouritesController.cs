@@ -27,7 +27,7 @@
         public async Task<ActionResult<FavouritesOutputModel>> Post(FavouritesInputViewModel input)
         {
             await this.favouritesService.FavouritedAsync(input.SongId, input.AlbumId, input.UserId);
-            var favouritesCount = this.favouritesService.GetCount(input.SongId, input.AlbumId);
+            var favouritesCount = await this.favouritesService.GetCount(input.SongId, input.AlbumId);
 
             return new FavouritesOutputModel { FavouritesCount = favouritesCount };
         }

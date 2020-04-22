@@ -25,9 +25,9 @@
             this.albumRepository = albumRepository;
         }
 
-        public int GetCount(int? songId, int? albumId)
+        public async Task<int> GetCount(int? songId, int? albumId)
         {
-            var favourites = this.repository.All().Where(f => f.SongId == songId && f.AlbumId == albumId).Select(f => f.Id);
+            var favourites = await this.repository.All().Where(f => f.SongId == songId && f.AlbumId == albumId).Select(f => f.Id).ToArrayAsync();
 
             return favourites.Count();
         }
