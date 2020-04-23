@@ -38,6 +38,11 @@
         {
             var user = await this.repository.All().Where(u => u.Id == userId).FirstOrDefaultAsync();
 
+            if (user == null)
+            {
+                throw new ArgumentNullException("Requested user wasn't found.");
+            }
+
             return user;
         }
 

@@ -99,20 +99,24 @@
 
         public async Task<IEnumerable<T>> GetAllSongsInPlaylistAsync<T>(string userId, int playlistId)
         {
-            var playlist = await this.playlistRepository.All().Where(p => p.UserId == userId && p.Id == playlistId).To<PlaylistViewModel>().FirstOrDefaultAsync();
+            var playlistid = await this.playlistRepository.All().Where(p => p.UserId == userId && p.Id == playlistId).Select(p => p.Id).FirstOrDefaultAsync();
 
-            var playlistSongs = await this.playlistsSongsRepository.All().Where(ps => ps.PlaylistId == playlistId).Select(x => x.Song).To<T>().ToListAsync();
+            var playlistSongs = await this.playlistsSongsRepository.All().Where(ps => ps.PlaylistId == playlistid).Select(x => x.Song).To<T>().ToListAsync();
 
             return playlistSongs;
         }
 
         public async Task RemoveAsync(string userId, int playlistId, int songId)
         {
-            var song = await this.playlistsSongsRepository.All().Where(ps => ps.PlaylistId == playlistId && ps.SongId == songId && ps.Song.UserId == userId).FirstOrDefaultAsync();
+            var playlist = await this.playlistRepository.All().Where(p => p.UserId == userId).ToListAsync();
+            var song = await this.playlistsSongsRepository.All().Where(ps => ps.PlaylistId == playlistId && ps.SongId == songId).FirstOrDefaultAsync();
 
-            if (song != null)
+            if (playlist != null)
             {
-                this.playlistsSongsRepository.Delete(song);
+                if (song != null)
+                {
+                    this.playlistsSongsRepository.Delete(song);
+                }
             }
 
             await this.playlistsSongsRepository.SaveChangesAsync();

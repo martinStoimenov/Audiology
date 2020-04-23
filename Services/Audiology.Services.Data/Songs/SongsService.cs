@@ -426,7 +426,7 @@
             string artistName = artist;
             string songName = $"/{song.Remove(dotIndex)}";
             string apiKey = appKey;
-            string search = baseUrl + artistName + songName + apiKey;
+            string search = baseUrl + artistName.Trim() + songName.Trim() + apiKey;
 
             var jsonResultString = await apiSeedsClient.GetAsync(search);
             string lyrics = string.Empty;
@@ -465,8 +465,8 @@
             string lyrics = string.Empty;
 
             var dotIndex = song.LastIndexOf(".");
-            var artistName = artist;
-            var songName = song.Remove(dotIndex);
+            var artistName = artist.Trim();
+            var songName = song.Remove(dotIndex).Trim();
 
             var response = await ovhClient.GetAsync("https://api.lyrics.ovh/v1/" + artistName + "/" + songName);
 
@@ -509,14 +509,14 @@
             var artistName = artist;
             var songName = song;
 
-            var query = $"/{artistName}-{songName}-lyrics";
+            var query = $"/{artistName.Trim()}-{songName.Trim()}-lyrics";
             var search = Regex.Replace(query, "( )+", "-");
 
             var content = await geniusClient.GetAsync(baseUrl + search);
 
             if (!content.IsSuccessStatusCode)
             {
-                throw new ArgumentException("Song lyrics can't be found right now");
+                return null;
             }
             else
             {

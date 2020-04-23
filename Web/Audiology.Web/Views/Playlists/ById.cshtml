@@ -21,7 +21,7 @@
                     <div class="d-block p-2 w-100 bd-highlight">
                         <h5 class="font-weight-lighter h-25 d-inline-block">@song.UserUserName</h5>
                     </div>
-                    <div class="text-wrap p-2 w-100 bd-highlight"><a asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(".mp3", "")</a></div>
+                    <div class="text-wrap p-2 w-100 bd-highlight"><a asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(song.FileExtension, "")</a></div>
 
                 </div>
 
@@ -41,7 +41,7 @@
             </div>
             <span class="d-flex justify-content-start align-self-end">
                 <audio id="player" style="width: 52rem" controls>
-                    <source src="~/Songs//@song.UserUserName/@song.Name" type="audio/mp3">
+                    <source src="~/Songs//@song.UserUserName/@song.Name.@song.FileExtension" type="audio/@song.FileExtension">
                 </audio>
             </span>
         </div>
