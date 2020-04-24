@@ -24,6 +24,8 @@
 
         Task<IEnumerable<T>> GetTopSongsForUserAsync<T>(string userId, int count);
 
+        Task<IEnumerable<T>> GetTopArtistsByFavsCount<T>(int? count = null);
+
         Task<T> GetSong<T>(int songId);
 
         Task BackgroundLyricsGathering();

@@ -1,0 +1,30 @@
+﻿@{
+    @model IEnumerable<Audiology.Web.ViewModels.Profile.TopArtistsViewModel>
+}
+@{ int count = 1; }
+
+<div class="text-center" style="margin-bottom: 2rem;">
+    <h1 class="text-uppercase font-weight-bold" style="margin-top: 8rem; font-size: 60px;">artists</h1>
+    <span class="text-uppercase text-danger font-italic font-weight-bold">Top 5 on Audiology</span>
+</div>
+
+@foreach (var artist in Model)
+{
+    <div class="row align-items-center">
+        <a asp-controller="Profile" asp-action="Index" asp-route-id="@artist.Id" style="text-decoration: none; color: black; display: contents">
+            <div class="col-1" style="padding-left: 50px;">
+                <span>@(count++)</span>
+            </div>
+            <div class="col-1">
+                <img src="@artist.ProfilePicUrl" width="60" height="60" class="rounded-circle" alt="Alternate Text" />
+            </div>
+            <div class="col-7">
+                <div class="font-weight-bolder">@artist.UserName <span class="text-uppercase font-weight-light" style="margin-left: 80px;">@artist.FirstName</span><span class="text-uppercase font-weight-light" style="margin-left: 10px;">@artist.LastName</span></div>
+            </div>
+            <div class="col-1">
+                <div><i class="far fa-heart" style="color: #dc3545;"></i> @artist.TotalFavCount</div>
+            </div>
+        </a>
+    </div>
+    <hr />
+}

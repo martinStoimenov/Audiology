@@ -10,5 +10,7 @@
         Task FavouritedAsync(int? songId, int? albumId, string userId);
 
         Task<IEnumerable<T>> GetAllAsync<T>(string userId);
+
+        Task<int> TotalFavsForArtist(string userId);
     }
 }

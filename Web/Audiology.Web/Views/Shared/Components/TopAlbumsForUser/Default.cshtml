@@ -21,7 +21,7 @@
                         <a href="#" onclick="favourite('@userId',null,@album.Id)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
                         <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@album.FavouritesCount</div>
                     </div>
-                    <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id">@album.Name</a>
+                    <a asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id" style="color: black;">@album.Name</a>
                         
                 </div>
                 

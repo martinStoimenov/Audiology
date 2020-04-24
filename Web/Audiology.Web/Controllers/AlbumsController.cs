@@ -10,6 +10,7 @@
     using Audiology.Services.Data.Songs;
     using Audiology.Web.ViewModels.Albums;
     using Audiology.Web.ViewModels.Songs;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "Artist")]
         public async Task<IActionResult> Upload(AlbumUploadViewModel input)
         {
             if (!this.ModelState.IsValid)
@@ -71,6 +73,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator,Artist")]
         public async Task<IActionResult> Edit(AlbumViewModel input)
         {
             if (!this.ModelState.IsValid)
@@ -84,6 +87,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator,Artist")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!this.ModelState.IsValid)

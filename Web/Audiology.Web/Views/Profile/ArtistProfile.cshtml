@@ -47,12 +47,12 @@
         <br />
         <vc:top-albums-for-user user-id="@Model.Id"></vc:top-albums-for-user>
 
-        <!-- Change Artist to User later -->
-        @if (User.IsInRole("Artist") || User.IsInRole("Administrator"))
-        {
-            <br />
-            <vc:chat artist-id="@Model.Id"></vc:chat>
-        }
+        <!-- Change Artist to User later
+    if (User.IsInRole("Artist") || User.IsInRole("Administrator"))
+    {
+        <br />
+        <vc:chat artist-id="Model.Id"></vc:chat>
+    } -->
 
     </div>
 </div>

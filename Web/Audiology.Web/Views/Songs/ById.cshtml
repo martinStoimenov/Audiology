@@ -173,7 +173,7 @@
 
                 <div class="col">
                     <a style="color: black;" asp-controller="Albums" asp-action="ById" asp-route-id="@Model.AlbumId"><span>@Model.AlbumName</span></a>
-                    <span class="font-weight-lighter">(@Model.AlbumReleaseDate?.ToShortDateString())</span>
+                    <div><span class="font-weight-lighter">(@Model.AlbumReleaseDate?.ToShortDateString())</span></div>
                     <div><span class="font-weight-bold">@Model.AlbumProducer</span></div>
                 </div>
             </div>

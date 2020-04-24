@@ -99,5 +99,14 @@
 
             return allFavourited;
         }
+
+        public async Task<int> TotalFavsForArtist(string userId)
+        {
+            var songCount = await this.songRepository.All().Where(s => s.UserId == userId).Select(s => s.FavouritesCount).SumAsync();
+            var albumCount = await this.albumRepository.All().Where(s => s.UserId == userId).Select(s => s.FavouritesCount).SumAsync();
+
+            int count = (int)songCount + albumCount;
+            return count;
+        }
     }
 }

@@ -6,7 +6,7 @@
     string userId = this.UserManager.GetUserId(this.User);
 }
 
-    <span>search results :</span>
+    <div class="text-center"><h3 class="font-italic font-weight-lighter">Search results :</h3></div>
 <div class="row">
     <div class="col-10">
         @foreach (var song in Model)
@@ -35,7 +35,7 @@
                     </div>
                     <span class="d-flex justify-content-start align-self-end">
                         <audio id="player" style="width: 52rem" controls>
-                            <source src="~/Songs//@song.UserUserName/@song.Name" type="audio/@song.Extension">
+                            <source src="~/Songs//@song.UserUserName/@song.Name.Replace(song.Extension, "")" type="audio/@song.Extension">
                         </audio>
                     </span>
                 </div>

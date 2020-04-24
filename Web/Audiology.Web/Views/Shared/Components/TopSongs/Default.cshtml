@@ -10,22 +10,22 @@
 
 @foreach (var song in Model)
 {
-    <div class="row align-items-center table-hover">
-        <a href="#" class="" style="text-decoration: none; color: black; display: contents">
-            <div class="col-1">
-                <span>@(count++) .</span>
+    <div class="row align-items-center">
+        <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black; display: contents">
+            <div class="col-1" style="padding-left: 50px;">
+                <span>@(count++)</span>
             </div>
             <div class="col-1">
                 <img src="@song.SongArtUrl" width="60" height="60" class="rounded" alt="Alternate Text" />
             </div>
             <div class="col-5">
-                <div class="font-weight-bolder">@song.Name.Remove(song.Name.LastIndexOf('.')) <span class="text-uppercase font-weight-light">Lyrics</span></div>
+                <div class="font-weight-bolder">@song.Name.Remove(song.Name.LastIndexOf('.')) <span class="text-uppercase font-weight-light" style="margin-left: 10px;">Lyrics</span></div>
             </div>
             <div class="col-3">
                 <div>@song.UserUserName</div>
             </div>
             <div class="col-1">
-                <div><i class="far fa-heart"></i> @song.FavouritesCount</div>
+                <div><i class="far fa-heart" style="color: #dc3545;"></i> @song.FavouritesCount</div>
             </div>
         </a>
     </div>

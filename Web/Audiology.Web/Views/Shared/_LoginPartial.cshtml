@@ -30,13 +30,13 @@
                 <i class="far fa-caret-circle-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-id="@userId"><i class="fas fa-user-circle"></i> Profile</a>
-                @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || (this.User.IsInRole(GlobalConstants.ArtistRoleName)))
-                {
-                    <a class="dropdown-item" asp-controller="Songs" asp-action="Index"><i class="fas fa-music"></i> Songs</a>
-                    <a class="dropdown-item" asp-controller="Albums" asp-action="Index"><i class="fas fa-compact-disc"></i> Albums</a>
                     <a class="dropdown-item" asp-controller="Favourites" asp-action="Index"><i class="fab fa-gratipay"></i> Favourites</a>
                     <a class="dropdown-item" asp-controller="Playlists" asp-action="Index"><i class="fas fa-headphones"></i> Playlists</a>
+                @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName) || (this.User.IsInRole(GlobalConstants.ArtistRoleName)))
+                {
+                <a class="dropdown-item" asp-controller="Profile" asp-action="Index" asp-route-id="@userId"><i class="fas fa-user-circle"></i> Profile</a>
+                    <a class="dropdown-item" asp-controller="Songs" asp-action="Index"><i class="fas fa-music"></i> Songs</a>
+                    <a class="dropdown-item" asp-controller="Albums" asp-action="Index"><i class="fas fa-compact-disc"></i> Albums</a>
                 }
                 <a asp-controller="Contacts" asp-action="Index" class="dropdown-item"><i class="fas fa-brain"></i> Contact</a>
             </ul>

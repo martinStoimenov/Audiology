@@ -14,9 +14,7 @@
 
         public async Task<IActionResult> Send(ContactFormViewModel input)
         {
-
-
-            return this.Redirect("/"); // email received page
+           return this.Redirect("/"); // email received page
         }
     }
 }

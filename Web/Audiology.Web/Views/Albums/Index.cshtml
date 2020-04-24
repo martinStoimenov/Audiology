@@ -8,6 +8,11 @@
 }
 
 <h1 class="text-center">Albums</h1>
+@if (this.User.IsInRole("Artist"))
+{
+<a asp-action="Upload" class="btn btn-dark btn-block">Upload Album</a>
+}
+
 <div class="row">
     @foreach (var album in Model)
     {

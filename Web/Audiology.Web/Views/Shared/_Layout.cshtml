@@ -25,7 +25,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark box-shadow mb-3" style="margin-bottom: 0 !important;">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@GlobalConstants.SystemName</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="fab fa-itunes-note"></i> @GlobalConstants.SystemName</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -56,6 +56,7 @@
 
     <footer class="border-top footer text-muted bg-dark">
         <div class="container">
+            <a href="https://github.com/martinStoimenov/Audiology" style="text-decoration: none; color: white; margin-right: 30px;"><i class="fab fa-github fa-2x"></i></a>
             &copy; @DateTime.Now.Year - @GlobalConstants.SystemName - <a style="color: white;" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
@@ -70,13 +71,13 @@
         <script src="~/slick/slick.js"></script>
     </environment>
     <environment names="Staging,Production">
+        <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
         <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
         <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js" asp-append-version="true"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.min.js" asp-append-version="true"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
         <script src="~/slick/slick.js"></script>
-        <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
     </environment>
 
     @this.RenderSection("Scripts", required: false)

@@ -27,13 +27,13 @@
                 <div class="text-center" style="width: 19rem; background-color: #f4f4f4">
 
                     <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" style="width: 18rem; height: 10rem;" alt="Image not found" />
-                    <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" class="stretched-link" style="text-decoration: none; color: black;">@song.Name.Replace(song.FileExtension, "")</a>
+                    <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(song.FileExtension, "")</a>
 
                     <h5 class="">@song.UserUserName</h5>
                     <form id="votesForm" method="post"></form>
 
                     <div class="align-content-start">
-                        <a href="#" onclick="favourite('userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
+                        <a href="#" onclick="favourite('@userId',@song.Id,null)"><i class="fas fa-heart" style="padding-left: 0px; color: black;"></i></a>
                         <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@song.FavouritesCount</div>
                     </div>
 

@@ -196,6 +196,8 @@
             this.songRepository.Update(song);
             await this.songRepository.SaveChangesAsync();
 
+            bool lyrics = await this.GetLyricsForSong(song, username);
+
             return song.Id;
         }
 
@@ -332,7 +334,7 @@
                 s => s.Name.Contains(searchTerm) ||
                 s.Album.Name.Contains(searchTerm) ||
                 s.Album.User.UserName.Contains(searchTerm) ||
-                s.User.UserName.Contains(searchTerm)).To<T>().ToListAsync();
+                s.User.UserName.Contains(searchTerm)).Distinct().To<T>().ToListAsync();
 
             return result;
         }
@@ -348,6 +350,17 @@
             var songs = await this.songRepository.All().Where(s => s.Genre == genre1).OrderByDescending(s => s.CreatedOn).To<T>().ToListAsync();
 
             return songs;
+        }
+
+        public async Task<IEnumerable<T>> GetTopArtistsByFavsCount<T>(int? count = null)
+        {
+            var users = await this.songRepository.All()
+                .OrderByDescending(s => s.FavouritesCount)
+                .ThenByDescending(s => s.Album.FavouritesCount)
+                .Take((int)count).Select(s => s.User).Distinct()
+                .To<T>().ToListAsync();
+
+            return users;
         }
 
         public string EmbedYoutube(string url)

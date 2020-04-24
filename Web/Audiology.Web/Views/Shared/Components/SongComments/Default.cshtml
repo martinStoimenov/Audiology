@@ -13,7 +13,7 @@
         <img src="@item.UserProfilePicUrl" width="30" height="30" class="rounded-circle" alt="Profile pic" />
         <span class="font-weight-bold">@item.UserUserName</span>
     </div>
-    if (item.UserId == userId)
+    if (item.UserId == userId || this.User.IsInRole("Administrator"))
     {
         <form asp-controller="Songs" asp-action="DeleteComment" method="post">
             <input type="hidden" name="Id" value="@item.Id" />

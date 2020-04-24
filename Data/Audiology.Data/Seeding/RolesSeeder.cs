@@ -20,6 +20,12 @@
             var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
+            await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
+
+            await SeedRoleAsync(roleManager, GlobalConstants.UserRoleName);
+
+            await SeedRoleAsync(roleManager, GlobalConstants.ArtistRoleName);
+
             if (!await userManager.Users.AnyAsync())
             {
                 var user = new ApplicationUser
@@ -32,7 +38,7 @@
                     Gender = Gender.Male,
                 };
 
-                var password = "123456";
+                var password = "askjdhAAd#3";
 
                 var result = await userManager.CreateAsync(user, password);
 
@@ -41,12 +47,6 @@
                     await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
                 }
             }
-
-            await SeedRoleAsync(roleManager, GlobalConstants.AdministratorRoleName);
-
-            await SeedRoleAsync(roleManager, GlobalConstants.UserRoleName);
-
-            await SeedRoleAsync(roleManager, GlobalConstants.ArtistRoleName);
         }
 
         private static async Task SeedRoleAsync(RoleManager<ApplicationRole> roleManager, string roleName)

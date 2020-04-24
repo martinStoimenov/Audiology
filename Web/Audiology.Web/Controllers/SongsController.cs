@@ -11,6 +11,7 @@
     using Audiology.Web.ViewModels.Comments;
     using Audiology.Web.ViewModels.Playlists;
     using Audiology.Web.ViewModels.Songs;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -75,6 +76,7 @@
             return this.View(songs);
         }
 
+        [Authorize(Roles = "Artist")]
         public async Task<IActionResult> Upload()
         {
             var albums = await this.albumsService.GetAllForUser<AlbumDropDownViewModel>(this.userManager.GetUserId(this.User));
@@ -87,6 +89,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Artist")]
         public async Task<IActionResult> Upload(SongUploadViewModel input)
         {
             if (!this.ModelState.IsValid)
@@ -103,6 +106,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Artist")]
         public async Task<IActionResult> Edit(SongViewModel input)
         {
             if (!this.ModelState.IsValid)
@@ -116,6 +120,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator,Artist")]
         public async Task<IActionResult> Delete(int id)
         {
             await this.songsService.DeleteSong(id);

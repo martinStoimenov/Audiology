@@ -246,7 +246,7 @@
             await songRepository.AddAsync(song4);
             await songRepository.SaveChangesAsync();
 
-            var songtest = await songRepository.All().Where(s => s.Id == song.Id).FirstOrDefaultAsync();
+            var songtest = await songRepository.All().Where(s => s.Id == song.Id).FirstOrDefaultAsync();    // works without automapper
             var songDB = service.GetAll<SongListViewModel>(3);
 
             Assert.Equal(3, songDB.Count());
