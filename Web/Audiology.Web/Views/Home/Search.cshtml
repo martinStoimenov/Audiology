@@ -23,7 +23,7 @@
                             <div class="d-block p-2 w-100 bd-highlight">
                                 <h5 class="font-weight-lighter h-25 d-inline-block">@song.UserUserName</h5>
                             </div>
-                            <div class="text-wrap p-2 w-100 bd-highlight"><a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@(song.Name != null ? song.Name.Replace(song.Extension, "") : "")</a></div>
+                            <div class="text-wrap p-2 w-100 bd-highlight"><a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@(song.Name.Replace(song.Extension, ""))</a></div>
 
                         </div>
 
@@ -35,7 +35,7 @@
                     </div>
                     <span class="d-flex justify-content-start align-self-end">
                         <audio id="player" style="width: 52rem" controls>
-                            <source src="~/Songs//@song.UserUserName/@song.Name.Replace(song.Extension, "")" type="audio/@song.Extension">
+                            <source src="~/Songs/@song.UserUserName/@song.Name" type="audio/@song.Extension.Replace(".", "")">
                         </audio>
                     </span>
                 </div>
@@ -48,7 +48,7 @@
         {
             if (album.AlbumName != null)
             {
-                <div class="col-md-4 mt-md-4" style="margin-left: -17rem; padding-left: 0rem; left: 7rem;">
+                <div class="col-md-4 mt-md-4" style="margin-left: -20rem; padding-left: 3rem; left: 7rem;">
                     <div class="card shadow-lg p-3 mb-5 rounded" style="width: 14rem; margin-left: 6rem;">
                         <img src="@album.AlbumCoverUrl" class="card-img-top img-fluid" style="width: 18rem; height: 9rem;" alt=" Sorry album cover not found :)">
                         <div class="card-body">

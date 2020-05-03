@@ -41,9 +41,9 @@
         {
             string userId = this.userManager.GetUserId(this.User);
 
-            var albums = await this.albumsService.GetAllForUser<AlbumDropDownViewModel>(userId);
-
             var song = await this.songsService.GetSong<SongViewModel>(id);
+
+            var albums = await this.albumsService.GetAllForUser<AlbumDropDownViewModel>(song.UserId);
 
             var youtubeLink = this.songsService.EmbedYoutube(song.YoutubeUrl);
 
@@ -63,15 +63,8 @@
 
         public async Task<IActionResult> Index()
         {
-            string userName = this.User.Identity.Name;
             string userId = this.userManager.GetUserId(this.User);
             var songs = await this.songsService.GetAllSongsForUserAsync<SongListViewModel>(userId);
-
-            foreach (var song in songs)
-            {
-                var songDuration = this.songsService.GetMediaDuration(song.Name, userName);
-                song.SongDuration = songDuration;
-            }
 
             return this.View(songs);
         }

@@ -43,7 +43,5 @@
         IEnumerable<T> GetAll<T>(int? count = null);
 
         string EmbedYoutube(string url);
-
-        string GetMediaDuration(string songName, string username);
     }
 }

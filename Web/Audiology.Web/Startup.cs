@@ -2,7 +2,7 @@
 {
     using System;
     using System.Reflection;
-
+    using Audiology.Common;
     using Audiology.Data;
     using Audiology.Data.Common;
     using Audiology.Data.Common.Repositories;
@@ -22,6 +22,7 @@
     using Audiology.Web.ViewModels;
     using CloudinaryDotNet;
     using Hangfire;
+    using Hangfire.Annotations;
     using Hangfire.Dashboard;
     using Hangfire.SqlServer;
     using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
 
     public class Startup
     {
@@ -69,7 +71,7 @@
 
             services.AddMvc(o =>
             {
-                var policy = new AuthorizationPolicyBuilder() // Add default authorization for all controllers
+                var policy = new AuthorizationPolicyBuilder() // Default authorization for all controllers
                     .RequireAuthenticatedUser()
                     .Build();
                 o.Filters.Add(new AuthorizeFilter(policy));
@@ -150,11 +152,9 @@
             }
             else
             {
-                app.UseExceptionHandler("Home/Error");
+                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions { IsReadOnlyFunc = (DashboardContext context) => true });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -164,6 +164,8 @@
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions { Authorization = new[] { new HangfireAuthotizationFilter() } });
 
             app.UseEndpoints(
                 endpoints =>
@@ -175,6 +177,20 @@
                     });
 
             recurringJobManager.AddOrUpdate("Gather-song-lyrics", () => serviceProvider.GetService<ISongsServcie>().BackgroundLyricsGathering(), Cron.Weekly(DayOfWeek.Friday));
+        }
+
+        private class HangfireAuthotizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize([NotNull] DashboardContext context)
+            {
+                var httpContext = context.GetHttpContext();
+                if (httpContext.User != null && httpContext.User.Identity.IsAuthenticated)
+                {
+                    return httpContext.User.IsInRole(GlobalConstants.AdministratorRoleName);
+                }
+
+                return false;
+            }
         }
     }
 }

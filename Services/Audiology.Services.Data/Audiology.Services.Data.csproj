@@ -15,7 +15,6 @@
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
-    <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.164" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

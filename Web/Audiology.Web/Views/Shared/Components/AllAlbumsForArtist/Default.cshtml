@@ -16,7 +16,7 @@
                     <a style="color: black;" asp-controller="Albums" asp-action="ById" asp-route-id="@album.Id"><h6 class="card-text text-center">@album.Name</h6></a>
 
                     <div class="justify-content-center">
-                        <div style="margin-left: 4rem;">
+                        <div style="margin-left: 7rem;">
                             <form id="votesForm" method="post"></form>
                             <a href="#" onclick="favourite('@userId',null,@album.Id)"><i class="fas fa-heart" style="padding-left: 0px;color: black;"></i></a>
                             <div id="favouritesCount" style="padding-left: 0px;" class="d-inline-block">@album.FavouritesCount</div>

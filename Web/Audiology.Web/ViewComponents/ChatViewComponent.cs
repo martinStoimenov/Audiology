@@ -23,7 +23,7 @@
 
         public async Task<IViewComponentResult> InvokeAsync(string artistId)
         {
-            this.ViewBag.ArtistId = artistId; // try storing it in viewbag
+            this.ViewBag.ArtistId = artistId;
 
             // remove the current artist from the list and retrieve the messages stored in DB
             var convos = await this.context.Messages

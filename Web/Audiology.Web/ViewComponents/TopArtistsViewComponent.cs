@@ -1,6 +1,8 @@
 ﻿namespace Audiology.Web.ViewComponents
 {
+    using System.Linq;
     using System.Threading.Tasks;
+
     using Audiology.Services.Data.Favourites;
     using Audiology.Services.Data.Songs;
     using Audiology.Web.ViewModels.Profile;
@@ -25,6 +27,7 @@
                 artist.TotalFavCount = await this.favouritesService.TotalFavsForArtist(artist.Id);
             }
 
+            artists.OrderByDescending(a => a.TotalFavCount);
             return this.View(artists);
         }
     }

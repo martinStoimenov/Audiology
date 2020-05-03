@@ -9,19 +9,15 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
-    using Audiology.Data;
     using Audiology.Data.Common.Repositories;
     using Audiology.Data.Models;
     using Audiology.Data.Models.Enumerations;
     using Audiology.Services.Mapping;
-    using Audiology.Web.ViewModels.Songs;
     using HtmlAgilityPack;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using NAudio.Wave;
 
     public class SongsService : ISongsServcie
     {
@@ -252,43 +248,6 @@
             return songs;
         }
 
-        public string GetMediaDuration(string songName, string username)
-        {
-            var dotIndex = songName.LastIndexOf('.');
-            var fileExtension = songName.Substring(dotIndex);
-
-            string name = songName;
-
-            string webRootPath = this.env.WebRootPath + "\\Songs\\";
-
-            var filePath = Path.Combine(webRootPath, username, name);
-
-            Mp3FileReader reader = new Mp3FileReader(filePath);
-            TimeSpan duration = reader.TotalTime;
-            /*            double duration = 0.0;
-                        using (FileStream fs = File.OpenRead(mediaFilename))
-                        {
-                            Mp3Frame frame = Mp3Frame.LoadFromStream(fs);
-                            if (frame != null)
-                            {
-                               // _sampleFrequency = (uint)frame.SampleRate;
-                            }
-                            while (frame != null)
-                            {
-                                if (frame.ChannelMode == ChannelMode.Mono)
-                                {
-                                    duration += (double)frame.SampleCount * 2.0 / (double)frame.SampleRate;
-                                }
-                                else
-                                {
-                                    duration += (double)frame.SampleCount * 4.0 / (double)frame.SampleRate;
-                                }
-                                frame = Mp3Frame.LoadFromStream(fs);
-                            }
-                        }*/
-            return duration.ToString(@"hh\:mm\:ss");
-        }
-
         /// <summary>
         /// Gets the top favourited Songs.
         /// </summary>
@@ -425,7 +384,7 @@
             var lyrics = await this.songRepository.All().Select(s => s.Lyrics.SongId).ToListAsync();
 
             var missingSongsLyrics = await this.songRepository.All().Where(s => lyrics.All(l => l != s.Id)).Include(s => s.User).ToListAsync();
-            ;
+
             return missingSongsLyrics;
         }
 

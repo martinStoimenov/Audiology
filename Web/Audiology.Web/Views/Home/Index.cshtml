@@ -2,7 +2,6 @@
 @using System.Text;
 @{
     @model IEnumerable<Audiology.Web.ViewModels.Songs.SongListViewModel>
-    this.ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center" style="margin-bottom: 6rem;">
@@ -52,7 +51,7 @@
         <div>
             <img src="@(song.SongArtUrl == null ? song.AlbumCoverUrl : song.SongArtUrl)" class="rounded-top" width="180" height="160" alt="Image not found" />
             <div class="text-center" style="width: 70%">
-                <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace(song.FileExtension, "")</a>
+                <a asp-controller="Songs" asp-action="ById" asp-route-id="@song.Id" style="text-decoration: none; color: black;">@song.Name.Replace("." + song.FileExtension, "" )</a>
                 <a asp-controller="Profile" asp-action="Index" asp-route-id="@song.UserId" style="text-decoration: none; color: black;"><h5 class="font-weight-bold">@song.UserUserName</h5></a>
             </div>
         </div>

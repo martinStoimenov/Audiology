@@ -28,7 +28,7 @@
 
             await this.service.CreateAsync(name, userId, songId, isPrivate);
 
-            return this.RedirectToAction("ById", "Songs", songId);
+            return this.RedirectToAction("ById", "Songs", new { id = songId });
         }
 
         [HttpPost]
@@ -38,7 +38,7 @@
 
             await this.service.AddAsync(userId, playlistId, songId);
 
-            return this.RedirectToAction("Index", "Songs");
+            return this.RedirectToAction("ById", "Songs", new { id = songId });
         }
 
         [HttpPost]

@@ -25,9 +25,6 @@ function favourite(userId, songId, albumId) {
     });
 }
 
-var artistId;
-$(doucument).ready(function () { artistId = window.location.pathname.split('/')[3] });
-
 var connection =
     new signalR.HubConnectionBuilder()
         .withUrl("/chat")
@@ -42,6 +39,7 @@ connection.on("NewMessage",
 
 
 $("#sendButton").click(function () {
+    var artistId = $(".musicianId").val();
 
     if ($("#userId").val() === "") {
 

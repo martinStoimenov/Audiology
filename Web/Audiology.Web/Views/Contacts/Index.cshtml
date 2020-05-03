@@ -10,30 +10,31 @@
     <div class="form-row">
         <div class="col-6">
             <label asp-for="@Model.Email"></label>
-            <input asp-for="@Model.Email" class="form-control" />
+            <input asp-for="@Model.Email" class="form-control" placeholder="example@@gmail.com" />
             <span asp-validation-for="@Model.Email" class="text-danger"></span>
         </div>
-        <div class="col-3">
+        <div class="col-5" style="margin-left: 5rem;">
             <label asp-for="@Model.FirstName"></label>
             <input asp-for="@Model.FirstName" class="form-control" placeholder="John" />
             <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
         </div>
-        <div class="col-3">
+
+    </div>
+    <div class="form-row">
+        <div class="col-6">
+            <label asp-for="@Model.Subject"></label>
+            <input asp-for="@Model.Subject" class="form-control" placeholder="I really really love this site" />
+            <span asp-validation-for="@Model.Subject" class="text-danger"></span>
+        </div>
+        <div class="col-5" style="margin-left: 5rem;">
             <label asp-for="@Model.LastName"></label>
             <input asp-for="@Model.LastName" class="form-control" placeholder="Doe" />
             <span asp-validation-for="@Model.LastName" class="text-danger"></span>
         </div>
     </div>
-    <div class="form-row">
-        <div class="col-6">
-            <label asp-for="@Model.Subject"></label>
-            <input asp-for="@Model.Subject" class="form-control" />
-            <span asp-validation-for="@Model.Subject" class="text-danger"></span>
-        </div>
-    </div>
     <div class="form-group" style="margin-top: 2rem;">
         <label for="exampleFormControlTextarea1">Message:</label>
-        <textarea asp-for="@Model.Content" class="form-control" id="exampleFormControlTextarea1" rows="15"></textarea>
+        <textarea asp-for="@Model.Content" class="form-control" placeholder="How can I get featured in top 5 Artists" id="exampleFormControlTextarea1" rows="15"></textarea>
     </div>
 
     <button asp-action="Send" class="btn btn-block btn-success font-weight-bolder" type="submit">Send</button>
